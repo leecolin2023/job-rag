@@ -8,6 +8,8 @@ AI 招聘岗位知识库初版：网页查询、结构化过滤、关键词/语�
 
 [第一轮真实Embedding实验已完成](docs/recall-pilot-2026-10-25.md)：种子标注下没有证据支持Embedding全面优于BM25，尚未执行全量Rerank轮次或切换线上索引。
 
+[逐项核对：30条完整查询、原始排名与五个案例](docs/recall-case-audit-2026-10-25.md)，展示Embedding收益、分块退化和漏标/近重复问题；现有指标也不能证明BM25的实际相关性更好。
+
 **当前服务器公网 MCP：`https://106.55.35.201/mcp`（需要 Bearer 令牌）。** 远程客户端配置、安全取令牌、证书及运维说明见 [公网访问文档](docs/remote-access.md)。原始 API/MCP 端口仍仅监听本机。
 
 ## Docker 服务化与 DeepSeek harness（推荐）
