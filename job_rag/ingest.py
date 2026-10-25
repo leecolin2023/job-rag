@@ -5,7 +5,8 @@ from sqlalchemy import delete, select
 
 from .db import Chunk, IndexTask, Job, Revision, StatusEvent, now
 from .models import embed
-from .normalize import REQUIRED_COLUMNS, content_hash, digest, documents, normalize
+from .normalize import REQUIRED_COLUMNS, content_hash, digest, normalize
+from .chunking import build_documents
 
 STATUSES = {"unknown", "active", "suspected_expired", "closed"}
 
@@ -94,7 +95,15 @@ def run_index_tasks(db, settings):
                 session.commit()
                 stats["obsolete"] += 1
                 continue
-            texts = documents(job.raw)
+            try:
+                docs = build_documents(job.raw, settings.chunking_strategy, settings.chunk_size,
+                                       settings.chunk_budget_unit, settings.tokenizer_path)
+            except Exception as exc:
+                task.state, task.error, task.attempts = "failed", type(exc).__name__, task.attempts + 1
+                session.commit()
+                stats["failed"] += 1
+                continue
+            texts = [doc.text for doc in docs]
             old_chunks = list(session.scalars(select(Chunk).where(Chunk.job_key == job.key).order_by(Chunk.ordinal)))
             # Timestamp/collection metadata edits reuse vectors if searchable text is identical.
             reuse = (job.index_signature == settings.index_signature and
@@ -103,6 +112,8 @@ def run_index_tasks(db, settings):
         try:
             if vectors is None:
                 vectors = embed(settings, texts)
+            if len(vectors) != len(docs):
+                raise ValueError("Document/vector count mismatch")
             with db.session.begin() as session:
                 task = session.get(IndexTask, task_id)
                 job = session.get(Job, task.job_key, with_for_update=True)
@@ -111,9 +122,9 @@ def run_index_tasks(db, settings):
                     stats["obsolete"] += 1
                     continue
                 session.execute(delete(Chunk).where(Chunk.job_key == job.key))
-                for ordinal, (text, vector) in enumerate(zip(texts, vectors)):
+                for ordinal, (doc, vector) in enumerate(zip(docs, vectors)):
                     session.add(Chunk(job_key=job.key, version=job.version, ordinal=ordinal,
-                                      text=text, embedding=vector))
+                                      text=doc.text, details=doc.details, embedding=vector))
                 job.indexed_version, job.index_signature = job.version, settings.index_signature
                 task.state, task.error, task.attempts = "done", None, task.attempts + 1
             stats["indexed"] += 1

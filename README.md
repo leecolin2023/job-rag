@@ -4,6 +4,10 @@ AI 招聘岗位知识库初版：网页查询、结构化过滤、关键词/语�
 
 **版本：0.1.0** · [当前成果与已知边界](docs/current-status.md) · [更新记录](CHANGELOG.md) · [公网接入](docs/remote-access.md) · [执行记录分析](docs/observability.md)
 
+**开发中：结构化分块与Qwen3.7实验。** 新版代码提供显式数据库迁移、源文可追溯章节/条件分块，以及独立的[两阶段实验工具](experiments/README.md)。详见[分块与迁移](docs/structured-chunking.md)、[实验协议](docs/embedding-experiments.md)。当前在线容器仍为0.1版本，尚未切换；现有数据库使用新版前必须先备份、`job-rag migrate`、再重建索引。
+
+[第一轮真实Embedding实验已完成](docs/recall-pilot-2026-10-25.md)：种子标注下没有证据支持Embedding全面优于BM25，尚未执行全量Rerank轮次或切换线上索引。
+
 **当前服务器公网 MCP：`https://106.55.35.201/mcp`（需要 Bearer 令牌）。** 远程客户端配置、安全取令牌、证书及运维说明见 [公网访问文档](docs/remote-access.md)。原始 API/MCP 端口仍仅监听本机。
 
 ## Docker 服务化与 DeepSeek harness（推荐）

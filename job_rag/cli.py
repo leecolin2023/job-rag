@@ -12,6 +12,7 @@ def main():
     parser = argparse.ArgumentParser(description="Job-RAG 知识库管理")
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("init", help="初始化数据库")
+    sub.add_parser("migrate", help="显式升级数据库结构；请先备份，再重新索引")
     ingest = sub.add_parser("import", help="增量导入 CSV；默认同步执行索引任务")
     ingest.add_argument("path")
     ingest.add_argument("--source", default="boss")
@@ -40,9 +41,12 @@ def main():
         return
     settings = Settings()
     db = Database(settings)
-    db.initialize()
     result = {"ok": True}
     try:
+        if args.command == "migrate":
+            print(json.dumps(db.migrate(), ensure_ascii=False, indent=2))
+            return
+        db.initialize()
         if args.command == "import":
             result = import_csv(db, settings, Path(args.path).read_bytes(), args.source)
             if not args.no_index:

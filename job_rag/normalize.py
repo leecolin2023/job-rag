@@ -62,7 +62,7 @@ def content_hash(row):
     return digest({k: row.get(k, "") for k in CONTENT_FIELDS})
 
 
-def documents(row, size=1100):
+def legacy_documents(row, size=1100):
     """Keep a job boundary and original paragraph text; prepend identifying context."""
     description = row.get("description", "")
     if not description.strip():
@@ -82,3 +82,9 @@ def documents(row, size=1100):
     if buffer:
         parts.append(buffer)
     return [header + "\n\n" + part for part in parts]
+
+
+def documents(row, size=1100):
+    """Compatibility text-only facade over the source-aligned structured parser."""
+    from .chunking import build_documents
+    return [document.text for document in build_documents(row, size=size)]

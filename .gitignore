@@ -7,6 +7,7 @@ __pycache__/
 .env.*
 !.env.example
 !.env.docker.example
+!.env.experiments.example
 runtime/
 .coverage
 jobs-backup.sql

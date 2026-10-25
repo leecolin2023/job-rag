@@ -2,7 +2,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from pgvector.sqlalchemy import Vector
-from sqlalchemy import JSON, ForeignKey, Integer, String, Text, UniqueConstraint, create_engine, event, text
+from sqlalchemy import JSON, ForeignKey, Integer, String, Text, UniqueConstraint, create_engine, event, inspect, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 
 from .config import Settings
@@ -53,6 +53,7 @@ class Chunk(Base):
     version: Mapped[int] = mapped_column(Integer)
     ordinal: Mapped[int] = mapped_column(Integer)
     text: Mapped[str] = mapped_column(Text)
+    details: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     # PostgreSQL uses pgvector. SQLite stores vectors as JSON for the small-data fallback.
     embedding: Mapped[list | None] = mapped_column(JSON().with_variant(Vector(), "postgresql"), nullable=True)
     __table_args__ = (UniqueConstraint("job_key", "version", "ordinal"),)
@@ -97,7 +98,28 @@ class Database:
         self.session = sessionmaker(self.engine, expire_on_commit=False)
 
     def initialize(self):
+        inspector = inspect(self.engine)
+        if inspector.has_table("chunks") and "details" not in {column["name"] for column in inspector.get_columns("chunks")}:
+            raise ValueError("Database schema requires migration. Back up first, then run: job-rag migrate")
         if self.engine.dialect.name == "postgresql":
             with self.engine.begin() as connection:
                 connection.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
         Base.metadata.create_all(self.engine)
+
+    def migrate(self):
+        """Explicit, additive migration; preserves raw records and existing index data."""
+        with self.engine.begin() as connection:
+            if self.engine.dialect.name == "postgresql":
+                connection.execute(text("SELECT pg_advisory_xact_lock(89733021)"))
+            elif self.engine.dialect.name == "sqlite":
+                connection.exec_driver_sql("BEGIN IMMEDIATE")
+            inspector = inspect(connection)
+            connection.execute(text("CREATE TABLE IF NOT EXISTS schema_migrations (name VARCHAR(100) PRIMARY KEY, applied_at VARCHAR(100) NOT NULL)"))
+            if inspector.has_table("chunks") and "details" not in {column["name"] for column in inspector.get_columns("chunks")}:
+                connection.execute(text("ALTER TABLE chunks ADD COLUMN details JSON"))
+            found = connection.scalar(text("SELECT name FROM schema_migrations WHERE name = '002_chunk_structure'"))
+            if not found:
+                connection.execute(text("INSERT INTO schema_migrations (name, applied_at) VALUES (:name, :at)"),
+                                   {"name": "002_chunk_structure", "at": now()})
+        self.initialize()
+        return {"ok": True, "migration": "002_chunk_structure", "reindex_required": True}

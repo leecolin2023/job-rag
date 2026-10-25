@@ -15,11 +15,13 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-test = ["pytest>=8,<10"]
+test = ["pytest>=8,<10", "numpy>=1.26,<3"]
+experiments = ["numpy>=1.26,<3", "tokenizers>=0.20,<1"]
 
 [project.scripts]
 job-rag = "job_rag.cli:main"
 job-rag-mcp = "job_rag.mcp_server:main"
+job-rag-experiment = "job_rag.experiments.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["job_rag*"]

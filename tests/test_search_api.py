@@ -56,7 +56,7 @@ def test_hybrid_and_generation_fallback(db, settings, monkeypatch):
     monkeypatch.setattr("job_rag.ingest.embed", lambda _, texts: [[1., 0.] for _ in texts])
     import_csv(db, configured, csv_bytes(row()))
     run_index_tasks(db, configured)
-    monkeypatch.setattr("job_rag.search.embed", lambda _, texts: [[1., 0.] for _ in texts])
+    monkeypatch.setattr("job_rag.search.embed", lambda _, texts, **kwargs: [[1., 0.] for _ in texts])
     monkeypatch.setattr("job_rag.search.chat", lambda *_: "匹配岗位 [1]")
     result = answer(db, configured, SearchRequest(query="语义测试", generate=True))
     assert result["mode"] == "hybrid"

@@ -13,7 +13,7 @@ from sqlalchemy.engine import make_url
 
 from job_rag.config import Settings
 from job_rag.db import Database
-from job_rag.ingest import import_csv, run_index_tasks, set_status
+from job_rag.ingest import import_csv, reindex, run_index_tasks, set_status
 from job_rag.search import SearchRequest, answer
 import job_rag.ingest as ingest_module
 import job_rag.search as search_module
@@ -31,7 +31,7 @@ try:
     test = Database(configured)
     test.initialize()
     ingest_module.embed = lambda _, texts: [[1., .2] for _ in texts]
-    search_module.embed = lambda _, texts: [[1., .2] for _ in texts]
+    search_module.embed = lambda _, texts, **kwargs: [[1., .2] for _ in texts]
     row = dict(job_id="check", title="RAG应用工程师", company="测试", location="广州",
                salary="20-30K", experience="1-3年", education="本科", url="https://example.com",
                description="Python RAG 知识库开发", status="已获取描述", collected_at="2026-10-23")
@@ -48,6 +48,19 @@ try:
     result = answer(test, configured, SearchRequest(query="知识库 RAG", city="广州", min_salary=20000))
     assert result["mode"] == "hybrid", result["warnings"]
     assert result["results"][0]["job_id"] == "check"
+    if hasattr(test, "migrate"):
+        # Simulate the old chunk schema only in this throwaway test database.
+        with test.engine.begin() as connection:
+            connection.execute(text("ALTER TABLE chunks DROP COLUMN details"))
+        try:
+            test.initialize()
+        except ValueError:
+            pass
+        else:
+            raise AssertionError("Old schema must require an explicit migration")
+        assert test.migrate()["reindex_required"]
+        assert test.migrate()["ok"]
+        assert reindex(test, configured)["failed"] == 0
     row["description"] = "新版 Python RAG"
     assert import_csv(test, configured, payload())["updated"] == 1
     assert answer(test, configured, SearchRequest(query="RAG"))["results"] == []
@@ -55,7 +68,7 @@ try:
     assert answer(test, configured, SearchRequest(query="RAG"))["results"][0]["version"] == 2
     set_status(test, "boss:check", "closed", "集成测试")
     assert answer(test, configured, SearchRequest(query="RAG"))["results"] == []
-    print("PASS: PostgreSQL + pgvector insert/distance, version replacement, closed-job exclusion")
+    print("PASS: PostgreSQL + pgvector insert/distance, explicit migration (when available), version replacement, closed-job exclusion")
 finally:
     if test:
         test.engine.dispose()

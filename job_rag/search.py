@@ -155,7 +155,7 @@ def search(db, settings, request):
         mode = "keyword"
         if settings.semantic_enabled and query.strip() and chunks:
             try:
-                vector = embed(settings, [filters.query])[0]
+                vector = embed(settings, [filters.query], text_type="query")[0]
                 if db.engine.dialect.name == "postgresql":
                     # Exact pgvector distance; an ANN index is unnecessary for this small corpus.
                     distance = cast(Chunk.embedding, Vector()).cosine_distance(vector)
@@ -186,11 +186,27 @@ def search(db, settings, request):
             chunk = chunks[index]
             if chunk.job_key not in grouped:
                 grouped[chunk.job_key] = {**serialize(jobs[chunk.job_key]), "score": round(combined[index], 6),
-                                          "evidence": [], "evidence_chunk_ids": []}
+                                          "evidence": [], "evidence_chunk_ids": [], "evidence_details": []}
             if len(grouped[chunk.job_key]["evidence"]) < 2:
                 grouped[chunk.job_key]["evidence"].append(chunk.text)
                 grouped[chunk.job_key]["evidence_chunk_ids"].append(chunk.id)
+                grouped[chunk.job_key]["evidence_details"].append(chunk.details or {"section_type": "unknown", "requirement_level": "unspecified"})
         results = list(grouped.values())[:filters.limit]
+        from .chunking import parse_sections
+        for result in results:
+            description = jobs[result["key"]].raw["description"]
+            context, remaining = [], 3600
+            for section in parse_sections(description):
+                if section.section_type not in {"requirements", "preferred"} or not description[section.start:section.end].strip():
+                    continue
+                end = min(section.end, section.start + remaining)
+                context.append({"section_type": section.section_type, "title": section.title,
+                                "text": description[section.start:end], "source_start": section.start,
+                                "source_end": end, "truncated": end < section.end})
+                remaining -= end - section.start
+                if remaining <= 0:
+                    break
+            result["qualification_context"] = context
         if any(j.indexed_version != j.version or j.index_signature != settings.index_signature for j in all_jobs):
             warnings.append("部分岗位索引尚未就绪；请运行 worker 或 reindex。旧版本不参与检索。")
         if any(r["job_status"] != "active" for r in results):
