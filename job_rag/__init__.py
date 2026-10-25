@@ -1,0 +1,1 @@
+"""Recruitment RAG knowledge base."""

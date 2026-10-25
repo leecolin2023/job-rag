@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Job-RAG · 岗位知识库</title>
+  <style>
+    :root{color-scheme:light;--primary:#2756bd}*{box-sizing:border-box}body{margin:0;background:#f3f5fa;color:#20304b;font:15px/1.7 system-ui,sans-serif}main{max-width:1080px;margin:42px auto;padding:0 22px}h1{margin-bottom:0}header p{color:#61708a}.panel,.job{background:white;border:1px solid #e1e6ef;border-radius:14px;padding:22px;margin:16px 0}.row{display:flex;gap:12px;flex-wrap:wrap}input,select,button{font:inherit;padding:9px 12px;border:1px solid #ccd4e1;border-radius:7px}input[type=search]{flex:1;min-width:220px}label{display:flex;flex-direction:column;font-size:13px;color:#52627a}.check{flex-direction:row;align-items:center;margin-top:12px}button{background:var(--primary);color:white;cursor:pointer;border:0}button:disabled{opacity:.5}#stats,.muted{color:#65748b;font-size:13px}.badge{display:inline-block;border-radius:20px;padding:2px 10px;background:#fff2ce;color:#806214;font-size:12px}.badge.active{background:#e1f6eb;color:#1c6a48}h3{margin:0}a{color:var(--primary)}pre{white-space:pre-wrap;overflow-wrap:anywhere;font:inherit}#warnings{color:#855e11}details{margin-top:12px}summary{cursor:pointer;color:var(--primary)}.meta{margin:10px 0}.error{color:#b42b2b}.toolbar{justify-content:space-between;align-items:center}@media(max-width:600px){main{margin-top:20px}.panel,.job{padding:16px}input,select{max-width:100%}}
+  </style>
+</head>
+<body><main>
+  <header><h1>Job-RAG <small>岗位知识库</small></h1><p>按条件找岗位，按原文核对。采集记录不代表当前仍在招聘。</p><div id="stats">正在加载知识库…</div></header>
+  <form id="form" class="panel">
+    <div class="row"><input type="search" id="query" placeholder="例如：广州 RAG Python 大模型应用" aria-label="检索问题"><button id="submit">检索岗位</button></div>
+    <div class="row" style="margin-top:16px">
+      <label>城市<select id="city"><option value="">自动识别 / 不限</option></select></label>
+      <label>最低月薪（元）<input id="salary" type="number" min="0" step="1000" placeholder="如 20000"></label>
+      <label>薪资规则<select id="salary-mode"><option value="lower_bound">岗位薪资下限达到门槛</option><option value="overlap">岗位薪资区间覆盖门槛</option></select></label>
+      <label>我的经验（年）<input id="years" type="number" min="0" max="60" placeholder="不限"></label>
+      <label>必含技能（逗号分隔）<input id="skills" placeholder="Python,RAG"></label>
+    </div>
+    <div class="row">
+      <label class="check"><input id="active" type="checkbox">仅确认在招</label>
+      <label class="check"><input id="history" type="checkbox">包含关闭/疑似失效（历史查询）</label>
+      <label class="check"><input id="generate" type="checkbox">使用大模型解释匹配结果</label>
+    </div>
+  </form>
+  <div id="warnings" role="status"></div><section id="answer" class="panel" hidden><pre id="answer-text"></pre></section>
+  <div id="results"></div>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const statuses={unknown:'未核验',active:'已确认在招',closed:'已关闭',suspected_expired:'疑似失效'};
+function el(tag,text,cls){const node=document.createElement(tag);if(text!==undefined)node.textContent=text;if(cls)node.className=cls;return node}
+function safeLink(url,text){try{const parsed=new URL(url);if(!['http:','https:'].includes(parsed.protocol))return el('span','来源链接不可用');const a=el('a',text);a.href=parsed.href;a.target='_blank';a.rel='noopener noreferrer';return a}catch{return el('span','来源链接不可用')}}
+async function loadStats(){try{const response=await fetch('/api/stats');if(!response.ok)throw Error();const s=await response.json();$('stats').textContent=`${s.total} 条岗位 · ${s.indexed} 条索引就绪 · ${s.retrieval==='hybrid'?'混合检索':'关键词检索（未配置语义模型）'} · ${s.statuses.active||0} 条确认在招`;for(const c of s.cities){const option=el('option',c);option.value=c;$('city').append(option)}}catch{$('stats').textContent='无法连接服务，请检查 /health'}}
+$('form').addEventListener('submit',async event=>{event.preventDefault();$('submit').disabled=true;$('warnings').textContent='正在检索…';$('results').replaceChildren();$('answer').hidden=true;try{
+ const request={query:$('query').value,city:$('city').value||null,min_salary:$('salary').value===''?null:Number($('salary').value),salary_mode:$('salary-mode').value,experience_years:$('years').value===''?null:Number($('years').value),skills:$('skills').value.split(/[,，]/).map(s=>s.trim()).filter(Boolean),active_only:$('active').checked,include_closed:$('history').checked,generate:$('generate').checked};
+ const response=await fetch('/api/search',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(request)});if(!response.ok)throw Error('查询失败，请检查输入或服务日志');const data=await response.json();$('warnings').textContent=data.warnings.join(' ');$('answer-text').textContent=data.answer;$('answer').hidden=false;
+ $('results').append(el('p',`检索方式：${data.mode} · 命中 ${data.total_matched} 条，展示 ${data.results.length} 条`,'muted'));
+ data.results.forEach((job,index)=>{const card=el('article',undefined,'job');const head=el('div',undefined,'row toolbar');head.append(el('h3',`[${index+1}] ${job.title}`),el('span',statuses[job.job_status],`badge ${job.job_status}`));card.append(head,el('div',`${job.company} · ${job.location} · ${job.salary}`,'meta'),el('div',`经验：${job.experience}｜学历：${job.education}`),el('div',`采集：${job.collected_at}｜最近成功核验：${job.last_verified_at||'暂无'}｜版本：${job.version}`,'muted'),safeLink(job.url,'查看原招聘页面'));
+ const evidence=el('details');evidence.append(el('summary','查看检索证据'),el('pre',job.evidence.join('\n\n——\n\n')));card.append(evidence);
+ const details=el('details');details.append(el('summary','查看完整岗位原文及状态记录'));details.addEventListener('toggle',async()=>{if(!details.open||details.dataset.loaded)return;try{const r=await fetch(`/api/jobs/${encodeURIComponent(job.job_id)}?source=${encodeURIComponent(job.source)}`);if(!r.ok)throw Error();const d=await r.json();details.append(el('pre',d.raw.description||'未取得岗位描述'),el('pre',JSON.stringify({quality_flags:d.normalized.quality_flags,status_history:d.status_history,versions:d.versions},null,2)));details.dataset.loaded='1'}catch{details.append(el('p','加载失败，请重试','error'))}});card.append(details);$('results').append(card)});
+}catch(error){$('warnings').textContent=error.message}finally{$('submit').disabled=false}});
+loadStats();
+</script></body></html>

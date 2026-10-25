@@ -1,0 +1,10 @@
+*
+!Dockerfile
+!pyproject.toml
+!README.md
+!job_rag/
+!job_rag/**
+!data/
+!data/jobs.csv
+**/__pycache__/
+**/*.pyc

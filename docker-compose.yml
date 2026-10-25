@@ -1,0 +1,74 @@
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: jobrag
+      POSTGRES_USER: jobrag
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set POSTGRES_PASSWORD in .env.docker}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U jobrag -d jobrag"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks: [backend]
+
+  init:
+    build: .
+    image: job-rag:local
+    env_file: .env.docker
+    environment:
+      DATABASE_URL: postgresql+psycopg://jobrag:${POSTGRES_PASSWORD}@db:5432/jobrag
+    depends_on:
+      db:
+        condition: service_healthy
+    command: ["job-rag", "import", "/app/data/jobs.csv"]
+    networks: [backend]
+
+  api:
+    image: job-rag:local
+    pull_policy: never
+    restart: unless-stopped
+    env_file: .env.docker
+    environment:
+      DATABASE_URL: postgresql+psycopg://jobrag:${POSTGRES_PASSWORD}@db:5432/jobrag
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    ports:
+      - "127.0.0.1:${JOB_RAG_API_PORT:-8008}:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=5)"]
+      interval: 15s
+      timeout: 6s
+      retries: 5
+    networks: [backend]
+
+  mcp:
+    image: job-rag:local
+    pull_policy: never
+    restart: unless-stopped
+    command: ["job-rag-mcp"]
+    environment:
+      JOB_RAG_API_URL: http://api:8000
+      MCP_HOST: 0.0.0.0
+      MCP_PORT: "8001"
+    depends_on:
+      api:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:${JOB_RAG_MCP_PORT:-8009}:8001"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8001/health', timeout=5)"]
+      interval: 15s
+      timeout: 6s
+      retries: 5
+    networks: [backend]
+
+volumes:
+  pgdata:
+
+networks:
+  backend:

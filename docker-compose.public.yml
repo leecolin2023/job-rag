@@ -1,0 +1,24 @@
+# Host HTTPS nginx forwards /mcp to this authenticated loopback-only gateway.
+# Use together with docker-compose.yml; do not expose the raw MCP/API ports.
+services:
+  gateway:
+    image: nginx:stable-alpine
+    restart: unless-stopped
+    user: "${JOB_RAG_UID:-1000}:${JOB_RAG_GID:-1001}"
+    entrypoint: ["nginx", "-c", "/etc/nginx/jobrag.conf", "-g", "daemon off;"]
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=32m,mode=1777
+    volumes:
+      - ./deploy/nginx-public.conf:/etc/nginx/jobrag.conf:ro
+      - ./runtime/public/server.crt:/etc/jobrag/server.crt:ro
+      - ./runtime/public/server.key:/etc/jobrag/server.key:ro
+      - ./runtime/public/auth.conf:/etc/jobrag/auth.conf:ro
+    ports:
+      - "127.0.0.1:${JOB_RAG_PUBLIC_PORT:-8443}:8443"
+    depends_on:
+      mcp:
+        condition: service_healthy
+    networks: [backend]
