@@ -119,7 +119,7 @@ def test_partial_rerank_response_is_not_silently_scored(tmp_path):
 
 def test_runtime_native_embedding_protocol(settings, monkeypatch):
     from dataclasses import replace
-    from job_rag.models import embed
+    from job_rag.providers.client import embed
     calls = []
 
     class Response:

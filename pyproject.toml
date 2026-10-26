@@ -19,15 +19,16 @@ test = ["pytest>=8,<10", "numpy>=1.26,<3"]
 experiments = ["numpy>=1.26,<3", "tokenizers>=0.20,<1"]
 
 [project.scripts]
-job-rag = "job_rag.cli:main"
-job-rag-mcp = "job_rag.mcp_server:main"
+job-rag = "job_rag.interfaces.cli:main"
+job-rag-mcp = "job_rag.interfaces.mcp_server:main"
 job-rag-experiment = "job_rag.experiments.cli:main"
 
 [tool.setuptools.packages.find]
 include = ["job_rag*"]
 
 [tool.setuptools.package-data]
-job_rag = ["static/*.html"]
+"job_rag.interfaces" = ["static/*.html"]
+"*" = ["README.md"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

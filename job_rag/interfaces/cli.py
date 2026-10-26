@@ -2,10 +2,13 @@ import argparse
 import json
 from pathlib import Path
 
-from .config import Settings
-from .db import Database
-from .ingest import import_csv, reindex, run_index_tasks, set_status
-from .search import SearchRequest, answer
+from ..config import Settings
+from ..storage import Database
+from ..preprocessing.importer import import_csv
+from ..indexing.worker import reindex, run_index_tasks
+from ..storage.status import set_status
+from ..retrieval.search import SearchRequest
+from ..retrieval.answer import answer
 
 
 def main():
@@ -37,7 +40,7 @@ def main():
     args = parser.parse_args()
     if args.command == "serve":
         import uvicorn
-        uvicorn.run("job_rag.api:app", host=args.host, port=args.port)
+        uvicorn.run("job_rag.interfaces.api:app", host=args.host, port=args.port)
         return
     settings = Settings()
     db = Database(settings)

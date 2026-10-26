@@ -9,9 +9,10 @@ from types import SimpleNamespace
 import numpy as np
 
 from ..chunking import CHUNKING_VERSION, PARSER_VERSION, build_documents, parse_sections
-from ..ingest import parse_csv
-from ..normalize import digest, normalize
-from ..search import SearchRequest, bm25, matches, tokens
+from ..preprocessing.validation import parse_csv
+from ..preprocessing.normalize import digest, normalize
+from ..retrieval.search import SearchRequest, bm25, tokens
+from ..querying.filters import matches
 from .metrics import mean_metrics, paired_bootstrap, ranking_metrics
 
 ARMS = {
@@ -61,7 +62,10 @@ def new_directory(path):
 
 def implementation_hash():
     return digest({name: Path(__file__).parents[1].joinpath(name).read_text()
-                   for name in ["chunking.py", "normalize.py", "search.py", "experiments/runner.py", "experiments/bailian.py", "experiments/metrics.py"]})
+                   for name in ["chunking/__init__.py", "chunking/core.py", "chunking/legacy.py",
+                                "preprocessing/normalize.py", "preprocessing/validation.py",
+                                "querying/filters.py", "retrieval/search.py", "storage/serialization.py",
+                                "experiments/runner.py", "experiments/bailian.py", "experiments/metrics.py"]})
 
 
 def validate_benchmark(benchmark, rows):

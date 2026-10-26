@@ -6,8 +6,8 @@ from pgvector.sqlalchemy import Vector
 from sqlalchemy import cast, select
 from sqlalchemy.dialects import postgresql
 
-from job_rag.db import Chunk
-from job_rag.models import embed
+from job_rag.storage import Chunk
+from job_rag.providers.client import embed
 
 
 def test_pgvector_query_compiles():

@@ -5,7 +5,7 @@ from pgvector.sqlalchemy import Vector
 from sqlalchemy import JSON, ForeignKey, Integer, String, Text, UniqueConstraint, create_engine, event, inspect, text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, sessionmaker
 
-from .config import Settings
+from ..config import Settings
 
 
 def now():

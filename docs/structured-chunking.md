@@ -10,7 +10,7 @@
 
 ## 二、分块流程具体如何运行？
 
-`job_rag/chunking.py` 负责构造 `Document(text, details)`。兼容接口 `normalize.documents()` 仍可返回文本列表；原固定分块保存在 `legacy_documents()` 中供对照。
+`job_rag/chunking/core.py` 负责构造 `Document(text, details)`，公共入口由 `job_rag/chunking/__init__.py` 导出；需要文本列表时读取各 `Document` 的 `text`。原固定分块由 `chunking/legacy.py` 的 `legacy_documents()` 提供，用于历史方案对照，不再由标准化模块提供分块入口。目录职责见[分块目录说明](../job_rag/chunking/README.md)。
 
 1. **识别章节。** 支持职责、任职要求、加分项、福利、公司介绍与 `unknown`，兼容编号、Markdown 和异常换行标题，例如 `【岗位\n职责】`；不在普通句子内部随意找标题。
 2. **保留条目。** 优先保持一条要求及其续行的整体性，不把 `Python或Java` 这样的条件机械拆开。

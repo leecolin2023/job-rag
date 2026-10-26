@@ -60,31 +60,3 @@ def normalize(row):
 
 def content_hash(row):
     return digest({k: row.get(k, "") for k in CONTENT_FIELDS})
-
-
-def legacy_documents(row, size=1100):
-    """Keep a job boundary and original paragraph text; prepend identifying context."""
-    description = row.get("description", "")
-    if not description.strip():
-        return []
-    header = "\n".join(f"{label}：{row.get(key, '')}" for label, key in (
-        ("岗位", "title"), ("公司", "company"), ("地点", "location"),
-        ("薪资", "salary"), ("经验", "experience"), ("学历", "education")))
-    parts, buffer = [], ""
-    for paragraph in description.splitlines(keepends=True):
-        if buffer and len(buffer) + len(paragraph) > size:
-            parts.append(buffer)
-            buffer = ""
-        while len(paragraph) > size:
-            parts.append(paragraph[:size])
-            paragraph = paragraph[size:]
-        buffer += paragraph
-    if buffer:
-        parts.append(buffer)
-    return [header + "\n\n" + part for part in parts]
-
-
-def documents(row, size=1100):
-    """Compatibility text-only facade over the source-aligned structured parser."""
-    from .chunking import build_documents
-    return [document.text for document in build_documents(row, size=size)]

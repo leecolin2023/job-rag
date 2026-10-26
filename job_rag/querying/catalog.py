@@ -11,9 +11,10 @@ from typing import Literal
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 from sqlalchemy import select
 
-from .db import Job
-from .normalize import digest
-from .search import StructuredFilters, matches, serialize
+from ..storage import Job
+from ..preprocessing.normalize import digest
+from ..storage.serialization import serialize
+from .filters import StructuredFilters, matches
 
 
 class CatalogRequest(BaseModel):

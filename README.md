@@ -1,5 +1,7 @@
 # Job-RAG
 
+目录说明：[原始数据](data/README.md) → [预处理](job_rag/preprocessing/README.md) → [存储](job_rag/storage/README.md) / [分块](job_rag/chunking/README.md) / [索引执行](job_rag/indexing/README.md)。在线路径见[服务入口](job_rag/interfaces/README.md)、[候选检索](job_rag/retrieval/README.md)、[精确查询](job_rag/querying/README.md)；完整导航见 [job_rag/README.md](job_rag/README.md)。
+
 [按任务选择工具与精确字面统计](docs/task-routing.md)：新增全库查询/计数、一致性分页、批量全文读取；语义全量统计和跨调用硬预算尚未自动实现。
 
 AI 招聘岗位知识库初版：网页查询、结构化过滤、关键词/语义混合检索、来源引用、增量导入与状态管理。
@@ -47,17 +49,19 @@ opencode mcp list
 
 该命令显式选择 **`opencode-go/deepseek-v4.1-flash`**，使用当前已连接的 OpenCode Go 账户及其额度，不改变其他对话的默认模型，不向容器复制凭据。当前环境的免费入口 `opencode/deepseek-v4.1-flash-free` 拒绝调用，因此未使用它。也已在当前用户的全局 agents/commands 中安装只读 `jobrag` 助手与 `/jobs` 命令，可从其他项目使用；项目内版本由仓库维护。
 
-**这里不是用 DeepSeek 生成 Embedding。** DeepSeek 是调用工具的 harness 模型，负责理解问题、提出 2—4 条同义改写、阅读证据并排序；服务负责严格条件过滤、多查询 BM25/RRF 候选召回。工具明确返回 `semantic_assessment: caller_llm_required`，不将词法分数称为语义分数。其他支持 MCP 的 DeepSeek harness 也能连接同一 URL，并按 MCP 初始化说明执行同样流程。
+**这里不是用 DeepSeek 生成 Embedding。** DeepSeek 是调用工具的 harness 模型，负责按任务选工具、按需改写、阅读证据并排序；服务负责严格条件过滤、多查询 BM25/RRF 候选召回与独立的全库字面查询。工具明确返回 `semantic_assessment: caller_llm_required`，不将词法分数称为语义分数。任务路由目前为提示规则，不是后端强制状态机。
 
 真正的向量召回仍需另外配置专用 Embedding 服务；可设置 `.env.docker` 的 `EMBEDDING_*` 并在同一配置下重新索引。仅连接 MCP 并不会使网页自动具备 DeepSeek 语义理解；网页/API 默认仍返回关键词结果。
 
-三个只读 MCP 工具：
+当前源码提供五个只读 MCP 工具（线上旧容器未因此自动更新）：
 
 | 工具 | 用途 |
 |---|---|
 | `get_knowledge_base_stats` | 查看数据规模、地区、状态及索引情况 |
 | `search_job_candidates` | 原问题 + 最多4条改写 + 硬条件，多查询去重召回并返回证据 |
 | `get_job` | 完整原文、最新状态和版本，最终推荐前复核 |
+| `query_job_catalog` | 全库字面匹配、精确计数及一致性分页，不需要索引或模型 |
+| `get_jobs_batch` | 每批最多20份完整JD，可绑定语料指纹及岗位版本 |
 
 管理 API 不暴露为 MCP 工具。回环服务没有读鉴权，不能直接映射到公网；远端 harness 应使用 SSH 转发，或通过带认证的反向代理部署。OpenCode MCP 无 OAuth，因为该回环服务本身无登录流程；若以后接入认证代理，按其方式配置认证。
 
@@ -115,6 +119,8 @@ job-rag serve
 打开 <http://127.0.0.1:8000>；API 文档：<http://127.0.0.1:8000/docs>。
 
 默认使用 `runtime/jobs.db`（SQLite），运行时数据库、向量和密钥均不提交 Git；基础岗位 CSV 已包含在仓库中。无模型配置时使用 **BM25 关键词检索 + 可核对的岗位来源列表**，不是语义检索，也不是 LLM 生成。中文检索使用字符二元组和少量别名，适合初版，但不等价于专业中文分词。配置模型后才启用完整的语义 RAG。
+
+目录重组后应重新执行 `pip install -e '.[test]'` 刷新命令入口；命令名和 HTTP URL 不变，不保留旧 Python 模块路径。直接使用 ASGI 时的新入口为 `job_rag.interfaces.api:app`，详见[服务入口说明](job_rag/interfaces/README.md)。
 
 远程服务器默认只监听回环地址，可通过 SSH 转发访问：
 

@@ -34,7 +34,7 @@ class Settings:
     @property
     def index_signature(self):
         from .chunking import CHUNKING_VERSION, PARSER_VERSION
-        from .normalize import digest
+        from .preprocessing.normalize import digest
         tokenizer_hash = "none"
         if self.chunk_budget_unit == "tokens":
             from pathlib import Path

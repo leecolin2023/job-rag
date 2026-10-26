@@ -4,7 +4,7 @@ import io
 import pytest
 
 from job_rag.config import Settings
-from job_rag.db import Database
+from job_rag.storage import Database
 
 
 @pytest.fixture

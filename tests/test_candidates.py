@@ -3,10 +3,12 @@ import asyncio
 import pytest
 from fastapi.testclient import TestClient
 
-from job_rag.api import create_app
-from job_rag.candidates import CandidateRequest, candidates
-from job_rag.ingest import import_csv, run_index_tasks, set_status
-from job_rag.mcp_server import create_mcp
+from job_rag.interfaces.api import create_app
+from job_rag.retrieval.candidates import CandidateRequest, candidates
+from job_rag.preprocessing.importer import import_csv
+from job_rag.indexing.worker import run_index_tasks
+from job_rag.storage.status import set_status
+from job_rag.interfaces.mcp_server import create_mcp
 
 from conftest import csv_bytes, row
 

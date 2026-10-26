@@ -2,9 +2,12 @@ from dataclasses import replace
 
 from fastapi.testclient import TestClient
 
-from job_rag.api import create_app
-from job_rag.ingest import import_csv, run_index_tasks, set_status
-from job_rag.search import SearchRequest, answer
+from job_rag.interfaces.api import create_app
+from job_rag.preprocessing.importer import import_csv
+from job_rag.indexing.worker import run_index_tasks
+from job_rag.storage.status import set_status
+from job_rag.retrieval.search import SearchRequest
+from job_rag.retrieval.answer import answer
 
 from conftest import csv_bytes, row
 
@@ -53,15 +56,15 @@ def test_suspected_expired_hidden_by_default(db, settings):
 def test_hybrid_and_generation_fallback(db, settings, monkeypatch):
     configured = replace(settings, embedding_api_key="dummy", embedding_model="mock", embedding_dimensions=2,
                          chat_api_key="dummy", chat_model="mock")
-    monkeypatch.setattr("job_rag.ingest.embed", lambda _, texts: [[1., 0.] for _ in texts])
+    monkeypatch.setattr("job_rag.indexing.worker.embed", lambda _, texts: [[1., 0.] for _ in texts])
     import_csv(db, configured, csv_bytes(row()))
     run_index_tasks(db, configured)
-    monkeypatch.setattr("job_rag.search.embed", lambda _, texts, **kwargs: [[1., 0.] for _ in texts])
-    monkeypatch.setattr("job_rag.search.chat", lambda *_: "匹配岗位 [1]")
+    monkeypatch.setattr("job_rag.retrieval.search.embed", lambda _, texts, **kwargs: [[1., 0.] for _ in texts])
+    monkeypatch.setattr("job_rag.retrieval.answer.chat", lambda *_: "匹配岗位 [1]")
     result = answer(db, configured, SearchRequest(query="语义测试", generate=True))
     assert result["mode"] == "hybrid"
     assert result["answer_mode"] == "llm"
-    monkeypatch.setattr("job_rag.search.chat", lambda *_: "编造引用 [99]")
+    monkeypatch.setattr("job_rag.retrieval.answer.chat", lambda *_: "编造引用 [99]")
     assert answer(db, configured, SearchRequest(query="RAG", generate=True))["answer_mode"] == "extractive"
 
 
@@ -74,7 +77,7 @@ def test_state_rechecked_after_model_response(db, settings, monkeypatch):
         set_status(db, "boss:one", "closed", "生成期间关闭")
         return "候选岗位 [1]"
 
-    monkeypatch.setattr("job_rag.search.chat", close_during_generation)
+    monkeypatch.setattr("job_rag.retrieval.answer.chat", close_during_generation)
     result = answer(db, configured, SearchRequest(query="RAG", generate=True))
     assert result["results"] == []
     assert "重新查询" in result["answer"]

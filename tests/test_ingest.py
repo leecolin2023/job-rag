@@ -3,10 +3,14 @@ from dataclasses import replace
 import pytest
 from sqlalchemy import func, select
 
-from job_rag.db import Chunk, IndexTask, Job, Revision, StatusEvent
-from job_rag.ingest import import_csv, parse_csv, reindex, run_index_tasks, set_status
-from job_rag.normalize import normalize
-from job_rag.search import SearchRequest, answer
+from job_rag.storage import Chunk, IndexTask, Job, Revision, StatusEvent
+from job_rag.preprocessing.importer import import_csv
+from job_rag.preprocessing.validation import parse_csv
+from job_rag.preprocessing.normalize import normalize
+from job_rag.indexing.worker import reindex, run_index_tasks
+from job_rag.storage.status import set_status
+from job_rag.retrieval.search import SearchRequest
+from job_rag.retrieval.answer import answer
 
 from conftest import csv_bytes, row
 
@@ -92,13 +96,13 @@ def test_failed_embedding_retries(db, settings, monkeypatch):
     def fail(*_):
         raise RuntimeError("secret provider response")
 
-    monkeypatch.setattr("job_rag.ingest.embed", fail)
+    monkeypatch.setattr("job_rag.indexing.worker.embed", fail)
     assert run_index_tasks(db, configured)["failed"] == 1
     with db.session() as session:
         task = session.scalar(select(IndexTask))
         assert task.error == "RuntimeError"
         assert session.get(Job, "boss:one").indexed_version is None
-    monkeypatch.setattr("job_rag.ingest.embed", lambda _, texts: [[1., 0.] for _ in texts])
+    monkeypatch.setattr("job_rag.indexing.worker.embed", lambda _, texts: [[1., 0.] for _ in texts])
     assert run_index_tasks(db, configured)["indexed"] == 1
 
 
@@ -110,7 +114,7 @@ def test_metadata_update_reuses_vectors(db, settings, monkeypatch):
         calls.append(texts)
         return [[1., 0.] for _ in texts]
 
-    monkeypatch.setattr("job_rag.ingest.embed", vectors)
+    monkeypatch.setattr("job_rag.indexing.worker.embed", vectors)
     import_csv(db, configured, csv_bytes(row()))
     run_index_tasks(db, configured)
     import_csv(db, configured, csv_bytes(row(collected_at="2026-10-24")))

@@ -1,4 +1,4 @@
-"""Small OpenAI-compatible client. Secrets and provider errors stay server-side."""
+"""Embedding/Chat HTTP clients. Secrets and provider errors stay server-side."""
 import math
 
 import httpx

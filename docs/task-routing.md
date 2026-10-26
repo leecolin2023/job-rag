@@ -2,6 +2,8 @@
 
 本批不更换模型、不切换索引、不部署线上服务，也不运行付费评测。
 
+代码目录已按职责整理：[服务接口](../job_rag/interfaces/README.md)、[候选检索](../job_rag/retrieval/README.md)、[精确查询](../job_rag/querying/README.md)。当前 `Catalog` 实现为 `job_rag/querying/catalog.py`，共享筛选规则位于同目录 `filters.py`，不依赖候选检索模块。
+
 ## 已实现与边界
 
 - Agent和MCP说明按字面查找、语义查找、指定JD比较、统计、个人匹配、综合分析选择工具；不再强制查询改写或固定推荐数量。

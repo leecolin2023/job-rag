@@ -26,7 +26,8 @@ async def main():
             await session.initialize()
             catalog = await session.list_tools()
             names = {tool.name for tool in catalog.tools}
-            assert names == {"get_knowledge_base_stats", "search_job_candidates", "get_job"}
+            assert names == {"get_knowledge_base_stats", "search_job_candidates", "get_job",
+                             "query_job_catalog", "get_jobs_batch"}
             stats = await session.call_tool("get_knowledge_base_stats", {})
             assert not stats.isError
             result = await session.call_tool("search_job_candidates", {
@@ -41,6 +42,14 @@ async def main():
             assert first["normalized"]["salary_min"] >= 20000
             detail = await session.call_tool("get_job", {"job_id": first["job_id"], "source": first["source"]})
             assert not detail.isError
+            full_catalog = await session.call_tool("query_job_catalog", {"count_only": True})
+            assert not full_catalog.isError
+            full_data = full_catalog.structuredContent or json.loads(full_catalog.content[0].text)
+            assert full_data["count_complete"] and full_data["count_kind"] == "exact_literal_not_semantic"
+            batch = await session.call_tool("get_jobs_batch", {
+                "jobs": [{"job_id": first["job_id"], "source": first["source"], "version": first["version"]}],
+            })
+            assert not batch.isError
             print(json.dumps({"status": "PASS", "tools": sorted(names), "candidate_mode": data["mode"],
                               "semantic_assessment": data["semantic_assessment"], "first_title": first["title"]}, ensure_ascii=False))
 

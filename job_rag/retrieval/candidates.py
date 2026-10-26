@@ -4,8 +4,9 @@ from collections import Counter
 from pydantic import Field
 from sqlalchemy import select
 
-from .db import Job
-from .search import SearchRequest, answer, resolve_filters
+from ..storage import Job
+from .search import SearchRequest, resolve_filters
+from .answer import answer
 
 
 class CandidateRequest(SearchRequest):

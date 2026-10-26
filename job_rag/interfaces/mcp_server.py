@@ -7,8 +7,8 @@ from mcp.server.transport_security import TransportSecuritySettings
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 
-from .catalog import BatchRequest, CatalogRequest, JobRef
-from .search import StructuredFilters
+from ..querying.catalog import BatchRequest, CatalogRequest, JobRef
+from ..querying.filters import StructuredFilters
 
 
 INSTRUCTIONS = """招聘知识库。先判断任务，可组合：字面查找、语义查找、指定JD比较、统计、个人匹配、综合分析。
@@ -82,7 +82,7 @@ def create_mcp(api_url=None):
         （薪资下限达标）或 overlap（区间覆盖）；skills 每项必须字面出现。
         unknown 不代表在招；include_closed 仅用于用户明确要求的历史分析。
         """
-        from .candidates import CandidateRequest
+        from ..retrieval.candidates import CandidateRequest
         payload = CandidateRequest(query=query, reformulations=reformulations or [], city=city,
                                    district=district, min_salary=min_salary, max_salary=max_salary,
                                    salary_period=salary_period, salary_mode=salary_mode,

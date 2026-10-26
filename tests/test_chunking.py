@@ -4,9 +4,10 @@ import pytest
 from sqlalchemy import inspect, text
 
 from job_rag.chunking import Budget, build_documents, condition_level, parse_sections
-from job_rag.db import Chunk, Database
-from job_rag.ingest import import_csv, run_index_tasks
-from job_rag.normalize import legacy_documents
+from job_rag.storage import Chunk, Database
+from job_rag.preprocessing.importer import import_csv
+from job_rag.indexing.worker import run_index_tasks
+from job_rag.chunking.legacy import legacy_documents
 
 from conftest import csv_bytes, row
 
@@ -110,7 +111,7 @@ def test_salary_update_reuses_embeddings_and_keeps_section_metadata(db, settings
         calls.append(texts)
         return [[1., 0.] for _ in texts]
 
-    monkeypatch.setattr("job_rag.ingest.embed", vectors)
+    monkeypatch.setattr("job_rag.indexing.worker.embed", vectors)
     import_csv(db, configured, csv_bytes(row()))
     run_index_tasks(db, configured)
     import_csv(db, configured, csv_bytes(row(salary="25-40K")))
@@ -148,7 +149,7 @@ def test_parser_failure_is_a_retryable_index_task(db, settings):
     import_csv(db, configured, csv_bytes(row()))
     result = run_index_tasks(db, configured)
     assert result["failed"] == 1
-    from job_rag.db import IndexTask
+    from job_rag.storage import IndexTask
     with db.session() as session:
         task = session.query(IndexTask).one()
         assert task.state == "failed"

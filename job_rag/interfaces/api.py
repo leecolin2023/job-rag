@@ -5,14 +5,17 @@ from pathlib import Path
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
-from sqlalchemy import func, select
+from sqlalchemy import select
 
-from .config import Settings
-from .candidates import CandidateRequest, candidates
-from .catalog import BatchRequest, CatalogRequest, SnapshotChanged, batch_jobs, catalog_query
-from .db import Database, IndexTask, Job, Revision, StatusEvent
-from .ingest import import_csv, set_status
-from .search import SearchRequest, answer, serialize
+from ..config import Settings
+from ..retrieval.candidates import CandidateRequest, candidates
+from ..querying.catalog import BatchRequest, CatalogRequest, SnapshotChanged, batch_jobs, catalog_query
+from ..querying.jobs import job_detail, knowledge_base_stats
+from ..storage import Database
+from ..preprocessing.importer import import_csv
+from ..storage.status import set_status
+from ..retrieval.search import SearchRequest
+from ..retrieval.answer import answer
 
 
 class StatusRequest(BaseModel):
@@ -52,15 +55,7 @@ def create_app(settings=None):
 
     @app.get("/api/stats")
     def stats():
-        with db.session() as session:
-            jobs = list(session.scalars(select(Job)))
-            statuses = dict(session.execute(select(Job.job_status, func.count()).group_by(Job.job_status)).all())
-            tasks = dict(session.execute(select(IndexTask.state, func.count()).group_by(IndexTask.state)).all())
-            return {"total": len(jobs), "statuses": statuses, "index_tasks": tasks,
-                    "indexed": sum(j.indexed_version == j.version and j.index_signature == settings.index_signature for j in jobs),
-                    "cities": sorted({j.normalized["city"] for j in jobs}),
-                    "retrieval": "hybrid" if settings.semantic_enabled else "keyword",
-                    "generation_enabled": bool(settings.chat_api_key and settings.chat_model)}
+        return knowledge_base_stats(db, settings)
 
     @app.post("/api/search")
     def search(request: SearchRequest):
@@ -88,18 +83,11 @@ def create_app(settings=None):
             raise HTTPException(409, str(exc))
 
     @app.get("/api/jobs/{job_id}")
-    def job_detail(job_id: str, source: str = "boss"):
-        with db.session() as session:
-            job = session.get(Job, f"{source}:{job_id}")
-            if not job:
-                raise HTTPException(404, "岗位不存在")
-            result = serialize(job, detail=True)
-            result["versions"] = [{"version": r.version, "created_at": r.created_at} for r in
-                                  session.scalars(select(Revision).where(Revision.job_key == job.key).order_by(Revision.version))]
-            result["status_history"] = [{"old_status": e.old_status, "new_status": e.new_status,
-                                         "reason": e.reason, "created_at": e.created_at} for e in
-                                        session.scalars(select(StatusEvent).where(StatusEvent.job_key == job.key).order_by(StatusEvent.id))]
-            return result
+    def detail(job_id: str, source: str = "boss"):
+        try:
+            return job_detail(db, job_id, source)
+        except KeyError:
+            raise HTTPException(404, "岗位不存在")
 
     @app.post("/api/jobs/{job_id}/status", dependencies=[Depends(admin)])
     def update_status(job_id: str, payload: StatusRequest):

@@ -6,10 +6,11 @@ from fastapi.testclient import TestClient
 from pydantic import ValidationError
 
 from conftest import csv_bytes, row
-from job_rag.api import create_app
-from job_rag.catalog import BatchRequest, CatalogRequest, JobRef, SnapshotChanged, batch_jobs, catalog_query
-from job_rag.ingest import import_csv, set_status
-from job_rag.mcp_server import create_mcp
+from job_rag.interfaces.api import create_app
+from job_rag.querying.catalog import BatchRequest, CatalogRequest, JobRef, SnapshotChanged, batch_jobs, catalog_query
+from job_rag.preprocessing.importer import import_csv
+from job_rag.storage.status import set_status
+from job_rag.interfaces.mcp_server import create_mcp
 
 
 def test_exhaustive_without_index_and_pagination(db, settings):
@@ -112,7 +113,7 @@ def test_mcp_forwards_validated_requests_and_conflicts(settings, monkeypatch):
                                    headers={"Content-Type": "application/json"})
             return httpx.Response(response.status_code, json=response.json())
 
-        monkeypatch.setattr("job_rag.mcp_server.httpx.Client", lambda **kwargs:
+        monkeypatch.setattr("job_rag.interfaces.mcp_server.httpx.Client", lambda **kwargs:
                             original_client(**kwargs, transport=httpx.MockTransport(handle)))
         server = create_mcp()
         result = asyncio.run(server.call_tool("query_job_catalog", {"terms": ["RAG"], "count_only": True}))

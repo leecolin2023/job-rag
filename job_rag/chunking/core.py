@@ -139,7 +139,7 @@ def _header(row, section=None, level="unspecified", typed=True):
 
 
 def _legacy_spans(row, size):
-    from .normalize import legacy_documents
+    from .legacy import legacy_documents
     position = 0
     for rendered in legacy_documents(row, size):
         body = rendered.split("\n\n", 1)[1]

@@ -1,7 +1,10 @@
 from pathlib import Path
 
-from job_rag.ingest import import_csv, parse_csv, run_index_tasks
-from job_rag.search import SearchRequest, answer
+from job_rag.preprocessing.importer import import_csv
+from job_rag.preprocessing.validation import parse_csv
+from job_rag.indexing.worker import run_index_tasks
+from job_rag.retrieval.search import SearchRequest
+from job_rag.retrieval.answer import answer
 
 
 DATA = Path(__file__).resolve().parents[1] / "data" / "jobs.csv"
