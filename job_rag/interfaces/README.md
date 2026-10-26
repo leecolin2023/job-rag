@@ -1,49 +1,46 @@
-# 服务接口：怎样把岗位能力交给网页、脚本和 Agent？
+# 为什么需要 API、MCP、CLI 三个入口，而不让 Agent 直接访问数据库？
 
-数据库里的岗位、BM25 排名和原文统计本身只是 Python 函数。真实使用时，浏览器要发送 HTTP 请求，命令行要解析参数，Agent 则需要知道有哪些安全可调用的工具。`interfaces/` 把这些外部形式转换为同一套内部业务调用；它不复制检索算法，也不替模型判断某岗位是否适合。
+系统内部已经有 Python 函数可以导入、检索、统计岗位。问题是不同用户的操作习惯不同：浏览器需要 HTTP，运维需要命令行，DeepSeek Agent 需要知道可以调用哪些具备明确参数和结果格式的工具。
 
-## 一、从一次用户提问看调用链
+如果为了方便而让 Agent 直接执行 SQL，普通“找工作”的请求就可能接触修改状态、删除数据等权力；若每个入口都重新写一遍检索逻辑，则同样的筛选条件可能在网页和 Agent 中得到不同结果。`interfaces/` 因此负责**安全地暴露同一套业务能力，不重复实现业务本身**。
 
-~~~text
-网页 → FastAPI /api/search ──→ retrieval.answer → 证据列表/可选 Chat
-Agent → MCP 工具 → HTTP API ──→ retrieval / querying → 数据库
-CLI → 命令解析 ──────────────→ preprocessing / indexing / retrieval / storage
-~~~
+## 一、一次网页搜索怎样到达数据库？
 
-`api.py` 负责 HTTP 参数解析、业务函数调用、数据库连接生命周期和状态码映射；`mcp_server.py` 用 FastMCP 把有限业务接口包装为工具，调用后端 API；`cli.py` 为人工导入、重建索引、启动服务和查询提供入口。`static/index.html` 是随 Python 包发布的简单网页，通过 `/api/search` 和岗位详情 API 读取结果，并非一套独立的前端服务器。
+用户在网页输入“广州 RAG 20K”，`static/index.html` 通过 `POST /api/search` 把查询和显式筛选条件交给 FastAPI。`api.py` 负责校验参数及生命周期，调用 `retrieval.answer.answer()`，后者再访问结构条件、分块与模型接口。API 将结果、来源和警告返回给页面。
 
-## 二、为什么 MCP 不提供任意数据库访问？
+网页并不会因为系统里有 MCP 就自动获得 DeepSeek 的理解能力；网页可选 Chat 是另一条生成链路。`api.py` 本身不计算 BM25，也不做全库计数，这可以避免同一算法在几个入口出现不同版本。
 
-Agent 擅长选择工具和阅读证据，却可能受误解或恶意文本影响。如果允许它运行任意 SQL 或修改岗位状态，一个普通求职问题就可能误触写操作。因此 MCP 只暴露五个**只读**工具：
+## 二、一次 Agent 查询为什么要经过 MCP？
 
-| 工具 | 使用时机 |
-|---|---|
-| `get_knowledge_base_stats` | 了解数据规模和检索状态 |
-| `search_job_candidates` | 寻找语义相关、可能满足条件的候选 |
-| `query_job_catalog` | 全库字面查找、准确字面计数、分页 |
-| `get_jobs_batch` | 一次读取最多 20 份指定 JD |
-| `get_job` | 核对一个岗位的完整正文、状态和版本 |
+OpenCode 的 DeepSeek Agent 不能仅靠“模型知道 Python 函数名”来执行操作，需要受协议约束的工具目录和输入参数。`mcp_server.py` 使用 FastMCP 暴露只读工具，再转换成后端 HTTP 调用。
 
-“广州多少个岗位提到了 vLLM”应走 catalog；“哪个岗位更适合做模型服务”通常先召回候选再阅读全文；明确指定两条 JD 则可以直接批量读取。当前这些选择主要由 OpenCode Agent 提示策略完成，不是后端强制的任务路由引擎。
+例如“广州多少条 JD 提到 vLLM？”应该调用 `query_job_catalog`；“找适合我的 RAG 职位”应调用 `search_job_candidates`；“比较这两份确定的岗位”直接调用 `get_jobs_batch`。若让全部问题强制进入多查询 RRF，精确字面统计就会被 Top-K 截断误导。
 
-## 三、哪些 HTTP 路由实际承担工作？
+MCP 当前只提供五个只读工具：`get_knowledge_base_stats`、`search_job_candidates`、`query_job_catalog`、`get_jobs_batch`、`get_job`。不提供导入、改状态或任意 SQL，这限制了 Agent 和招聘文本中潜在恶意指令造成的破坏范围。
 
-`GET /api/stats` 返回语料与索引统计；`POST /api/search` 返回普通检索及可选生成；`POST /api/candidates` 返回多查询候选；`POST /api/catalog` 和 `POST /api/jobs/batch` 支持全库字面分析与批量全文；`GET /api/jobs/{job_id}` 返回指定 JD。
+## 三、管理权限为什么与读取权限分开？
 
-另有 `POST /api/import` 与 `POST /api/jobs/{job_id}/status` 两个管理接口，需启用 `ADMIN_TOKEN` 并携带 Bearer 令牌。CSV 上传有限额，任务失败或快照变化会映射为适当 HTTP 错误，例如持续分页期间数据变化返回 409。管理接口**不映射**为 MCP 工具。
+`POST /api/import` 和 `POST /api/jobs/{job_id}/status` 会改变数据，必须在配置 `ADMIN_TOKEN` 后使用 Bearer 认证；网页和 MCP 不暴露管理员凭据。原始 API/MCP 在本地回环地址运行时不等于可以安全公开到网络；远程入口需经过 HTTPS、认证、限流及请求大小约束。
 
-## 四、怎样运行？服务安全边界在哪里？
+`cli.py` 则提供人工控制的 `job-rag import / worker / reindex / status / serve` 等命令。把危险操作保留在受控 CLI 或管理 API 中，而不是把所有操作授予查询 Agent，是权限最小化的工程选择。
+
+## 四、为什么有时工具返回“数据变化，重新开始”？
+
+`query_job_catalog` 逐页查看全部岗位时，如果另一进程更新了数据，继续拼接旧第一页和新第二页就可能重算或漏算。查询层通过指纹发现变化时抛出冲突，`api.py` 映射为 HTTP 409，MCP 将其转为“从头重新枚举”的错误提示。接口层并不试图替业务偷偷续跑一个失效快照。
+
+同理，当模型调用期间职位状态改变，最终能否继续返回推荐由回答模块复核，而不是网关替它判断。
+
+## 五、如何启动以及当前不能保证什么？
 
 ~~~bash
 pip install -e '.[test]'
 job-rag serve --host 127.0.0.1 --port 8000
-# 在另一终端启动 MCP（后端地址由 JOB_RAG_API_URL 配置）
+# 另一个进程：
 job-rag-mcp
-
-# 直接使用 ASGI 时的当前模块入口
+# 或直接以 ASGI 启动：
 uvicorn job_rag.interfaces.api:app --host 127.0.0.1 --port 8000
 ~~~
 
-重新组织目录后应重新安装包，使 `pyproject.toml` 的脚本入口更新。Docker 镜像也必须重建才会使用新的代码位置；移动文件并不等于已经重启远端服务。
+`pyproject.toml` 的入口指向 `interfaces/cli.py` 与 `interfaces/mcp_server.py`；模块移动后应重新安装或重建镜像。完整公网配置见[远程访问](../../docs/remote-access.md)。
 
-本机回环 API/MCP 与公网访问的信任边界不同。生产式公网访问应经 HTTPS、鉴权和限流网关，不应把内部裸端口直接映射到互联网。MCP 接收的岗位原文是不可信数据，不能当指令执行；来源编号存在也不足以保证模型结论正确。更多部署细节见[根 README](../../README.md)与[公网接入](../../docs/remote-access.md)。
+任务路由目前主要是 Agent 的提示策略，不是后端强制状态机；管理接口不等于多租户权限系统；访问 MCP 不等于所用模型一定正确理解了证据。接口层保证的是**清楚的调用边界和权限边界**，不是最终业务判断的真实性。

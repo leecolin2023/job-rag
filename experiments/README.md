@@ -1,66 +1,70 @@
-# 检索评测：用同一批问题验证 Job-RAG 的改进
+# 怎样设计一场能说明问题的 Job-RAG 检索实验？
 
-这里保存的是**实验输入**，不是线上索引，也不是模型已经得出的正确答案。`benchmark.v1.json` 包含 30 条查询，按 15 个主题组组织，每组两种问法；dev 14 条、test 16 条。很多问题最初只标注一条可在 CSV 中找到的种子岗位。因此当前可以观察“指定岗位是否进入前 K 名”，但不能自动宣称所有其他岗位都不相关。
+用户真正关心的是“能不能找到符合自己意图的岗位”，而不是“某个预设岗位在排行榜上的位置”。如果检索评测只用从一份 JD 反推的搜索问题，再把这条 JD 当作唯一正解，BM25 可能因为词汇重复而有明显优势；Embedding 如果找出另一份同样合适的 JD，反而可能被评为失败。
 
-## 一、为什么要分成两轮实验？
+因此本目录的 `benchmark.v1.json` 不是标准答案大全，而是首轮**种子标注基准**：30 条查询、15 个主题组、14 条 dev 和 16 条 test。它适合观察已知正例的排名，却不足以直接代表全部真实用户查询的相关性。
 
-如果同时修改切块、Embedding、查询改写和 Reranker，最后效果变化就无法知道来自哪里。本项目先固定查询、硬条件和 Embedding 模型，比较**同一份 JD 怎样组织成检索文本**；再在固定候选集合上比较不同**排序方式**。
+## 一、为什么不能同时优化召回和 Rerank？
+
+假设改变分块后新方案从 Top-50 找到更多岗位，又同时启用 Reranker；最后 Top-5 改善，我们不知道是候选增加还是排序变聪明。所以实验分成两步：
 
 ~~~text
-第一轮：固定语料/问题 → 分块 A/B/C/D/E → Embedding 召回 → 岗位级排名
-                    ↘ 同时保存 BM25 全文参考
-                           ↓
-                  合并候选、人工审阅
-                           ↓
-第二轮：选定同一候选集合 → 不重排/BM25/规则/Qwen Rerank → 排序指标
+固定问题、硬条件、Embedding 模型与语料
+  → 对比分块 A/B/C/D/E 与 BM25 参考 → 冻结岗位级候选
+  → 合并候选并人工复核
+  → 固定同一候选、同一文档表示 → 对比不同重排方法
 ~~~
 
-第一轮回答“某种文本表示是否更容易把相关岗位找出来”；第二轮回答“已找到的岗位能否排得更合理”。Reranker 不能救回根本没进候选池的岗位。
+第一轮回答“找得到吗”，第二轮回答“同样的候选谁排前面”。Reranker 不能找回完全不在候选池中的岗位。
 
-## 二、具体怎样执行？
-
-先安装实验依赖。准备阶段只冻结数据、查询、分块和实现指纹，不调用付费模型。
+## 二、先运行不付费的准备，再决定是否付费
 
 ~~~bash
 pip install -e '.[test,experiments]'
+
+# 仅冻结数据、查询、策略和实现哈希
 job-rag-experiment prepare --output runtime/experiments/prepared-v1
+
+# 在本机交互准备独立百炼配置，密钥不要放在命令中
+python3 scripts/setup_bailian_env.py --host https://你的业务空间.cn-beijing.maas.aliyuncs.com
+
+# 小探针验证模型/网络/权限（真实付费请求）
+job-rag-experiment --max-requests 2 probe --execute
 ~~~
 
-百炼凭据在本地受限配置中准备，不将 Key 写入仓库或命令行。小探针、正式召回与第二轮重排会产生外部 API 请求，必须明确使用 `--execute`。
+随后执行第一轮召回，并生成报告：
 
 ~~~bash
-python3 scripts/setup_bailian_env.py --host https://你的业务空间.cn-beijing.maas.aliyuncs.com
-job-rag-experiment --max-requests 2 probe --execute
-
 job-rag-experiment recall --prepared runtime/experiments/prepared-v1 \
   --output runtime/experiments/recall-v1 --candidate-limit 50 --execute
 job-rag-experiment report runtime/experiments/recall-v1
 ~~~
 
-首先看候选和原文，不要只看平均排名。要让排名比较更接近真实求职体验，需把各系统的候选汇集并人工标注（0 不相关、1 部分相关、2 相关、3 直接匹配），正例记录对应原文依据。
+为什么不在看到这份报告时就选赢家？因为许多未标注岗位可能同样满足原问题。接下来应将各方案候选汇集，依据原文逐条判断：
 
 ~~~bash
 job-rag-experiment pool --recall-run runtime/experiments/recall-v1 \
   --depth 50 --output runtime/experiments/review-v1.json
 
-# 完成 reviewed 标注后，无须再调用 Embedding
+# 人工补齐证据、相关性等级和 reviewed 标记后，免重新调用 Embedding
 job-rag-experiment rescore --recall-run runtime/experiments/recall-v1 \
   --judgments runtime/experiments/review-v1.json \
   --output runtime/experiments/recall-reviewed-v1
 ~~~
 
-选定召回方案后才能做固定候选重排。下面的 D 是**命令示例**，不表示 D 已经在 dev 中胜出；若人工审阅未完成，可用 `--allow-provisional` 调试，但不能视为正式评价。
+第二轮使用在 dev 中选定的召回方案，保持候选集合冻结。以下 D 只是命令示意，**不代表它已被证明最好**：
 
 ~~~bash
 job-rag-experiment rerank --recall-run runtime/experiments/recall-v1 \
-  --arm D_section_typed_1100 \
-  --judgments runtime/experiments/review-v1.json \
+  --arm D_section_typed_1100 --judgments runtime/experiments/review-v1.json \
   --output runtime/experiments/rerank-v1 --execute
 job-rag-experiment report runtime/experiments/rerank-v1
 ~~~
 
-## 三、实验结果应如何解读？
+尚无审阅标签时的 `--allow-provisional` 仅可用于管线调试，不能包装为经过人工复核的性能结论。
 
-首轮真实 Embedding 已经运行，显示结构分块有时改善种子岗位排名，有时也会退化；BM25 对明确的技术词表现很强，但不能由此断言语义检索无价值。完整 Rerank 第二轮尚无实测胜负。
+## 三、怎么看待目前结果？
 
-`runtime/experiments/` 存放缓存、冻结快照、请求日志、候选和报告，默认不提交 Git，也不会自动修改线上数据库。成本保护是本地软件估计而非供应商账单硬限额。进一步阅读[源码机制](../job_rag/experiments/README.md)、[实验协议](../docs/embedding-experiments.md)和[逐题案例](../docs/recall-case-audit-2026-10-25.md)。
+首轮真实 Embedding 已经运行，章节切分在部分查询中提高种子岗位排名、部分查询中退化，BM25 对明确技术名词表现很强。**这不支持“一定应该换 Embedding”或“Embedding 总是不如 BM25”**，因为种子标注与输入表示存在限制。完整 Rerank 第二轮尚未执行。
+
+快照、模型缓存、请求日志、候选审阅及报表均在 `runtime/experiments/`，被 Git 忽略，**不会自动修改线上索引**。模型调用需要 `--execute`，软件费用限制也不等于平台账单硬限额。要理解实验代码如何控制变量，请看[实现模块](../job_rag/experiments/README.md)；要看实际数据与解释，请看[实验报告](../docs/recall-pilot-2026-10-25.md)和[逐题复核](../docs/recall-case-audit-2026-10-25.md)。
