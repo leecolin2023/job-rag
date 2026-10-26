@@ -1,20 +1,44 @@
-# Job-RAG
+# Job-RAG：从招聘原文到可核对的岗位知识服务
 
-目录说明：[原始数据](data/README.md) → [预处理](job_rag/preprocessing/README.md) → [存储](job_rag/storage/README.md) / [分块](job_rag/chunking/README.md) / [索引执行](job_rag/indexing/README.md)。在线路径见[服务入口](job_rag/interfaces/README.md)、[候选检索](job_rag/retrieval/README.md)、[精确查询](job_rag/querying/README.md)；完整导航见 [job_rag/README.md](job_rag/README.md)。
+用户提出“广州有哪些月薪下限 20K、负责企业 RAG 建设的岗位”，看起来只是一次搜索，背后却需要同时解决四件不同的事：**字段条件是否符合、岗位职责是否相关、推荐有没有原文证据、岗位是否仍在招聘**。如果把这四件事都交给一次大模型生成，容易把“关键词出现”说成“必备能力”，或把“采集成功”说成“目前在招”。
 
-[按任务选择工具与精确字面统计](docs/task-routing.md)：新增全库查询/计数、一致性分页、批量全文读取；语义全量统计和跨调用硬预算尚未自动实现。
+Job-RAG 因此把任务分开：数据库保存来源与版本；确定性规则处理城市、薪资及准确字面计数；检索模块产生有排名的候选；调用方 Agent 或可选 Chat 阅读证据并解释。项目可以在不配置模型的情况下进行 BM25 检索，也可以在配置 Embedding 之后使用混合召回，但**pgvector 的存在不等于向量检索已经启用**。
 
-AI 招聘岗位知识库初版：网页查询、结构化过滤、关键词/语义混合检索、来源引用、增量导入与状态管理。
+## 一、先看系统如何运转
 
-**版本：0.1.0** · [当前成果与已知边界](docs/current-status.md) · [更新记录](CHANGELOG.md) · [公网接入](docs/remote-access.md) · [执行记录分析](docs/observability.md)
+~~~text
+外部招聘数据 → data/jobs.csv
+                     ↓
+      preprocessing（校验、标准化、增量导入）
+                     ↓
+      storage（原文、版本、状态、索引任务）
+                     ↓
+      indexing → chunking → 可选 Embedding → 当前 Chunk 索引
 
-**开发中：结构化分块与Qwen3.7实验。** 新版代码提供显式数据库迁移、源文可追溯章节/条件分块，以及独立的[两阶段实验工具](experiments/README.md)。详见[分块与迁移](docs/structured-chunking.md)、[实验协议](docs/embedding-experiments.md)。当前在线容器仍为0.1版本，尚未切换；现有数据库使用新版前必须先备份、`job-rag migrate`、再重建索引。
+用户提问 → 网页/API 或 OpenCode + MCP
+           ├── querying：全库字面计数、分页、全文读取
+           └── retrieval：硬条件 → BM25/可选向量 → 候选及证据
+                                                     ↓
+                                       来源列表或大模型分析
+~~~
 
-[第一轮真实Embedding实验已完成](docs/recall-pilot-2026-10-25.md)：种子标注下没有证据支持Embedding全面优于BM25，尚未执行全量Rerank轮次或切换线上索引。
+例如“**多少**岗位字面提到 vLLM”，应使用 `query_job_catalog` 做全库扫描，不能将 Top-K 检索数量冒充总体；“**哪些岗位适合**模型部署方向”，则可能先用 `search_job_candidates` 找候选，再读取原始 JD 分辨必备、优先、公司介绍等语义。任务选择目前依赖 Agent 指令，不是强制工作流状态机。
 
-[逐项核对：30条完整查询、原始排名与五个案例](docs/recall-case-audit-2026-10-25.md)，展示Embedding收益、分块退化和漏标/近重复问题；现有指标也不能证明BM25的实际相关性更好。
+## 二、为什么现在按目录组织代码？
 
-**当前服务器公网 MCP：`https://106.55.35.201/mcp`（需要 Bearer 令牌）。** 远程客户端配置、安全取令牌、证书及运维说明见 [公网访问文档](docs/remote-access.md)。原始 API/MCP 端口仍仅监听本机。
+最新目录将“数据准备”和“用户查询”两条链路显式分开。每个目录 README 不只列文件，还解释该模块**解决什么问题、怎样发生状态变化、为什么需要与其他模块分离**。推荐顺着主线阅读：
+
+[原始数据](data/README.md) → [预处理](job_rag/preprocessing/README.md) → [存储](job_rag/storage/README.md) → [分块](job_rag/chunking/README.md) → [索引](job_rag/indexing/README.md)。
+
+在线请求则看[服务接口](job_rag/interfaces/README.md) → [候选检索](job_rag/retrieval/README.md)或[精确查询](job_rag/querying/README.md)；远端模型接入在[providers](job_rag/providers/README.md)，独立评测原理在[实验说明](experiments/README.md)。完整模块调用图见[代码导读](job_rag/README.md)。
+
+## 三、当前成果与适用边界
+
+**源码版本标识：0.1.0；在线部署与最新 main 代码不是同一个概念。** 根据已有运维记录，线上容器仍是旧版；新目录结构、全库查询接口和结构化分块代码需要重新构建及验证后才会部署。目录重组本身不迁移数据库、不更新向量、不证明线上接口已经变化。
+
+当前数据快照为 593 条岗位，其中 592 条有正文。项目已实现原文保留、字段标准化、版本与状态维护、BM25、多查询候选、MCP、全库**字面**查询和批量全文读取；Qwen Embedding 完成首轮离线对照，完整 Rerank 轮次尚未运行。语义全量判定、持久化招聘能力事实以及可靠的自动汇总尚未形成完整闭环。
+
+相关材料：[当前能力说明](docs/current-status.md)、[任务路由边界](docs/task-routing.md)、[首轮检索实验](docs/recall-pilot-2026-10-25.md)、[更新历史](CHANGELOG.md)。以下章节保留启动、运行维护与安全说明。
 
 ## Docker 服务化与 DeepSeek harness（推荐）
 
@@ -145,7 +169,7 @@ CHAT_MODEL=你的可用聊天模型
 
 之后运行 `job-rag reindex` 并重启服务。在网页勾选“使用大模型解释匹配结果”开启生成。仅配置 Embedding 也可以混合检索；仅配置 Chat 则基于关键词检索结果生成回答。
 
-- Embedding 模型须原生输出配置的维度，客户端不发送 `dimensions` 参数，以兼容其他服务。
+- Embedding 模型实际输出维度必须与配置一致；OpenAI-compatible 接口默认不发送 `dimensions`，仅在显式开启 `EMBEDDING_SEND_DIMENSIONS` 时发送。
 - 修改模型、服务地址、维度或预处理规则后须修改版本并重建。签名不匹配的旧向量不参与检索。
 - 岗位分块会发送到 Embedding 服务；问题和命中的岗位证据会发送到 Chat 服务。配置前确认服务的数据政策。
 - 模型服务失败时查询降级为关键词检索/来源列表；索引失败保留任务，可重试，不切换到半成品版本。
@@ -218,6 +242,8 @@ job-rag search '大模型应用' --active-only --generate
 | `GET /api/stats` | 岗位、状态、索引任务统计 |
 | `POST /api/search` | 检索 / 可选生成，参数见 `/docs` |
 | `POST /api/candidates` | 多查询候选召回，由调用模型阅读证据完成语义判断 |
+| `POST /api/catalog` | 全库字面检索、精确字面计数及一致性分页 |
+| `POST /api/jobs/batch` | 批量读取完整 JD，可绑定版本与语料指纹 |
 | `GET /api/jobs/{job_id}?source=boss` | 岗位原文、版本目录、状态历史 |
 | `POST /api/import?source=boss` | CSV 原始请求体导入，最大 20 MiB，需管理令牌；之后运行 worker |
 | `POST /api/jobs/{job_id}/status` | 更新有效状态，需管理令牌 |

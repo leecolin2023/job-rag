@@ -1,36 +1,47 @@
-# 代码目录导航
+# Job-RAG 代码导读：从一条岗位到一次有证据的回答
 
-按数据处理阶段组织，代码目录不等于运行数据的存储目录：
+这是 Python 业务代码目录，不是数据仓库或运行日志目录。读这些模块最有效的方法，不是记住每个文件名，而是跟随两条实际链路：**岗位如何变成可以搜索的资料**，以及**用户的问题如何变成可核对的结果**。
 
-| 阶段 | 目录 | 说明 |
-|---|---|---|
-| 外部原始输入 | [`../data/`](../data/README.md) | CSV 字段、采集边界、原文保留 |
-| 预处理 | [`preprocessing/`](preprocessing/README.md) | 整份校验、规则标准化、事务内增量导入 |
-| 持久化 | [`storage/`](storage/README.md) | 数据模型、实际保存位置、版本与招聘状态 |
-| 结构化分块 | [`chunking/`](chunking/README.md) | 原文对齐的章节、条目与规则标签 |
-| 索引执行 | [`indexing/`](indexing/README.md) | 任务、可选 Embedding 与索引替换 |
-| 服务接口 | [`interfaces/`](interfaces/README.md) | FastAPI、只读 MCP、CLI 与网页资源 |
-| 相关性检索 | [`retrieval/`](retrieval/README.md) | BM25/可选向量、两层融合、证据及回答 |
-| 精确数据查询 | [`querying/`](querying/README.md) | 公共硬过滤、全库字面计数、分页、全文和统计 |
-| 模型接入 | [`providers/`](providers/README.md) | 在线 Embedding/Chat HTTP 客户端，不是 ORM 模型 |
-| 离线实验 | [`experiments/`](experiments/README.md) | 冻结语料、检索对照、重排、标注与重算 |
+## 一、数据建设链路
 
-顶层只保留 `config.py`（环境配置与索引签名）、`__init__.py`（包声明）及本文档。原有平铺业务模块已删除，不提供兼容层；代码与测试统一使用上表中的模块。各目录的 `__init__.py` 仅声明包或公共 API，不另设一套实现。
+~~~text
+外部 CSV（../data/）
+       ↓
+preprocessing/  整份校验 → 城市/薪资等标准化 → 增量版本入库
+       ↓
+storage/        当前 JD + 历史版本 + 招聘状态 + 待索引任务
+       ↓
+indexing/       取任务 → chunking/ 章节与条目分块
+       ↓
+providers/      可选调用 Embedding
+       ↓
+storage/        原子替换当前版本 Chunk，标记索引就绪
+~~~
 
-### 在线调用关系
+这条链路把**记录是否保存成功**和**检索索引是否构建完成**分开。即使远端 Embedding 不可用，也应保留岗位原文与可重试任务；只有索引版本与当前岗位一致时，搜索才使用对应证据。
 
-```text
-Agent → MCP → FastAPI → retrieval/（候选检索与证据）
-                     → querying/ （确定性全库查询、全文读取）
-CLI ─────────────────→ 各阶段业务模块
+[原始数据](../data/README.md)解释来源与原文保存；[预处理](preprocessing/README.md)解释校验、规则标准化和增量导入；[存储](storage/README.md)解释五张表；[分块](chunking/README.md)解释章节与证据位置；[索引](indexing/README.md)解释任务和原子替换；[模型接入](providers/README.md)解释何时真的发生远端请求。
 
-retrieval/ → querying/filters.py + storage/serialization.py
-retrieval/、indexing/ → providers/client.py（按配置调用模型）
-各数据访问模块 → storage/ → PostgreSQL / SQLite
-```
+## 二、用户查询链路
 
-`querying/` 不依赖 `retrieval/`；字面计数不会间接经过 BM25、向量或 Chat。API/MCP 不各自重复实现岗位查询。网页/API 的可选 Chat 回答与调用方 Agent 回答仍是两条独立路径。
+~~~text
+网页 / CLI / Agent
+         ↓
+interfaces/（HTTP、CLI 或只读 MCP）
+         ├── querying/  完整字面计数、分页、完整 JD、确定性过滤
+         └── retrieval/ 候选召回：BM25 + 可选向量 + RRF
+                           ↓
+                     证据/来源列表或可选模型解释
+~~~
 
-安装入口配置在 `../pyproject.toml`：`job-rag` → `interfaces.cli:main`，`job-rag-mcp` → `interfaces.mcp_server:main`，实验命令仍为 `experiments.cli:main`。入口变更后重新安装包；接口 URL、命令名和参数保持不变。
+为什么分两条查询路径？“广州多少岗位字面提到 vLLM”需要全库扫描，不能用 Top-20 当总数；“找负责企业 RAG 工程的岗位”需要相关性排序，但相关性又不等于岗位真的把某技能作为必备条件。任务选择主要由外部 Agent 提示完成，当前不是后端强制路由状态机。
 
-本次重组不搬动数据库、不改变表结构或默认配置、不改写原始数据与历史实验，也不自动部署服务。
+[服务接口](interfaces/README.md)解释三种入口及安全边界；[精确查询](querying/README.md)解释全库字面计数和一致性分页；[候选检索](retrieval/README.md)解释硬过滤、BM25、RRF、证据和可选 Chat；[离线实验](experiments/README.md)解释怎样判断变化来自召回还是排序。
+
+## 三、从哪里开始读源代码？
+
+如果想理解数据更新，按 `preprocessing/importer.py → indexing/tasks.py → indexing/worker.py → storage/database.py` 阅读。如果想理解用户查询，按 `interfaces/api.py → retrieval/search.py → retrieval/candidates.py → retrieval/answer.py` 阅读。统计任务则从 `interfaces/mcp_server.py → querying/catalog.py` 开始。
+
+顶层 `config.py` 统一读取环境变量并计算索引签名；`__init__.py` 声明 Python 包。三种命令入口在 `pyproject.toml`：`job-rag`、`job-rag-mcp` 与 `job-rag-experiment`。文件重组后需要重新安装 Python 包或重建镜像，但**移动代码本身不迁移数据库、不重建索引、也不证明线上已切换**。
+
+本项目当前核心是**可追溯的招聘检索与数据查询**。它并未将所有 JD 的技能、工作任务、能力深度与招聘约束完整抽成可复用的业务事实表；需要这种精确语义统计时，仍必须补上可靠的逐岗位判定和汇总工作。

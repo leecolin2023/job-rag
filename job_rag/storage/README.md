@@ -1,54 +1,44 @@
-# 数据库存储与招聘状态
+# 存储层：为什么要把原文、历史版本、索引与招聘状态分开？
 
-本目录负责数据模型、连接、初始化、显式迁移和招聘状态记录；不负责 CSV 校验、字段解析或正文分块。
+想象一条岗位今天写“负责 RAG 系统”，明天改成“负责向量检索与知识图谱”，同时招聘页面暂时无法访问。这里其实发生了三种不同的变化：**招聘描述版本**、**基于描述的检索索引**、**职位是否仍在招**。如果全存在一张没有历史的表里，更新后就无法回答某个结果依据哪一版 JD，也无法区分采集失败与岗位关闭。
 
-```text
-storage/
-├── database.py    # ORM 模型、Database、初始化与迁移
-├── status.py      # 招聘状态变更与依据记录
-├── serialization.py # 检索、全文及全库查询的公共岗位输出结构
-└── __init__.py    # 公共模型与数据库入口
-```
+`storage/` 为这些对象提供数据模型和持久化基础，不负责判断岗位是否匹配用户。
 
-数据库实现统一位于 `storage/database.py`，公共入口由 `storage/__init__.py` 导出，不保留根目录旧模块。本次目录重组不改变表结构或数据位置，不需要因为移动代码而迁移数据库或重建索引。
+## 一、数据保存在哪儿？
 
-## 数据实际保存在哪里？
+`database.py` 的 `Database` 读取 `DATABASE_URL`。不配置时使用 SQLite，默认地址为 `sqlite:///runtime/jobs.db`；Docker Compose 使用 PostgreSQL + pgvector，将数据目录持久化到 `pgdata` 卷。注意：`storage/` 是**代码包**，并不是数据库文件所在目录；重排 Python 包位置不会自动迁移数据库文件或容器数据卷。
 
-由 `DATABASE_URL` 决定，而不是保存在本代码目录。
+SQLite 对可选向量使用 JSON 列，PostgreSQL 使用 pgvector 类型。后者提供余弦距离查询能力，但**安装 pgvector 不代表已经配置或调用了 Embedding**。
 
-| 运行方式 | 保存位置 |
-|---|---|
-| 本地默认 | SQLite：`sqlite:///runtime/jobs.db`，路径相对进程工作目录；在项目根目录启动时为项目下的 `runtime/jobs.db` |
-| 自定义配置 | `DATABASE_URL` 指向的数据库，可能不同于默认值 |
-| 仓库 Docker Compose | PostgreSQL + pgvector；服务内 `/var/lib/postgresql/data`，由命名卷 `pgdata` 持久化，Docker 实际卷名通常带 Compose 项目前缀 |
+## 二、五张表分别保存哪种事实？
 
-`data/jobs.csv` 是外部输入文件；数据库保存导入后的原始字段、派生字段与版本。数据库文件、卷和实验缓存不应提交 Git。修改代码目录不会搬动或备份这些数据。
+| 表 | 作用 | 为什么不能混在一起 |
+|---|---|---|
+| `jobs` | 当前版本的原始字段 `raw`、派生字段 `normalized`、状态、版本及索引签名 | 提供当下可读取的岗位对象 |
+| `revisions` | 数据变更时保存此前与当前导入版本的内容 | 能解释岗位文字何时发生变化，不等于每次读取日志 |
+| `chunks` | 当前有效索引的分块文字、原文位置、可选向量 | 是从 JD 派生的表示，可以重建；历史分块不会永久保存 |
+| `index_tasks` | 某岗位版本、索引签名与任务状态 | 网络模型或分块失败时能重试，而不丢原始岗位 |
+| `status_events` | 状态从什么变成什么、依据和时间 | 让“招聘还有效吗”不被“采集成功了吗”替代 |
 
-不要在文档或日志中粘贴包含数据库密码的连接串。备份、迁移、删除数据和调整卷需要单独操作，不能用重新导入 CSV 代替完整备份。
+新 JD 先写 `jobs/revisions` 并登记任务，后续 Worker 成功后更新 `chunks` 和 `indexed_version`。只有岗位版本、索引版本、配置签名都符合条件，检索层才使用相应索引，避免新版岗位配旧版证据。
 
-## 主要表
+## 三、为什么招聘状态必须单独维护？
 
-| 表 | 内容 |
-|---|---|
-| `jobs` | 当前岗位：唯一键、`raw` 原始字段、`normalized` 派生字段、版本、招聘状态、观察与核验时间、索引就绪信息 |
-| `revisions` | 岗位每次新增或导入字段变化时的原始字段、标准字段及版本；不等于完整的每次观察事件日志 |
-| `chunks` | 当前已写入索引的正文块、原文对齐信息与可选向量；重建时替换，历史块并非永久保留 |
-| `index_tasks` | 岗位版本与索引签名对应的任务状态、尝试次数和脱敏错误类型 |
-| `status_events` | 招聘状态变更的前后值、依据和时间 |
+`status.py::set_status()` 接受 `unknown`、`active`、`suspected_expired`、`closed` 四种状态。状态改变时写入 `status_events`，需要非空原因；只有明确标记已确认在招或关闭，才更新成功核验时间。
 
-SQLite 用 JSON 保存可选向量；PostgreSQL 用 pgvector 类型。原始 JD 留存在 `jobs.raw` 与相应 `revisions.raw`，不会被索引结果覆盖。
+CSV 的 `status` 是采集结果：“获得了详情文字”不等于 `active`；“打不开网页”也不能可靠证明 `closed`。`last_seen_at` 表示最近被系统观察/导入，`last_verified_at` 表示最近完成明确核验，两者不能混用。更新招聘状态不需要重新生成向量。
 
-## 招聘状态单独维护
+## 四、怎样使用和维护？
 
-`storage/status.py::set_status()` 支持 `unknown`、`active`、`suspected_expired`、`closed`，变更必须提供非空依据。新岗位为 `unknown`；只有确认 `active` 或 `closed` 时才更新成功核验时间。
+`database.py` 管理连接、SQLAlchemy ORM、建表和显式迁移；`serialization.py` 将同一岗位统一转换为 API 输出，包括来源、版本和状态；它不负责查询或排序。
 
-CSV 的 `status` 是采集结果，与此处 `job_status` 不同。页面失效、搜索不到或采集成功都不能自动等同于招聘已结束或正在招聘。
+~~~bash
+job-rag init
+# 修改过数据库结构的既有实例：先备份，再按迁移要求执行
+job-rag migrate
+job-rag reindex
+~~~
 
-## 调用入口
+`create_all()` 不是通用自动迁移器；迁移需要显式执行。当前写入按单写入者设计，避免同时运行多个 import、worker 或 reindex。原始 CSV 无法恢复人工状态历史，备份数据库与备份 CSV 是两项不同的操作；PostgreSQL 可用 `pg_dump`，SQLite 运行中不要仅复制主库文件而忽略 WAL。
 
-```python
-from job_rag.storage import Database, Job, Revision
-from job_rag.storage.status import set_status
-```
-
-初始化及迁移命令保持原样。结构迁移仍须显式执行并先备份；导入、索引和状态管理是不同职责，分别见[预处理](../preprocessing/README.md)、[索引执行](../indexing/README.md)。
+下一步看[索引执行](../indexing/README.md)怎样安全替换派生块；在[查询层](../querying/README.md)中可看到为什么精确字面统计与有截断的检索必须分开。
