@@ -1,5 +1,7 @@
 # Job-RAG
 
+[按任务选择工具与精确字面统计](docs/task-routing.md)：新增全库查询/计数、一致性分页、批量全文读取；语义全量统计和跨调用硬预算尚未自动实现。
+
 AI 招聘岗位知识库初版：网页查询、结构化过滤、关键词/语义混合检索、来源引用、增量导入与状态管理。
 
 **版本：0.1.0** · [当前成果与已知边界](docs/current-status.md) · [更新记录](CHANGELOG.md) · [公网接入](docs/remote-access.md) · [执行记录分析](docs/observability.md)

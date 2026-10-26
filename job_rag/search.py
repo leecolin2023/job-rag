@@ -2,7 +2,7 @@ import math
 import re
 from collections import Counter
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from pgvector.sqlalchemy import Vector
 from sqlalchemy import cast, select
 
@@ -10,8 +10,8 @@ from .db import Chunk, Job
 from .models import chat, embed
 
 
-class SearchRequest(BaseModel):
-    query: str = Field(default="", max_length=2000)
+class StructuredFilters(BaseModel):
+    model_config = ConfigDict(extra="forbid")
     city: str | None = None
     district: str | None = None
     min_salary: float | None = Field(default=None, ge=0)
@@ -24,6 +24,10 @@ class SearchRequest(BaseModel):
     skills: list[str] = Field(default_factory=list, max_length=20)
     active_only: bool = False
     include_closed: bool = False
+
+
+class SearchRequest(StructuredFilters):
+    query: str = Field(default="", max_length=2000)
     limit: int = Field(default=8, ge=1, le=30)
     generate: bool = False
     infer_filters: bool = True
@@ -212,6 +216,7 @@ def search(db, settings, request):
         if any(r["job_status"] != "active" for r in results):
             warnings.append("结果含未确认在招或历史岗位，采集成功不代表目前仍在招聘。")
         return {"results": results, "total_matched": len(grouped), "mode": mode,
+                "count_kind": "bounded_chunk_recall_not_corpus_count", "count_complete": False,
                 "filters": filters.model_dump(exclude={"generate"}), "warnings": warnings}
 
 

@@ -45,6 +45,10 @@ def candidates(db, settings, request):
             item["fusion_score"] = round(scores[key], 6)
             output.append(item)
     return {"results": output[:request.candidate_limit], "total_candidates": len(output),
+            "count_kind": "bounded_recall_union_not_corpus_count",
+            "count_complete": False, "returned_candidates": min(len(output), request.candidate_limit),
+            "recall_limits": {"per_query_jobs": 30, "per_channel_chunks": 100,
+                              "final_jobs": request.candidate_limit},
             "mode": "multi_query_hybrid" if settings.semantic_enabled else "multi_query_keyword",
             "semantic_assessment": "caller_llm_required", "queries": queries,
             "filters": base.model_dump(exclude={"query", "generate", "limit"}),

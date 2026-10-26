@@ -9,6 +9,7 @@ from sqlalchemy import func, select
 
 from .config import Settings
 from .candidates import CandidateRequest, candidates
+from .catalog import BatchRequest, CatalogRequest, SnapshotChanged, batch_jobs, catalog_query
 from .db import Database, IndexTask, Job, Revision, StatusEvent
 from .ingest import import_csv, set_status
 from .search import SearchRequest, answer, serialize
@@ -71,6 +72,20 @@ def create_app(settings=None):
             return candidates(db, settings, request)
         except ValueError as exc:
             raise HTTPException(400, str(exc))
+
+    @app.post("/api/catalog")
+    def catalog(request: CatalogRequest):
+        try:
+            return catalog_query(db, request)
+        except SnapshotChanged as exc:
+            raise HTTPException(409, str(exc))
+
+    @app.post("/api/jobs/batch")
+    def batch(request: BatchRequest):
+        try:
+            return batch_jobs(db, request)
+        except SnapshotChanged as exc:
+            raise HTTPException(409, str(exc))
 
     @app.get("/api/jobs/{job_id}")
     def job_detail(job_id: str, source: str = "boss"):
