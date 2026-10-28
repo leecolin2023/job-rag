@@ -1,0 +1,8 @@
+keyword,search_city,capture_date,capture_status,visible_hits,exhaustive,notes
+vLLM,广州,2026-10-28,captured_partial,15,false,仅当前页面可见卡片
+SGLang,广州,2026-10-28,captured_partial,15,false,仅当前页面可见卡片
+MaaS,广州,2026-10-28,captured_partial,15,false,仅当前页面可见卡片
+模型部署,广州,2026-10-28,captured_partial,15,false,仅当前页面可见卡片
+Agent,广州,2026-10-28,captured_partial,15,false,仅当前页面可见卡片
+RAG,广州,2026-10-28,captured_partial,15,false,仅当前页面可见卡片
+AI网关,广州,2026-10-28,read_failed,,false,页面内容未成功读取；不能视为无岗位
