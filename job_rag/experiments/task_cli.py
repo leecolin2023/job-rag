@@ -24,6 +24,7 @@ def main():
     score.add_argument("--gold", required=True)
     score.add_argument("--predictions", help="Optional external Agent/LLM predictions.jsonl")
     score.add_argument("--trace", help="Optional external per-stage trace.jsonl; missing stages stay undetermined")
+    score.add_argument("--output", help="New directory for external-arm evaluation; required with --predictions")
     args = parser.parse_args()
     try:
         if args.command == "run":
@@ -33,7 +34,7 @@ def main():
         elif args.command == "prepare-review":
             result = prepare_review_queue(args.dataset, args.output, args.limit)
         else:
-            result = evaluate(args.run, args.dataset, args.gold, args.predictions, args.trace)
+            result = evaluate(args.run, args.dataset, args.gold, args.predictions, args.trace, args.output)
         print(json.dumps(result, ensure_ascii=False, indent=2))
     except (ValueError, KeyError, OSError, json.JSONDecodeError) as exc:
         parser.exit(1, f"Experiment failed: {exc}\n")
