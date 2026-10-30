@@ -1,3 +1,5 @@
+> **任务驱动实验实现**：新增 [task_runner.py](task_runner.py)、[task_eval.py](task_eval.py) 和 [task_cli.py](task_cli.py)，独立于下述旧的 Embedding/Rerank 排名评测。运行与数据定义见 [新任务实验说明](../../experiments/rag-tech-requirements/README.md)。
+
 # 为什么我们不能凭几次搜索结果就宣布“新 Embedding 更好”？
 
 系统用了章节分块后，某个指定 RAG 岗位从第 15 位跃升到第 1 位，看起来像大幅进步。但另一个同样相关的岗位可能因此从前排跌落；更麻烦的是，如果评测只标记一个种子岗位，其他真正合适的岗位会被错误地视为负例。**检索评测的核心问题，是怎样区分算法变化、输入变化和标注缺失造成的排名差异。**
