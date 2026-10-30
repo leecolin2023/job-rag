@@ -50,6 +50,17 @@ job-rag-task evaluate \
   --gold experiments/rag-tech-requirements/gold.jsonl
 ~~~
 
+### 从真实岗位生成待复核队列
+
+~~~bash
+job-rag-task prepare-review \
+  --dataset data/jobs.csv \
+  --limit 40 \
+  --output runtime/experiments/rag-tech-review-01
+~~~
+
+生成 review_queue.jsonl 和 review_manifest.json。按独立 RAG 字面命中、未知章节、GraphRAG/RAGFlow 边界、其他章节出现 RAG、普通负例分层抽样；保存完整 JD 和基线建议供人工阅读。队列全部标记 pending_review，**不能直接当作 gold 输入评测**。确认每条范围与技术证据后，需要另行制作 gold.jsonl，使用 human_reviewed 标签并保留 description_sha256 以防源文本变更。
+
 每次 output 必须是新的目录，不允许静默覆盖已有实验。
 
 | 文件 | 含义 |
