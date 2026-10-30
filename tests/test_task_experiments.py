@@ -129,3 +129,16 @@ def test_review_queue_is_stratified_and_cannot_be_used_as_gold(tmp_path):
     assert all(row["in_scope"] is None for row in queue)
     with pytest.raises(ValueError, match="label_source"):
         load_gold(folder / "review_queue.jsonl", load_dataset(DATASET))
+
+
+def test_real_csv_exhaustive_baseline_runs_without_gold(tmp_path):
+    output = tmp_path / "real"
+    result = run(ROOT / "data" / "jobs.csv", output)
+    assert result["jobs"] == 593
+    assert result["matched"] > 0
+    assert result["verified"] is False
+    manifest = json.loads((output / "manifest.json").read_text())
+    assert manifest["retrieval"] == "not_applicable"
+    assert manifest["semantic_verification"] is False
+    assert len(read_jsonl(output / "predictions.jsonl")) == 593
+    assert not (output / "evaluation.json").exists()
