@@ -98,9 +98,10 @@ def test_external_predictions_do_not_inherit_other_systems_stage_trace(tmp_path)
     target["technologies"] = []
     external = tmp_path / "external.jsonl"
     write_jsonl(external, predictions)
-    result = evaluate(output, DATASET, GOLD, predictions_path=external)
+    result = evaluate(output, DATASET, GOLD, predictions_path=external, output_dir=tmp_path / "external-scored")
     assert any(f["job_id"] == "fx01" and f["kind"] == "technical_fact_missing"
                and f["stage"] == "undetermined" for f in result["failures"])
+    assert (tmp_path / "external-scored" / "evaluation_manifest.json").exists()
 
 
 def test_aggregate_and_answer_drift_get_distinct_diagnostics(tmp_path):
