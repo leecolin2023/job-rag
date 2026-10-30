@@ -4,6 +4,7 @@ The same question is tested across job-level counterexamples. Synthetic-spec lab
 are never presented as human-reviewed real-world truth.
 """
 from collections import Counter, defaultdict
+import hashlib
 import json
 from pathlib import Path
 
@@ -28,6 +29,9 @@ def load_gold(path, rows):
                 raise ValueError(f"{key}: unresolved scope cannot have judged technologies")
             continue
         original = by_id[key]["description"]
+        expected_hash = hashlib.sha256(original.encode("utf-8")).hexdigest()
+        if label.get("description_sha256") and label["description_sha256"] != expected_hash:
+            raise ValueError(f"{key}: gold JD hash is stale")
         if label["in_scope"]:
             scope = label.get("scope_evidence")
             if not scope or scope.get("section") not in {"responsibilities", "requirements"}:
