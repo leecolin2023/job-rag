@@ -188,7 +188,7 @@ def evaluate(run_dir, dataset_path, gold_path, predictions_path=None, trace_path
     run_dir = Path(run_dir)
     manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
     if manifest.get("task") != TASK_ID or file_hash(dataset_path) != manifest.get("dataset_sha256"):
-        raise ValueError("Dataset or task does not match frozen run manifest")
+        raise ValueError("Dataset snapshot or task does not match frozen run manifest")
     dataset = load_dataset(dataset_path)
     labels = load_gold(gold_path, dataset)
     predictions = read_jsonl(predictions_path or run_dir / "predictions.jsonl")
