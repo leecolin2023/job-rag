@@ -7,7 +7,7 @@ from collections import Counter, defaultdict
 import json
 from pathlib import Path
 
-from .task_runner import TASK_ID, file_hash, load_dataset, read_jsonl, write_json
+from .task_runner import TASK_ID, aggregate, file_hash, load_dataset, read_jsonl, render_report, write_json
 
 
 def load_gold(path, rows):
@@ -192,8 +192,21 @@ def evaluate(run_dir, dataset_path, gold_path, predictions_path=None, trace_path
     dataset = load_dataset(dataset_path)
     labels = load_gold(gold_path, dataset)
     predictions = read_jsonl(predictions_path or run_dir / "predictions.jsonl")
-    trace = read_jsonl(trace_path or run_dir / "trace.jsonl")
+    # A separate prediction file must not inherit the baseline's stage trace:
+    # otherwise failure attribution would falsely credit an unrelated pipeline.
+    trace = read_jsonl(trace_path) if trace_path else (
+        [] if predictions_path else read_jsonl(run_dir / "trace.jsonl"))
     result = diagnose(dataset, predictions, trace, labels)
+    if predictions_path is None:
+        recorded_summary = json.loads((run_dir / "summary.json").read_text(encoding="utf-8"))
+        expected_summary = aggregate(predictions)
+        if recorded_summary != expected_summary:
+            result["failures"].append({"stage": "aggregation", "kind": "aggregate_disagrees_with_predictions"})
+        recorded_report = (run_dir / "report.md").read_text(encoding="utf-8")
+        if recorded_report != render_report(manifest, recorded_summary):
+            result["failures"].append({"stage": "answer", "kind": "report_disagrees_with_aggregate"})
+        result["failure_counts_by_first_stage"] = dict(sorted(
+            Counter(f["stage"] for f in result["failures"]).items()))
     result["gold_sha256"] = file_hash(gold_path)
     result["predictions_external"] = predictions_path is not None
     (run_dir / "evaluation.md").write_text(render_evaluation(result), encoding="utf-8")
