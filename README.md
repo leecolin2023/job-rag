@@ -314,14 +314,15 @@ data/
 └── jobs.csv  # 唯一的标准化岗位数据源，593 条
 ```
 
-`data/jobs.csv` 保留 16 个已有字段：
+`data/jobs.csv` 保留 12 个字段（593 个不同职位 ID）：
 
-`job_id, title, company, location, salary, experience, education, url, description, status, collected_at, keywords, first_keyword, keyword_count, is_guangzhou, address`
+`job_id, title, company, location, salary, experience, education, url, description, status, collected_at, keywords`
 
 - `job_id`：来自 BOSS 职位 ID，是全局唯一的更新/关联键。
 - `description`：岗位职责与任职要求原文，**不做摘要、语义改写或无依据的文本修复**。链接失效且未取得描述的 1 条记录，其值为空，不使用原表中的占位符 `6`。
 - `status`：来自最新主表，明确记录是否取得描述及失败情况。
-- `first_keyword`、`is_guangzhou`：通过相同 `job_id` 从历史去重总表关联得到。
+- `keywords`：记录岗位通过哪些搜索关键词被发现；多个关键词按原格式用中文分号 `；` 连接，不代表 JD 明确要求这些技能。
+- `first_keyword`、`keyword_count`、`is_guangzhou`、`address` 已从主表移除：首次来源应由采集记录维护；关键词数与地区过滤可由已有字段计算；具体地址不属于当前分析的核心信息。
 
 **文件编码**：UTF-8 with BOM（`utf-8-sig`）。按照标准 CSV 转义，岗位描述中的逗号、引号、换行均保留。不能直接使用换行符判断记录条数，建议使用 Python `csv` 或 `pandas.read_csv`。
 
