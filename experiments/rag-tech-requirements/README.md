@@ -85,7 +85,8 @@ job-rag-task evaluate \
   --dataset experiments/rag-tech-requirements/fixtures.json \
   --gold experiments/rag-tech-requirements/gold.jsonl \
   --predictions /path/to/agent-predictions.jsonl \
-  --trace /path/to/agent-trace.jsonl
+  --trace /path/to/agent-trace.jsonl \
+  --output runtime/experiments/agent-evaluation-01
 ~~~
 
 最小预测记录：每个源岗位必须有一条，包括未命中者，不能只给 Top-K。
@@ -107,7 +108,7 @@ job-rag-task evaluate \
 }
 ~~~
 
-上面偏移量只是 schema 占位，真实预测必须从原始 description 计算，满足 description[start:end] 与 quote 完全一致；绝不能照抄 0。技术类别与现有 technical_vocabulary.py 一致；新增 Java 等类别时需要版本化映射。没有外部实验臂自己的 trace 时，无法证明具体错误发生在检索、证据获取还是语义判断，报告会标记 undetermined，而不是借用规则基线的 trace。
+上面偏移量只是 schema 占位，真实预测必须从原始 description 计算，满足 description[start:end] 与 quote 完全一致；绝不能照抄 0。技术类别与现有 technical_vocabulary.py 一致；新增 Java 等类别时需要版本化映射。外部预测必须使用新的 --output 保存评分结果，避免覆盖基线；没有外部实验臂自己的 trace 时，无法证明具体错误发生在检索、证据获取还是语义判断，报告会标记 undetermined，而不是借用规则基线的 trace。
 
 ## 如何判断哪里出错？
 
