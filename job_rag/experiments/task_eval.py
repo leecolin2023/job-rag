@@ -188,7 +188,7 @@ def diagnose(dataset, predictions, trace, gold):
     return summary
 
 
-def evaluate(run_dir, dataset_path, gold_path, predictions_path=None, trace_path=None):
+def evaluate(run_dir, dataset_path, gold_path, predictions_path=None, trace_path=None, output_dir=None):
     run_dir = Path(run_dir)
     manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
     if manifest.get("task") != TASK_ID or file_hash(dataset_path) != manifest.get("dataset_sha256"):
@@ -213,8 +213,20 @@ def evaluate(run_dir, dataset_path, gold_path, predictions_path=None, trace_path
             Counter(f["stage"] for f in result["failures"]).items()))
     result["gold_sha256"] = file_hash(gold_path)
     result["predictions_external"] = predictions_path is not None
-    (run_dir / "evaluation.md").write_text(render_evaluation(result), encoding="utf-8")
-    write_json(run_dir / "evaluation.json", result)
+    if predictions_path is not None and not output_dir:
+        raise ValueError("External predictions require a separate --output directory")
+    destination = Path(output_dir) if output_dir else run_dir
+    if output_dir:
+        destination.mkdir(parents=True, exist_ok=False)
+        write_json(destination / "evaluation_manifest.json", {
+            "task": TASK_ID, "source_run": str(run_dir),
+            "dataset_sha256": manifest["dataset_sha256"],
+            "gold_sha256": file_hash(gold_path),
+            "predictions_sha256": file_hash(predictions_path or run_dir / "predictions.jsonl"),
+            "trace_sha256": file_hash(trace_path) if trace_path else None,
+        })
+    (destination / "evaluation.md").write_text(render_evaluation(result), encoding="utf-8")
+    write_json(destination / "evaluation.json", result)
     return result
 
 
