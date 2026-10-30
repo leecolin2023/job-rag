@@ -5,7 +5,8 @@ from pathlib import Path
 import pytest
 
 from job_rag.experiments.task_runner import load_dataset, read_jsonl, run, write_jsonl
-from job_rag.experiments.task_eval import evaluate
+from job_rag.experiments.task_eval import evaluate, load_gold
+from job_rag.experiments.task_review import prepare_review_queue
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -112,3 +113,19 @@ def test_aggregate_and_answer_drift_get_distinct_diagnostics(tmp_path):
     result = evaluate(output, DATASET, GOLD)
     assert any(f["stage"] == "aggregation" for f in result["failures"])
     assert any(f["stage"] == "answer" for f in result["failures"])
+
+
+def test_review_queue_is_stratified_and_cannot_be_used_as_gold(tmp_path):
+    folder = tmp_path / "review"
+    result = prepare_review_queue(DATASET, folder, limit=10)
+    assert result["sampled"] == 10
+    assert not result["gold_verified"]
+    assert result["groups"]["unknown_section"] >= 1
+    assert result["groups"]["alias_boundary"] >= 1
+    assert result["groups"]["excluded_section"] >= 1
+    queue = read_jsonl(folder / "review_queue.jsonl")
+    assert len({row["job_id"] for row in queue}) == 10
+    assert all(row["label_source"] == "pending_review" for row in queue)
+    assert all(row["in_scope"] is None for row in queue)
+    with pytest.raises(ValueError, match="label_source"):
+        load_gold(folder / "review_queue.jsonl", load_dataset(DATASET))
