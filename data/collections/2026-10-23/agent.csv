@@ -5895,3 +5895,18 @@ Agent,Sr GenAI Agent Lead｜顶尖金融外资,页面未显示,广州,40-70K·15
 Agent,ai数据分析师,页面未显示,广州,20-35K·16薪,3-5年,本科,https://www.zhipin.com/job_detail/727712d88cb166b00nJ92dy8EVpU.html,4,2026-10-23,727712d88cb166b00nJ92dy8EVpU
 Agent,Java 后端开发工程师 (agent 方向),广州汽车集团股份...,广州,25-50K,3-5年,本科,https://www.zhipin.com/job_detail/d68c51ac188236b80nZ539m8FVNW.html,4,2026-10-23,d68c51ac188236b80nZ539m8FVNW
 Agent,Java高级开发工程师（应用工具方向）,指针科技,广州·天河区·员村,15-20K,5-10年,本科,https://www.zhipin.com/job_detail/f2a1f6a9af6adfb40nZ53dS_FVtY.html,4,2026-10-23,f2a1f6a9af6adfb40nZ53dS_FVtY
+Agent,AI研发工程师（算力底座/非agent）,云宏信息,广州·天河区·天河客运站,18-27K,3-5年,本科,https://www.zhipin.com/job_detail/04fe9acc3c2fef3e0nx7296_FlNT.html,"vllm
+kvcache
+卸
+载优化
+推理
+引擎
+网关
+岗位职责 
+1、GPU 算力池化与管理平台开发：负责 GPU 集群的资源纳管、调度分配、多租户隔离与监控告警，支持训练/推理任务的统一算力编排，提升 GPU 利⽤率；具备国产 GPU 卡的适配与算⼦调优能⼒。 
+2、Token 网关系统设计与实现：开发高性能 Token ⽹关服务，支持多模型后端路由、流量管控、鉴权计费、限流熔断及请求审计，保障大模型推理服务的稳定与可观测性。 
+3、Token 生成与推理服务优化：对接主流推理框架（vLLM / TGI / TensorRT-LLM / SGLang​ 等），优化 Token 生成吞吐与首 Token 延迟，支持动态批处理、KV Cache 管理等推理加速特性。 
+岗位要求 
+1、扎实的后端工程能力：精通 Go / Python / C++ 至少一门语言，熟悉高性能网络编程与分布式系统开发，有网关、代理、负载均衡类系统开发经验者优先。 
+2、GPU 与 AI 推理栈经验：熟悉 NVIDIA GPU 架构及 CUDA 生态，了解 Kubernetes + GPU 设备插件（Device Plugin / MIG / MPS）的调度机制；熟悉通用国产 GPU 卡（如昇腾、海光、天数智芯等）的算子优化方法，包括算子融合、内存布局优化、计算图切分等调优手段。 
+3、大模型推理与网关技术栈：熟悉 LLM 推理流程（prefill / decode 阶段、KV Cache、PagedAttention 等），了解 OpenAI API 协议及主流 Token 计费模型，有 API Gateway / Envoy / Nginx 二次开发经验者加分；对 SGLang 的 RadixAttention、结构化输出等特性有实际使用或二次开发经验者优先。",2026-10-23,04fe9acc3c2fef3e0nx7296_FlNT
