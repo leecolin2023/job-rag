@@ -1,5 +1,10 @@
 # 更新记录
 
+## 开发中 — CSV 删列与导入版本语义
+
+- `data/jobs.csv` 删除 `first_keyword/keyword_count/is_guangzhou/address` 后，版本判定改用内容字段的 `content_hash`；采集元数据（`status/keywords/collected_at`）或 CSV 列结构变化只原位刷新 `raw`，不升版本、不写 `revisions`、不登记索引任务。
+- 存量数据库无需 DDL：导入时从 `job.raw` 按当前字段集重算 `content_hash`，惰性刷新旧哈希并移除残留列；导入统计新增 `refreshed`。
+
 ## 开发中 — 按职责整理目录
 
 - 将服务入口、相关性检索、精确查询、模型客户端分别归入 `interfaces/`、`retrieval/`、`querying/`、`providers/`，与预处理、存储、分块、索引执行及实验目录分离。

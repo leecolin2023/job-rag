@@ -40,11 +40,13 @@ education=本科
 
 ## 四、为什么还需要两种哈希和岗位版本？
 
-同一个来源 ID 重新导入，可能出现三种变化：完全没变；只有采集日期变化；岗位职责或薪资变了。
+同一个来源 ID 重新导入，可能出现三类变化：完全没变；只有采集元数据（`status/keywords/collected_at`）或 CSV 列结构变化；岗位内容字段变化。除此之外，索引签名过期也会触发重新索引，与原始行是否变化无关。
 
-`importer.py` 使用 `source:job_id` 定位岗位。`raw_hash` 对整行导入字段求指纹，用于判断是否增加 `version`、保存新 `revisions`；`content_hash` 针对参与检索内容的一组字段建立另一指纹。这样能够区分“来源记录发生了变化”和“向量文本需要重新生成”。
+`importer.py` 使用 `source:job_id` 定位岗位。`raw_hash` 是整行导入字段的精确指纹，只用于判断当前 `raw` 是否需要原地刷新并留下审计依据；是否增加 `version` 由 `content_hash` 决定。`content_hash` 只覆盖会影响岗位证据与检索文档的字段：`title/company/location/salary/experience/education/description/url`。采集字段、以及像 `address` 这样被删掉的列，都不参与版本判定。
 
-即使采集日期改变造成新版本，只要索引生成的文字和签名确实没变，[Worker](../indexing/README.md)也可能复用向量。导入时只登记 `index_tasks`，避免数据库事务因外部模型超时而悬挂。
+判定时不会直接信任数据库中存量的 `job.content_hash`，而是用当前字段集从 `job.raw` 重算旧值。这样，CSV 删列或采集元数据变化只会原位替换 `raw`、刷新两个哈希和 `normalized`，不增加版本、不写 `revisions`、不登记索引任务；只有内容字段真正变化才产生新版本。旧库不需要 DDL 迁移，下次导入时会惰性修正哈希并去掉残留列。
+
+内容变化仍然登记 `index_tasks`；导入时不请求模型，避免数据库事务因外部模型超时而悬挂。如果生成的检索文字和签名确实没变，[Worker](../indexing/README.md)会复用向量。`revisions` 只保存内容版本，不保存采集元数据刷新。
 
 此外，岗位的 `job_status` 不是从 CSV 采集 `status` 直接拷贝。重新导入不会使人工关闭的岗位自动恢复；未出现在文件里的岗位也不会被自动关闭。
 

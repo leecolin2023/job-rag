@@ -4,11 +4,14 @@ import json
 import re
 import unicodedata
 
-REQUIRED_COLUMNS = {
-    "job_id", "title", "company", "location", "salary", "experience", "education",
-    "url", "description", "status", "collected_at",
-}
-CONTENT_FIELDS = ("title", "company", "location", "salary", "experience", "education", "description", "address", "url")
+IDENTITY_FIELDS = ("job_id",)
+# Fields that describe the job itself. Only changes here create a new version.
+CONTENT_FIELDS = ("title", "company", "location", "salary", "experience", "education", "description", "url")
+# Collection metadata: refreshed in place, never part of the version decision.
+# status remains required and is still exposed as collection_status.
+COLLECTION_FIELDS = ("status", "keywords", "collected_at")
+SOURCE_FIELDS = IDENTITY_FIELDS + CONTENT_FIELDS + COLLECTION_FIELDS
+REQUIRED_COLUMNS = set(SOURCE_FIELDS) - {"keywords"}
 
 
 def digest(value):

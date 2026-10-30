@@ -1,5 +1,8 @@
 from pathlib import Path
 
+from sqlalchemy import select
+
+from job_rag.storage import Job
 from job_rag.preprocessing.importer import import_csv
 from job_rag.preprocessing.validation import parse_csv
 from job_rag.indexing.worker import run_index_tasks
@@ -24,3 +27,5 @@ def test_real_dataset(db, settings):
         assert job["normalized"]["salary_min"] >= 20000
         assert job["job_status"] == "unknown"
     assert import_csv(db, settings, content)["unchanged"] == 593
+    with db.session() as session:
+        assert set(session.scalars(select(Job.version))) == {1}

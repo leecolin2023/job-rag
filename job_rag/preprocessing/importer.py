@@ -9,7 +9,7 @@ def import_csv(db, settings, content, source="boss"):
     if not source or len(source) > 60 or ":" in source:
         raise ValueError("source must be 1-60 characters and must not contain ':'")
     rows = parse_csv(content)  # Validate the entire input before writing anything.
-    stats = {"created": 0, "updated": 0, "unchanged": 0, "total": len(rows)}
+    stats = {"created": 0, "updated": 0, "refreshed": 0, "unchanged": 0, "total": len(rows)}
     stamp = now()
     with db.session.begin() as session:
         for row in rows:
@@ -23,21 +23,34 @@ def import_csv(db, settings, content, source="boss"):
                           first_seen_at=stamp, last_seen_at=stamp)
                 session.add(job)
                 session.flush()
+                session.add(Revision(job_key=key, version=1, raw=row,
+                                     normalized=job.normalized, created_at=stamp))
+                enqueue(session, job, settings)
                 stats["created"] += 1
-            elif job.raw_hash != raw_hash:
+                continue
+            # Recompute from the stored raw record instead of trusting the stored
+            # hashes: existing rows may predate the current field set.
+            stored_raw_hash, stored_content_hash = digest(job.raw), content_hash(job.raw)
+            if stored_content_hash != search_hash:
                 job.version += 1
                 job.raw, job.normalized = row, normalize(row)
                 job.raw_hash, job.content_hash = raw_hash, search_hash
+                job.last_seen_at = stamp
+                session.add(Revision(job_key=key, version=job.version, raw=row,
+                                     normalized=job.normalized, created_at=stamp))
+                enqueue(session, job, settings)
                 stats["updated"] += 1
+                continue
+            # Content is unchanged. Collection metadata or the CSV column set may
+            # still have changed; refresh the current record without a new version.
+            if stored_raw_hash != raw_hash:
+                job.raw, job.normalized = row, normalize(row)
+                stats["refreshed"] += 1
             else:
                 stats["unchanged"] += 1
-                job.last_seen_at = stamp
-                if job.indexed_version != job.version or job.index_signature != settings.index_signature:
-                    enqueue(session, job, settings)
-                continue
+            job.raw_hash, job.content_hash = raw_hash, search_hash
             job.last_seen_at = stamp
-            session.add(Revision(job_key=key, version=job.version, raw=row,
-                                 normalized=job.normalized, created_at=stamp))
-            enqueue(session, job, settings)
+            if job.indexed_version != job.version or job.index_signature != settings.index_signature:
+                enqueue(session, job, settings)
     # Absence in a CSV never closes a job. Observation time is not verification time.
     return stats
