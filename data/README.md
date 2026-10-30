@@ -16,11 +16,11 @@ Job-RAG 不直接把采集到的招聘信息交给模型“读完记住”。如
 
 ## 二、为什么一份岗位要保留这些字段？
 
-当前快照含 593 个不同 `job_id`、12 列，其中 592 条 `description` 非空。最重要的不是列数，而是**字段扮演不同的证据角色**。
+当前合并主表含 **1,093** 个不同 `job_id`、12 列，其中 **1,092** 条 `description` 非空；包含 2026-10-23 与 2026-10-30 两轮采集。最重要的不是列数，而是**字段扮演不同的证据角色**。
 
 假设一条招聘标题为“AI 平台工程师”，薪资“20–35K”，正文含“vLLM 经验优先”。`title/company/location/salary/experience/education` 描述招聘方展示的基本属性；`description` 承载实际职责、必备条件和加分语境；`job_id` 是以后识别同一来源岗位更新的关键；`url` 与 `collected_at` 让人能追溯出处和采集日期。
 
-另一些字段 `status/keywords` 记录的是采集过程。例如“通过 vLLM 关键词搜到”不等于这份 JD 的完整技能标签，更不等于招聘方**要求** vLLM。`status` 记录“是否取得详情”，并不等于数据库单独维护的 `job_status`（在招、关闭、未核验等）。`first_keyword`、`keyword_count`、`is_guangzhou` 和 `address` 已从主表删除；首次搜索来源可由采集记录维护，关键词数量与广州筛选可以根据保留字段计算。导入时，`status/keywords/collected_at` 或 CSV 列结构的变化只会刷新当前原文，不会制造新的岗位版本；只有 `title/company/location/salary/experience/education/description/url` 变化才会升版本。
+另一些字段 `status/keywords/collected_at` 记录整理状态、搜索来源与最近一次采集日期。`keywords` 不等于 JD 的真实技术要求。自 2026-10-30 起，CSV 的 `status` 按使用者要求取 `招聘中` 或 `下线`：旧 Agent/RAG 岗位在新采集集合缺失时标 `下线`，其他标 `招聘中`。这是**按采集结果推断的状态**，不等同于平台核验的在招/关闭状态，尤其本轮未复查的 48 条其他关键词旧岗位不能视为已确认招聘中。数据库的 `job_status` 是独立的人工核验状态；普通导入不会把 CSV 的状态自动写入该字段。详见 [2026-10-30 合并报告](collections/2026-10-30/MERGE_REPORT.md)。`first_keyword`、`keyword_count`、`is_guangzhou`、`address` 已从主表移除。导入时，`status/keywords/collected_at` 变化只刷新原文，不单独生成索引版本；实际岗位内容变更才触发索引更新。
 
 ## 三、为什么不在这里直接清洗、摘要或生成 Embedding？
 
