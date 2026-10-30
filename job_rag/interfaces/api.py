@@ -2,7 +2,7 @@ import secrets
 from contextlib import asynccontextmanager
 from pathlib import Path
 
-from fastapi import Depends, FastAPI, Header, HTTPException, Request
+from fastapi import Depends, FastAPI, Header, HTTPException, Query, Request
 from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 from sqlalchemy import select
@@ -11,6 +11,7 @@ from ..config import Settings
 from ..retrieval.candidates import CandidateRequest, candidates
 from ..querying.catalog import BatchRequest, CatalogRequest, SnapshotChanged, batch_jobs, catalog_query
 from ..querying.jobs import job_detail, knowledge_base_stats
+from ..querying.summarize_job_technical_mentions import TechnicalSummaryRequest, summarize_job_technical_mentions
 from ..storage import Database
 from ..preprocessing.importer import import_csv
 from ..storage.status import set_status
@@ -82,12 +83,21 @@ def create_app(settings=None):
         except SnapshotChanged as exc:
             raise HTTPException(409, str(exc))
 
-    @app.get("/api/jobs/{job_id}")
-    def detail(job_id: str, source: str = "boss"):
+    @app.post("/api/technical-mentions")
+    def technical_mentions(request: TechnicalSummaryRequest):
         try:
-            return job_detail(db, job_id, source)
+            return summarize_job_technical_mentions(db, request)
+        except SnapshotChanged as exc:
+            raise HTTPException(409, str(exc))
+
+    @app.get("/api/jobs/{job_id}")
+    def detail(job_id: str, source: str = "boss", sections: list[str] | None = Query(default=None), include_raw: bool = True):
+        try:
+            return job_detail(db, job_id, source, sections, include_raw)
         except KeyError:
             raise HTTPException(404, "岗位不存在")
+        except ValueError as exc:
+            raise HTTPException(400, str(exc))
 
     @app.post("/api/jobs/{job_id}/status", dependencies=[Depends(admin)])
     def update_status(job_id: str, payload: StatusRequest):

@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 from .bailian import BailianClient, BailianConfig, BailianError
-from .runner import ARMS, pool, prepare, recall, rerank, rescore, report
+from .runner import ARMS, audit_rerank_inputs, pool, prepare, recall, rerank, rescore, report
 
 
 def main():
@@ -40,6 +40,10 @@ def main():
     rank.add_argument("--execute", action="store_true")
     render = commands.add_parser("report", help="Render summary JSON to Markdown and CSV; no API calls")
     render.add_argument("run")
+    audit = commands.add_parser("audit-rerank-inputs", help="Inspect full-JD frozen candidate request sizes; no API calls or credentials")
+    audit.add_argument("--recall-run", required=True)
+    audit.add_argument("--model", default="qwen3.7-text-rerank")
+    audit.add_argument("--tokenizer-path", default="", help="Local tokenizer JSON; caller must verify suitability for the hosted model")
     probe = commands.add_parser("probe", help="Tiny paid model/endpoint/auth validation before a full run")
     probe.add_argument("--execute", action="store_true")
     args = parser.parse_args()
@@ -55,6 +59,8 @@ def main():
             result = rescore(args.recall_run, args.judgments, args.output)
         elif args.command == "report":
             result = report(args.run)
+        elif args.command == "audit-rerank-inputs":
+            result = audit_rerank_inputs(args.recall_run, args.model, args.tokenizer_path)
         else:
             if not args.execute:
                 parser.error("This command calls paid APIs. Use --execute only after reviewing the prepared plan")

@@ -18,6 +18,8 @@ from urllib.parse import urlsplit
 from dotenv import dotenv_values
 import httpx
 
+from .rerank_inputs import InputCounter, inspect_inputs, payload, require_admitted
+
 
 @dataclass(frozen=True)
 class BailianConfig:
@@ -28,6 +30,7 @@ class BailianConfig:
     rerank_model: str = "qwen3.7-text-rerank"
     batch_size: int = 20
     trust_env: bool = False
+    rerank_tokenizer_path: str = ""
 
     def __post_init__(self):
         url = urlsplit(self.host)
@@ -47,7 +50,8 @@ class BailianConfig:
                    dimensions=int(values.get("BAILIAN_EMBEDDING_DIMENSIONS", "1024")),
                    rerank_model=values.get("BAILIAN_RERANK_MODEL", "qwen3.7-text-rerank"),
                    batch_size=int(values.get("BAILIAN_BATCH_SIZE", "20")),
-                   trust_env=values.get("BAILIAN_TRUST_ENV", "false").lower() == "true")
+                   trust_env=values.get("BAILIAN_TRUST_ENV", "false").lower() == "true",
+                   rerank_tokenizer_path=values.get("BAILIAN_RERANK_TOKENIZER_PATH", ""))
 
     def public(self):
         return {key: value for key, value in asdict(self).items() if key != "api_key"}
@@ -201,21 +205,16 @@ class BailianClient:
     def rerank(self, query, documents, instruct=""):
         if not documents:
             return []
-        if len(documents) > 500:
-            raise ValueError("Rerank batch exceeds 500 documents")
-        # Conservative request guard; bytes are not advertised as actual tokenizer counts.
-        if sum(len(text.encode()) for text in documents) + len(query.encode()) * len(documents) > 120000:
-            raise ValueError("Rerank conservative UTF-8 byte guard exceeded; reduce candidate count/doc budget")
-        payload = {"model": self.config.rerank_model, "input": {"query": query, "documents": documents},
-                   "parameters": {"top_n": len(documents)}}
-        if instruct:
-            payload["parameters"]["instruct"] = instruct
-        key = key_for({"operation": "rerank-v1", "host": self.config.host, "payload": payload})
+        stats = inspect_inputs(query, documents, self.config.rerank_model, instruct,
+                               InputCounter(self.config.rerank_tokenizer_path))
+        require_admitted(stats)
+        request_payload = payload(query, documents, self.config.rerank_model, instruct)
+        key = key_for({"operation": "rerank-v1", "host": self.config.host, "payload": request_payload})
         cached = self._get(key)
         self.last_from_cache = cached is not None
         if cached is not None:
             return cached
-        body = self._post("/services/rerank/text-rerank/text-rerank", payload)
+        body = self._post("/services/rerank/text-rerank/text-rerank", request_payload)
         results = body["output"]["results"]
         if sorted(item["index"] for item in results) != list(range(len(documents))):
             raise BailianError("Rerank indexes/count mismatch; refusing partial candidate comparison")

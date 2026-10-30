@@ -12,12 +12,13 @@ from .answer import answer
 class CandidateRequest(SearchRequest):
     reformulations: list[str] = Field(default_factory=list, max_length=4)
     candidate_limit: int = Field(default=20, ge=1, le=60)
+    rerank: bool = False
 
 
 def candidates(db, settings, request):
     with db.session() as session:
         cities = {job.normalized["city"] for job in session.scalars(select(Job))}
-    original = SearchRequest(**request.model_dump(exclude={"reformulations", "candidate_limit"}))
+    original = SearchRequest(**request.model_dump(exclude={"reformulations", "candidate_limit", "rerank"}))
     base = resolve_filters(original, cities)
     queries = list(dict.fromkeys([request.query] + request.reformulations))
     if any(len(query) > 2000 for query in queries):
@@ -33,6 +34,23 @@ def candidates(db, settings, request):
             if item["key"] not in records:
                 records[item["key"]] = item
                 item["matched_queries"] = []
+                item["evidence_queries"] = {str(chunk_id): [query] for chunk_id in item.get("evidence_chunk_ids", [])}
+                item["evidence_merge_truncated"] = False
+            else:
+                record = records[item["key"]]
+                for i, chunk_id in enumerate(item.get("evidence_chunk_ids", [])):
+                    provenance = record["evidence_queries"].setdefault(str(chunk_id), [])
+                    if query not in provenance:
+                        provenance.append(query)
+                    if chunk_id in record.get("evidence_chunk_ids", []):
+                        continue
+                    # Up to two source chunks per query, across at most five queries.
+                    if len(record["evidence_chunk_ids"]) >= 10:
+                        record["evidence_merge_truncated"] = True
+                        continue
+                    record["evidence_chunk_ids"].append(chunk_id)
+                    record["evidence"].append(item["evidence"][i])
+                    record["evidence_details"].append(item["evidence_details"][i])
             records[item["key"]]["matched_queries"].append(query)
     ordered = sorted(records, key=lambda key: (-scores[key], key))
     output = []
@@ -45,7 +63,13 @@ def candidates(db, settings, request):
                 continue
             item["fusion_score"] = round(scores[key], 6)
             output.append(item)
-    return {"results": output[:request.candidate_limit], "total_candidates": len(output),
+    rerank_metadata = {"requested": False, "applied": False}
+    if request.rerank:
+        from .rerank import rerank_candidates
+        output, rerank_metadata = rerank_candidates(db, settings, request.query, output)
+        if not rerank_metadata["applied"]:
+            warnings.add("模型重排未执行，保留召回融合顺序；原因见rerank字段。")
+    return {"results": output[:request.candidate_limit], "total_candidates": len(output), "rerank": rerank_metadata,
             "count_kind": "bounded_recall_union_not_corpus_count",
             "count_complete": False, "returned_candidates": min(len(output), request.candidate_limit),
             "recall_limits": {"per_query_jobs": 30, "per_channel_chunks": 100,

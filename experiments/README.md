@@ -54,6 +54,14 @@ job-rag-experiment rescore --recall-run runtime/experiments/recall-v1 \
 
 第二轮使用在 dev 中选定的召回方案，保持候选集合冻结。以下 D 只是命令示意，**不代表它已被证明最好**：
 
+重排前可先检查完整 JD 请求体积，不需要模型配置或付费：
+
+~~~bash
+job-rag-experiment audit-rerank-inputs --recall-run runtime/experiments/recall-v1
+~~~
+
+重排已取消 1800 字节截断，统一使用完整原文。默认通过 UTF-8 字节加保留量进行保守预检，不能当作实际 Token 计数。可在审计时传 `--tokenizer-path`、运行时设置 `BAILIAN_RERANK_TOKENIZER_PATH` 使用同一份本地 tokenizer JSON，但须自行核实它适用于托管模型；加载文件本身不证明一致。未通过预检会在发送请求前停止。详见 [输入审计说明](../docs/rerank-input-audit-2026-10-28.md)。
+
 ~~~bash
 job-rag-experiment rerank --recall-run runtime/experiments/recall-v1 \
   --arm D_section_typed_1100 --judgments runtime/experiments/review-v1.json \

@@ -117,6 +117,55 @@ def test_partial_rerank_response_is_not_silently_scored(tmp_path):
         client.close()
 
 
+@pytest.mark.parametrize("query,documents,instruct,issue", [
+    ("x" * 4001, ["a"], "", "query_estimate"),
+    ("q", ["x" * 30001], "", "document_estimate"),
+    ("q", ["a"] * 501, "", "document_count"),
+    ("q", ["x" * 24000] * 5, "", "request_estimate"),
+    ("q", ["x"] * 100, "instruction" * 200, "request_estimate"),
+])
+def test_rerank_rejects_unadmitted_inputs_before_http(tmp_path, query, documents, instruct, issue):
+    def forbidden(request):
+        pytest.fail("invalid inputs must not be sent")
+    client = BailianClient(config(), tmp_path / "cache.db", tmp_path / "journal.jsonl",
+                          transport=httpx.MockTransport(forbidden))
+    try:
+        with pytest.raises(ValueError, match=issue):
+            client.rerank(query, documents, instruct)
+        assert client.requests == 0
+    finally:
+        client.close()
+
+
+def test_local_counter_is_identified_and_long_full_jd_sent_unchanged(tmp_path):
+    pytest.importorskip("tokenizers")
+    from tokenizers import Tokenizer, models, pre_tokenizers
+    from dataclasses import replace
+    from job_rag.experiments.rerank_inputs import InputCounter, inspect_inputs
+    tokenizer = Tokenizer(models.WordLevel({"[UNK]": 0}, unk_token="[UNK]"))
+    tokenizer.pre_tokenizer = pre_tokenizers.Whitespace()
+    path = tmp_path / "synthetic-tokenizer.json"
+    tokenizer.save(str(path))
+    text = "完整岗位描述 " * 300
+    docs = [text] * 50
+    stats = inspect_inputs("query", docs, counter=InputCounter(str(path)))
+    assert stats["provider_formula_utf8_bytes"] > 120000
+    assert stats["admitted"]
+    assert not stats["counter"]["provider_tokens_verified"]
+    calls = []
+    def handle(request):
+        calls.append(json.loads(request.content))
+        return httpx.Response(200, json={"output": {"results": [
+            {"index": i, "relevance_score": .5} for i in range(50)]}})
+    client = BailianClient(replace(config(), rerank_tokenizer_path=str(path)), tmp_path / "cache.db",
+                          tmp_path / "journal.jsonl", transport=httpx.MockTransport(handle))
+    try:
+        client.rerank("query", docs)
+        assert calls[0]["input"]["documents"] == docs
+    finally:
+        client.close()
+
+
 def test_runtime_native_embedding_protocol(settings, monkeypatch):
     from dataclasses import replace
     from job_rag.providers.client import embed

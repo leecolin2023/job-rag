@@ -6,7 +6,7 @@ import pytest
 
 from job_rag.experiments.metrics import paired_bootstrap, ranking_metrics
 from job_rag.experiments.runner import (
-    ARMS, load_prepared, pool, prepare, read_json, read_lines, recall, report, rerank, rescore, write_json,
+    ARMS, audit_rerank_inputs, load_prepared, pool, prepare, read_json, read_lines, recall, report, rerank, rescore, write_json,
 )
 
 from conftest import csv_bytes, row
@@ -65,6 +65,7 @@ def test_recall_then_fixed_candidate_rerank_and_review(tmp_path):
     rerank(recdir, rerankdir, FixtureClient(), "D_section_typed_1100", allow_provisional=True)
     for result in read_lines(rerankdir / "results.jsonl"):
         assert all(set(ranking) == set(result["candidate_ids"]) for ranking in result["rankings"].values())
+        assert all(not item["truncated"] for item in result["representations"])
     review = tmp_path / "review.json"
     assert pool(recdir, review, depth=2)["judgments_to_review"] == 4
     labels = read_json(review)
@@ -89,6 +90,50 @@ def test_artifact_mutation_is_rejected(tmp_path):
     path.write_text(path.read_text().replace("测试公司", "修改公司"))
     with pytest.raises(ValueError, match="changed"):
         load_prepared(prepared)
+
+
+def test_full_jd_keeps_tail_whitespace_and_original_section_order():
+    from job_rag.experiments.runner import _representation
+    description = " \n岗位职责\n" + "负责系统建设。" * 600 + "\r\n任职要求\n不要求博士，满足其一即可。 \n"
+    text, truncated = _representation(row(description=description))
+    assert text.endswith(description)
+    assert len(text.encode()) > 1800
+    assert not truncated
+
+
+def test_audit_and_whole_run_preflight_do_not_call_model(tmp_path):
+    prepared = fixture_prepare(tmp_path)
+    recdir = tmp_path / "recall"
+    recall(prepared, recdir, FixtureClient(), candidate_limit=2)
+    audit = audit_rerank_inputs(recdir)
+    assert len(audit["requests"]) == 2 * (len(ARMS) + 1) * 2
+    assert all(item["admitted"] for item in audit["requests"])
+    # Historical implementation may differ; frozen source/candidate hashes may not.
+    prepared_manifest = read_json(prepared / "manifest.json")
+    prepared_manifest["implementation_hash"] = "historical-implementation"
+    write_json(prepared / "manifest.json", prepared_manifest)
+    from job_rag.preprocessing.normalize import digest
+    manifest = read_json(recdir / "manifest.json")
+    manifest["prepared_manifest_hash"] = digest(prepared_manifest)
+    write_json(recdir / "manifest.json", manifest)
+    assert audit_rerank_inputs(recdir)["requests"] == audit["requests"]
+    # A later overlong query must stop the whole run before its first API call.
+    results = read_lines(recdir / "results.jsonl")
+    results[-1]["query"] = "x" * 4001
+    from job_rag.experiments.runner import write_lines
+    from job_rag.preprocessing.normalize import digest
+    write_lines(recdir / "results.jsonl", results)
+    manifest = read_json(recdir / "manifest.json")
+    manifest["results_hash"] = digest(results)
+    write_json(recdir / "manifest.json", manifest)
+
+    class NoCalls(FixtureClient):
+        def rerank(self, *args, **kwargs):
+            pytest.fail("preflight must run before model calls")
+
+    with pytest.raises(ValueError, match="No text was truncated"):
+        rerank(recdir, tmp_path / "blocked", NoCalls(), "A_legacy_1100", allow_provisional=True)
+    assert not (tmp_path / "blocked").exists()
 
 
 def test_reference_evidence_and_paraphrase_splits_are_validated(tmp_path):

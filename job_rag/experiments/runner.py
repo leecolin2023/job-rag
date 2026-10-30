@@ -14,6 +14,7 @@ from ..preprocessing.normalize import digest, normalize
 from ..retrieval.search import SearchRequest, bm25, tokens
 from ..querying.filters import matches
 from .metrics import mean_metrics, paired_bootstrap, ranking_metrics
+from .rerank_inputs import InputCounter, inspect_inputs, representation, require_admitted
 
 ARMS = {
     "A_legacy_1100": ("legacy", 1100),
@@ -65,7 +66,8 @@ def implementation_hash():
                    for name in ["chunking/__init__.py", "chunking/core.py", "chunking/legacy.py",
                                 "preprocessing/normalize.py", "preprocessing/validation.py",
                                 "querying/filters.py", "retrieval/search.py", "storage/serialization.py",
-                                "experiments/runner.py", "experiments/bailian.py", "experiments/metrics.py"]})
+                                "experiments/runner.py", "experiments/bailian.py", "experiments/metrics.py",
+                                "experiments/rerank_inputs.py", "providers/rerank_inputs.py"]})
 
 
 def validate_benchmark(benchmark, rows):
@@ -144,10 +146,10 @@ def prepare(csv_path, benchmark_path, output):
     return manifest
 
 
-def load_prepared(directory):
+def load_prepared(directory, *, require_current_implementation=True):
     directory = Path(directory)
     manifest = read_json(directory / "manifest.json")
-    if manifest["implementation_hash"] != implementation_hash():
+    if require_current_implementation and manifest["implementation_hash"] != implementation_hash():
         raise ValueError("Experiment implementation changed since preparation; create a new prepared snapshot (embedding cache can be reused)")
     for filename, expected in manifest["artifacts"].items():
         value = read_lines(directory / filename) if filename.endswith(".jsonl") else read_json(directory / filename)
@@ -357,35 +359,43 @@ def rescore(recall_directory, judgments, output):
     return summary
 
 
-def _representation(row, budget=1800):
-    """Same bounded, source-based parent representation for every reranking arm."""
-    source = row["description"]
-    sections = parse_sections(source)
-    ordered = sorted(sections, key=lambda section: ({"requirements": 0, "responsibilities": 1, "preferred": 2}.get(section.section_type, 3), section.start))
-    rendered = f"岗位：{row['title']}\n"
-    if len(rendered.encode()) > budget:
-        return rendered.encode()[:budget - 40].decode("utf-8", errors="ignore") + "\n[原文有截断，需完整复核]", True
-    truncated = False
-    for section in ordered:
-        addition = f"\n章节：{section.title}\n" + source[section.start:section.end]
-        remaining = budget - len(rendered.encode())
-        if len(addition.encode()) > remaining:
-            addition = addition.encode()[:max(remaining - 40, 0)].decode("utf-8", errors="ignore") + "\n[原文有截断，需完整复核]"
-            rendered += addition
-            truncated = True
-            break
-        rendered += addition
-    return rendered, truncated
+def _representation(row):
+    return representation(row), False
 
 
-def rerank(recall_directory, output, client, arm, judgments=None, allow_provisional=False):
+def _load_recall_inputs(recall_directory):
     manifest = read_json(Path(recall_directory) / "manifest.json")
-    prepared_manifest, records, _ = load_prepared(manifest["prepared_directory"])
+    # Reuse immutable historical candidates for a NEW rerank experiment. Every
+    # artifact and manifest hash remains checked; no recall is regenerated here.
+    prepared_manifest, records, _ = load_prepared(manifest["prepared_directory"], require_current_implementation=False)
     if digest(prepared_manifest) != manifest["prepared_manifest_hash"]:
         raise ValueError("Prepared manifest changed")
     results = read_lines(Path(recall_directory) / "results.jsonl")
     if digest(results) != manifest["results_hash"]:
         raise ValueError("Frozen candidate/results artifact changed")
+    return manifest, records, results
+
+
+def audit_rerank_inputs(recall_directory, model="qwen3.7-text-rerank", tokenizer_path=""):
+    """Inspect every frozen query/arm with no credentials, writes or API calls."""
+    manifest, records, results = _load_recall_inputs(recall_directory)
+    by_id = {r["raw"]["job_id"]: r["raw"] for r in records}
+    counter = InputCounter(tokenizer_path)
+    requests = []
+    for result in results:
+        for arm, ranking in result["rankings"].items():
+            texts = [representation(by_id[item["job_id"]]) for item in ranking]
+            for name, instruction in [("qwen_default", ""), ("qwen_recruitment_instruction", RERANK_INSTRUCTION)]:
+                requests.append({"query_id": result["query_id"], "arm": arm, "strategy": name,
+                                 **inspect_inputs(result["query"], texts, model, instruction, counter)})
+    return {"recall_results_hash": manifest["results_hash"], "model": model,
+            "audit_implementation_hash": implementation_hash(),
+            "representation": "full title and exact JD, original order, no truncation",
+            "counter": counter.metadata, "requests": requests}
+
+
+def rerank(recall_directory, output, client, arm, judgments=None, allow_provisional=False):
+    manifest, records, results = _load_recall_inputs(recall_directory)
     if judgments:
         review = apply_judgments(results, judgments)
         if review.get("recall_results_hash") != manifest["results_hash"]:
@@ -396,17 +406,20 @@ def rerank(recall_directory, output, client, arm, judgments=None, allow_provisio
         validate_reviewed_results(results, records)
     if any(arm not in result["rankings"] for result in results):
         raise ValueError("Choose a single existing recall arm, based on dev data")
-    directory = new_directory(output)
     by_id = {record["raw"]["job_id"]: record["raw"] for record in records}
+    model = getattr(client.config, "rerank_model", "qwen3.7-text-rerank")
+    counter = InputCounter(getattr(client.config, "rerank_tokenizer_path", ""))
+    # Check the entire run before any billable request or output directory creation.
+    for result in results:
+        texts = [representation(by_id[item["job_id"]]) for item in result["rankings"][arm]]
+        require_admitted(inspect_inputs(result["query"], texts, model, RERANK_INSTRUCTION, counter))
+    directory = new_directory(output)
     outputs = []
     names = ["none", "bm25", "section_rule", "qwen_default", "qwen_recruitment_instruction"]
     for result in results:
         original = result["rankings"][arm]
         ids = [item["job_id"] for item in original]
-        budget = min(1800, (110000 - len(result["query"].encode()) * len(ids)) // max(len(ids), 1))
-        if budget < 256:
-            raise ValueError("Query/candidate count leaves insufficient rerank document budget")
-        representations = [_representation(by_id[job_id], budget) for job_id in ids]
+        representations = [_representation(by_id[job_id]) for job_id in ids]
         texts = [item[0] for item in representations]
         lexical_scores = bm25(tokens(result["query"]), texts)
         rankings = {"none": ids, "bm25": [ids[i] for i in sorted(range(len(ids)), key=lambda i: (-lexical_scores[i], i))]}
@@ -437,7 +450,8 @@ def rerank(recall_directory, output, client, arm, judgments=None, allow_provisio
         outputs.append({"query_id": result["query_id"], "split": result["split"], "group": result["group"], "query": result["query"],
                         "candidate_ids": ids, "representations": [{"job_id": key, "text": text, "truncated": truncated}
                                                                     for key, (text, truncated) in zip(ids, representations)],
-                        "representation_budget_utf8_bytes": budget,
+                        "input_preflight": {name: inspect_inputs(result["query"], texts, model, instruction, counter)
+                                            for name, instruction in [("qwen_default", ""), ("qwen_recruitment_instruction", RERANK_INSTRUCTION)]},
                         "rankings": rankings, "latency_ms": latencies, "judgment_scope": result["judgment_scope"],
                         "candidate_recall_ceiling": ranking_metrics(ids, grades, judgment_scope=result["judgment_scope"]),
                         "metrics": {name: ranking_metrics(ranking, grades, judgment_scope=result["judgment_scope"])
@@ -445,6 +459,7 @@ def rerank(recall_directory, output, client, arm, judgments=None, allow_provisio
     write_lines(directory / "results.jsonl", outputs)
     write_json(directory / "manifest.json", {"phase": "rerank", "recall_run": str(Path(recall_directory).resolve()),
                "recall_results_hash": manifest["results_hash"], "recall_arm": arm, "provider": client.config.public(),
+               "implementation_hash": implementation_hash(),
                "completed_at": datetime.now(timezone.utc).isoformat(),
                "request_journal": str(getattr(client, "journal", "fixture-only")),
                "cache_path": getattr(client, "cache_path", "fixture-only"),
@@ -452,7 +467,8 @@ def rerank(recall_directory, output, client, arm, judgments=None, allow_provisio
                "cost_guard_cny": getattr(client, "max_cost_cny", None),
                "estimated_list_cost_cny": getattr(client, "estimated_spend_cny", None),
                "judgments_hash": digest(read_json(judgments)) if judgments else None,
-               "representation": "frozen parent sections, at most 1800 UTF-8 bytes, identical across arms",
+               "representation": "full title and exact JD, original order, no truncation, identical across arms",
+               "input_counter": counter.metadata,
                "provisional": not bool(judgments), "strategies": names})
     summary = _summary(outputs, names, "fixed-candidate rerank; NOT another recall experiment")
     write_json(directory / "summary.json", summary)

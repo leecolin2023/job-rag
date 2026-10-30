@@ -56,6 +56,6 @@ def test_mcp_only_readonly_tools():
         server = create_mcp()
         tools = await server.list_tools()
         assert {tool.name for tool in tools} == {"get_knowledge_base_stats", "search_job_candidates", "get_job",
-                                               "query_job_catalog", "get_jobs_batch"}
+                                               "query_job_catalog", "get_jobs_batch", "summarize_job_technical_mentions"}
 
     asyncio.run(check())

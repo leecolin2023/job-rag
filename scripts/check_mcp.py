@@ -27,7 +27,7 @@ async def main():
             catalog = await session.list_tools()
             names = {tool.name for tool in catalog.tools}
             assert names == {"get_knowledge_base_stats", "search_job_candidates", "get_job",
-                             "query_job_catalog", "get_jobs_batch"}
+                             "query_job_catalog", "get_jobs_batch", "summarize_job_technical_mentions"}
             stats = await session.call_tool("get_knowledge_base_stats", {})
             assert not stats.isError
             result = await session.call_tool("search_job_candidates", {

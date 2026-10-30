@@ -548,3 +548,15 @@ Job-RAG 最值得保留的不是“可以从多少种入口访问”，而是**�
 - [MCP 2026-07-28 规范说明](https://blog.modelcontextprotocol.io/posts/2026-07-28/)：新版本的无会话设计及兼容性变化。
 - [Job-RAG：Retrieval](../retrieval/README.md)：为什么需要候选召回、排序与证据片段。
 - [Job-RAG：Querying](../querying/README.md)：为什么精确计数、完整枚举与跨页一致性是另一类问题。
+
+---
+
+## 当前源码实现补充（2026-10-30）
+
+本节记录当前源码，与上文的长期目标设计区分；源码改动不代表已部署到线上。
+
+MCP 当前提供六个只读工具：`get_knowledge_base_stats`、`search_job_candidates`、`query_job_catalog`、`get_jobs_batch`、`get_job`、`summarize_job_technical_mentions`。不提供导入、改状态或任意 SQL，这限制了 Agent 和招聘文本中潜在恶意指令造成的破坏范围。
+
+任务路由目前主要是 Agent 的提示策略，不是后端强制状态机；管理接口不等于多租户权限系统；访问 MCP 不等于所用模型一定正确理解了证据。接口层保证的是**清楚的调用边界和权限边界**，不是最终业务判断的真实性。
+
+2026-10-29：工具注册已拆到 `mcp_tools/<工具名>.py`，`mcp_server.py` 只组装服务。共享传输在 `mcp_transport.py`；章节统计的自动化验收见 [章节分析测试](../../tests/test_section_analysis.py)。

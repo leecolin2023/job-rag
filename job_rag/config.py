@@ -25,11 +25,19 @@ class Settings:
     chat_base_url: str = os.getenv("CHAT_BASE_URL", "https://api.openai.com/v1")
     chat_api_key: str = os.getenv("CHAT_API_KEY", "")
     chat_model: str = os.getenv("CHAT_MODEL", "")
+    rerank_base_url: str = os.getenv("RERANK_BASE_URL", "")
+    rerank_api_key: str = os.getenv("RERANK_API_KEY", "")
+    rerank_model: str = os.getenv("RERANK_MODEL", "")
+    rerank_tokenizer_path: str = os.getenv("RERANK_TOKENIZER_PATH", "")
     admin_token: str = os.getenv("ADMIN_TOKEN", "")
 
     @property
     def semantic_enabled(self):
         return bool(self.embedding_api_key and self.embedding_model)
+
+    @property
+    def rerank_enabled(self):
+        return bool(self.rerank_base_url and self.rerank_api_key and self.rerank_model)
 
     @property
     def index_signature(self):

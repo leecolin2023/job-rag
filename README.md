@@ -94,7 +94,7 @@ opencode mcp list
 
 真正的向量召回仍需另外配置专用 Embedding 服务；可设置 `.env.docker` 的 `EMBEDDING_*` 并在同一配置下重新索引。仅连接 MCP 并不会使网页自动具备 DeepSeek 语义理解；网页/API 默认仍返回关键词结果。
 
-当前源码提供五个只读 MCP 工具（线上旧容器未因此自动更新）：
+当前源码提供六个只读 MCP 工具（线上旧容器未因此自动更新）：
 
 | 工具 | 用途 |
 |---|---|
@@ -102,7 +102,10 @@ opencode mcp list
 | `search_job_candidates` | 原问题 + 最多4条改写 + 硬条件，多查询去重召回并返回证据 |
 | `get_job` | 完整原文、最新状态和版本，最终推荐前复核 |
 | `query_job_catalog` | 全库字面匹配、精确计数及一致性分页，不需要索引或模型 |
-| `get_jobs_batch` | 每批最多20份完整JD，可绑定语料指纹及岗位版本 |
+| `get_jobs_batch` | 每批最多20份完整JD、章节与原文位置，可绑定语料指纹及岗位版本 |
+| `summarize_job_technical_mentions` | 章节限定的全库技术提及频次、条件规则标签、证据与逐岗位分页 |
+
+新增章节筛选、技术统计和逐工具文件目录见 [MCP 分析工具说明](job_rag/interfaces/README.md)。
 
 管理 API 不暴露为 MCP 工具。回环服务没有读鉴权，不能直接映射到公网；远端 harness 应使用 SSH 转发，或通过带认证的反向代理部署。OpenCode MCP 无 OAuth，因为该回环服务本身无登录流程；若以后接入认证代理，按其方式配置认证。
 
@@ -261,6 +264,7 @@ job-rag search '大模型应用' --active-only --generate
 | `POST /api/candidates` | 多查询候选召回，由调用模型阅读证据完成语义判断 |
 | `POST /api/catalog` | 全库字面检索、精确字面计数及一致性分页 |
 | `POST /api/jobs/batch` | 批量读取完整 JD，可绑定版本与语料指纹 |
+| `POST /api/technical-mentions` | 章节限定的技术提及汇总、条件分组和证据 |
 | `GET /api/jobs/{job_id}?source=boss` | 岗位原文、版本目录、状态历史 |
 | `POST /api/import?source=boss` | CSV 原始请求体导入，最大 20 MiB，需管理令牌；之后运行 worker |
 | `POST /api/jobs/{job_id}/status` | 更新有效状态，需管理令牌 |
