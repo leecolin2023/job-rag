@@ -22,6 +22,7 @@ experiments = ["numpy>=1.26,<3", "tokenizers>=0.20,<1"]
 job-rag = "job_rag.interfaces.cli:main"
 job-rag-mcp = "job_rag.interfaces.mcp_server:main"
 job-rag-experiment = "job_rag.experiments.cli:main"
+job-rag-task = "job_rag.experiments.task_cli:main"
 
 [tool.setuptools.packages.find]
 include = ["job_rag*"]
