@@ -1,6 +1,28 @@
-> **新的任务驱动实验（推荐入口）**：围绕唯一主问题「统计职责或任职要求中出现 RAG 的岗位的技术要求」，使用全库扫描、可独立审阅的 gold 和逐环节失败诊断。参见 [RAG 技术要求统计实验](rag-tech-requirements/README.md)。下文是保留的历史 30 查询排序实验。
+# Job-RAG 离线实验：统一目录与命令
 
-# 怎样设计一场能说明问题的 Job-RAG 检索实验？
+实验定义、评测数据和实验执行程序均在根目录 `experiments/`，生产包 `job_rag/` 只保留业务与检索等核心实现。实验程序可以调用生产核心模块，但生产模块不依赖实验代码。
+
+**唯一命令：`job-rag-experiment`**。保留原有检索排名子命令 `prepare / recall / pool / rescore / rerank / report / audit-rerank-inputs / probe`，任务驱动实验通过同一入口调用 `run / prepare-review / evaluate`。取消 `job-rag-task` 入口。
+
+- 执行代码：`experiments/cli.py`、`runner.py`、`task_runner.py`、`task_eval.py`、`task_review.py`、`bailian.py`、`metrics.py`。
+- 实验资料：`benchmark.v1.json`、`rag-tech-requirements/fixtures.json` 和 `gold.jsonl`。
+- 执行产物：`runtime/experiments/`（Git 忽略，不能作为产品事实或已核验标签）。
+- [实现细节](IMPLEMENTATION.md)｜[RAG 技术要求统计实验](rag-tech-requirements/README.md)
+
+新命令示例：
+
+~~~bash
+pip install -e '.[test,experiments]'
+
+job-rag-experiment run \
+  --dataset experiments/rag-tech-requirements/fixtures.json \
+  --gold experiments/rag-tech-requirements/gold.jsonl \
+  --output runtime/experiments/rag-task-demo
+~~~
+
+## 历史检索排名实验说明
+
+### 怎样设计一场能说明问题的 Job-RAG 检索实验？
 
 用户真正关心的是“能不能找到符合自己意图的岗位”，而不是“某个预设岗位在排行榜上的位置”。如果检索评测只用从一份 JD 反推的搜索问题，再把这条 JD 当作唯一正解，BM25 可能因为词汇重复而有明显优势；Embedding 如果找出另一份同样合适的 JD，反而可能被评为失败。
 
@@ -77,4 +99,4 @@ job-rag-experiment report runtime/experiments/rerank-v1
 
 首轮真实 Embedding 已经运行，章节切分在部分查询中提高种子岗位排名、部分查询中退化，BM25 对明确技术名词表现很强。**这不支持“一定应该换 Embedding”或“Embedding 总是不如 BM25”**，因为种子标注与输入表示存在限制。完整 Rerank 第二轮尚未执行。
 
-快照、模型缓存、请求日志、候选审阅及报表均在 `runtime/experiments/`，被 Git 忽略，**不会自动修改线上索引**。模型调用需要 `--execute`，软件费用限制也不等于平台账单硬限额。要理解实验代码如何控制变量，请看[实现模块](../job_rag/experiments/README.md)；要看实际数据与解释，请看[实验报告](../docs/recall-pilot-2026-10-25.md)和[逐题复核](../docs/recall-case-audit-2026-10-25.md)。
+快照、模型缓存、请求日志、候选审阅及报表均在 `runtime/experiments/`，被 Git 忽略，**不会自动修改线上索引**。模型调用需要 `--execute`，软件费用限制也不等于平台账单硬限额。要理解实验代码如何控制变量，请看[实现模块](IMPLEMENTATION.md)；要看实际数据与解释，请看[实验报告](../docs/recall-pilot-2026-10-25.md)和[逐题复核](../docs/recall-case-audit-2026-10-25.md)。
