@@ -1,4 +1,4 @@
-{"job_id":"fx01","label_source":"synthetic_spec","in_scope":true,"scope_evidence":{"section":"responsibilities","quote":"RAG"},"tech_review_complete":true,"technologies":[{"technology":"python","requirement_level":"required","quote":"Python","alternative":false}]}
+{"job_id":"fx01","label_source":"synthetic_spec","in_scope":true,"scope_evidence":{"section":"responsibilities","quote":"RAG"},"tech_review_complete":true,"technologies":[{"technology":"python","requirement_level":"required","quote":"Python","alternative":false},{"technology":"vector_retrieval","requirement_level":"preferred","quote":"Milvus","alternative":false}]}
 {"job_id":"fx02","label_source":"synthetic_spec","in_scope":false,"technologies":[]}
 {"job_id":"fx03","label_source":"synthetic_spec","in_scope":false,"technologies":[]}
 {"job_id":"fx04","label_source":"synthetic_spec","in_scope":true,"scope_evidence":{"section":"requirements","quote":"RAG"},"tech_review_complete":true,"technologies":[{"technology":"python","requirement_level":"not_required","quote":"Python","alternative":false}]}

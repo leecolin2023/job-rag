@@ -16,8 +16,11 @@ from job_rag.querying.sections import parse_query_sections, SECTION_RULE_VERSION
 from job_rag.querying.technical_vocabulary import TECHNOLOGIES, VOCABULARY_VERSION
 
 
-TASK_ID = "rag-technical-requirements-v1"
-ALLOWED = frozenset({"responsibilities", "requirements"})
+TASK_ID = "rag-technical-requirements-v2"
+# A bonus-only RAG mention cannot qualify a job, but an eligible job's
+# bonus skills are useful market signals and must be captured as preferred.
+SCOPE_SECTIONS = frozenset({"responsibilities", "requirements"})
+TECH_SECTIONS = SCOPE_SECTIONS | {"preferred"}
 RAG = re.compile(r"(?<![A-Za-z0-9_])RAG(?![A-Za-z0-9_])", re.I)
 
 
@@ -83,7 +86,7 @@ def baseline_job(row):
     })
     scope_hits = []
     for section in sections:
-        if section["section_type"] not in ALLOWED:
+        if section["section_type"] not in SCOPE_SECTIONS:
             continue
         for match in RAG.finditer(section["text"]):
             left, right = section["source_start"] + match.start(), section["source_start"] + match.end()
@@ -97,7 +100,7 @@ def baseline_job(row):
     mentions = []
     if included:
         for section in sections:
-            if section["section_type"] not in ALLOWED:
+            if section["section_type"] not in TECH_SECTIONS:
                 continue
             for category, (label, pattern) in TECHNOLOGIES.items():
                 for match in re.finditer(pattern, section["text"], re.I):
@@ -164,12 +167,22 @@ def render_report(manifest, summary):
         "",
         "**以下是技术词在命中岗位中的共现统计，不是已核验的必备技能数量，也不证明技术直接用于 RAG。**",
         "",
-        "| 技术类别 | 命中岗位数 |",
-        "| --- | ---: |",
+        "| 技术类别 | 提及岗位数 | 明确必备（规则） | 优先（规则） |",
+        "| --- | ---: | ---: | ---: |",
     ]
     for item in summary["categories"]:
-        lines.append(f"| {item['label']} | {item['job_count']} |")
-    lines += ["", "当前基线不调用大模型、不依赖 Top-K 检索；切分与检索阶段标记为不适用。",
+        counts = item["condition_job_counts"]
+        lines.append(
+            f"| {item['label']} | {item['job_count']} | "
+            f"{counts.get('required', 0)} | {counts.get('preferred', 0)} |"
+        )
+    lines += [
+        "",
+        "统计范围仅由职责/任职要求中的独立 RAG 决定；入选岗位的独立加分项技术也纳入优先统计。",
+        "同一岗位同一技术的提及数去重；同一技术在不同条件下可重复出现，因此必备与优先列不能简单相加。",
+        "必备/优先列为未经语义核验的规则标签；否定、任选、未明确等提及不计入这两列。",
+        "",
+        "当前基线不调用大模型、不依赖 Top-K 检索；切分与检索阶段标记为不适用。",
               "正式技术要求、任选/否定和与 RAG 的直接关联，必须使用人工标注数据另行评测。",
               ""]
     return "\n".join(lines)
@@ -183,8 +196,9 @@ def run(dataset, output):
     manifest = {
         "task": TASK_ID, "created_at": datetime.now(timezone.utc).isoformat(),
         "dataset": str(dataset), "dataset_sha256": file_hash(dataset),
-        "corpus_jobs": len(rows), "arm": "literal_full_scan_rules_v1",
+        "corpus_jobs": len(rows), "arm": "literal_full_scan_rules_v2",
         "scope_policy": "independent_RAG_in_responsibilities_or_requirements",
+        "technology_sections": sorted(TECH_SECTIONS),
         "section_rule_version": SECTION_RULE_VERSION, "vocabulary_version": VOCABULARY_VERSION,
         "chunking": "not_applicable", "retrieval": "not_applicable",
         "gold_source": "none", "semantic_verification": False,

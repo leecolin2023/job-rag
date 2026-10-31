@@ -29,20 +29,54 @@ def test_fixture_run_produces_trace_and_reports_without_paid_models(tmp_path):
     assert pred["fx09"]["needs_scope_review"]  # unknown is unresolved, not a negative
     assert pred["fx08"]["in_scope"]
     assert "Docker" in [t["matched_text"] for t in pred["fx08"]["technologies"]]
-    assert not any(t["matched_text"] == "Milvus" for t in pred["fx01"]["technologies"])
+    bonus = next(t for t in pred["fx01"]["technologies"] if t["matched_text"] == "Milvus")
+    assert bonus["section"] == "preferred"
+    assert bonus["requirement_level"] == "preferred"
     assert not any(t["matched_text"] == "Docker" for t in pred["fx10"]["technologies"])
+    assert pred["fx11"]["technologies"] == []  # A bonus-only RAG mention is not in scope
     summary = json.loads((output / "summary.json").read_text())
     cats = {c["technology"]: c for c in summary["categories"]}
     assert summary["denominator_jobs"] == 11
     assert summary["unresolved_unknown_jobs"] == 1
-    assert cats["vector_retrieval"]["job_count"] == 3
+    assert cats["vector_retrieval"]["job_count"] == 4
+    assert cats["vector_retrieval"]["condition_job_counts"]["preferred"] == 1
     assert cats["python"]["job_count"] == 7
     assert "不是已核验的必备技能" in (output / "report.md").read_text()
+    report = (output / "report.md").read_text()
+    assert "优先（规则）" in report
+    assert "独立加分项技术也纳入优先统计" in report
     events = read_jsonl(output / "trace.jsonl")
     assert {"source", "section", "selection", "evidence",
             "interpretation", "aggregation", "answer"} <= {e["stage"] for e in events}
     with pytest.raises(FileExistsError):
         run(DATASET, output)
+
+
+
+def test_bonus_section_only_adds_preferred_evidence_after_scope_matches():
+    from experiments.rag_tech_requirements.task_runner import aggregate, baseline_job
+
+    eligible = {
+        "job_id": "eligible",
+        "description": "岗位职责：建设 RAG 系统。\\n任职要求：必须掌握 Milvus。\\n加分项：熟悉 Milvus。",
+    }
+    bonus_only = {
+        "job_id": "bonus-only",
+        "description": "岗位职责：维护后端。\\n加分项：RAG 或 Milvus 项目经验优先。",
+    }
+    included, _ = baseline_job(eligible)
+    excluded, _ = baseline_job(bonus_only)
+    assert included["in_scope"]
+    milvus_mentions = [m for m in included["technologies"] if m["technology"] == "vector_retrieval"]
+    assert {m["requirement_level"] for m in milvus_mentions} == {"required", "preferred"}
+    assert all(m["matched_text"] == "Milvus" for m in milvus_mentions)
+    assert excluded["in_scope"] is False
+    assert excluded["technologies"] == []
+    category = next(c for c in aggregate([included, excluded])["categories"]
+                    if c["technology"] == "vector_retrieval")
+    assert category["job_count"] == 1
+    assert category["condition_job_counts"]["required"] == 1
+    assert category["condition_job_counts"]["preferred"] == 1
 
 
 def test_gold_comparison_exposes_vocab_and_condition_failures(tmp_path):
@@ -56,6 +90,8 @@ def test_gold_comparison_exposes_vocab_and_condition_failures(tmp_path):
     assert result["scope_recall_on_labeled"] == 1.0
     assert result["technical_evidence_recall_on_complete_labeled"] < 1.0
     assert result["condition_accuracy_on_matched"] < 1.0
+    assert not any(f["job_id"] == "fx01" and f.get("technology") == "vector_retrieval"
+                   for f in result["failures"])
     assert any(f["kind"] == "technical_fact_missing" and f["technology"] == "java"
                and f["stage"] == "evidence" for f in result["failures"])
     assert any(f["stage"] == "interpretation" and f["kind"] == "condition_wrong"
