@@ -168,3 +168,15 @@ def test_real_benchmark_has_thirty_source_backed_queries(tmp_path):
     assert manifest["arms"]["C_section_compact_1100"]["chunks"] == manifest["arms"]["D_section_typed_1100"]["chunks"]
     for record in read_lines(tmp_path / "real" / "D_section_typed_1100.jsonl"):
         assert len(record["text"]) <= 1100
+
+
+def test_jsonl_readers_preserve_unicode_line_separator_inside_jd(tmp_path):
+    from experiments.runner import write_lines, read_lines
+    from experiments.task_runner import write_jsonl, read_jsonl
+    rows = [{"job_id": "unicode", "text": "岗位职责：RAG\u2028任职要求：Python\u2029更多内容\u0085结尾"}]
+    ranking_jsonl = tmp_path / "ranking.jsonl"
+    write_lines(ranking_jsonl, rows)
+    assert read_lines(ranking_jsonl) == rows
+    task_jsonl = tmp_path / "task.jsonl"
+    write_jsonl(task_jsonl, rows)
+    assert read_jsonl(task_jsonl) == rows

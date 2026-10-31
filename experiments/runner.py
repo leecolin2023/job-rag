@@ -47,7 +47,7 @@ def write_json(path, value):
 
 
 def read_lines(path):
-    return [json.loads(line) for line in Path(path).read_text().splitlines() if line.strip()]
+    return [json.loads(line) for line in Path(path).read_text().split("\n") if line.strip()]
 
 
 def write_lines(path, records):
