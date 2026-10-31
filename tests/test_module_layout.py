@@ -130,3 +130,23 @@ def test_normalization_example_and_unknown_do_not_rewrite():
     assert original == before
     unknown = normalize(row(salary="面议"))
     assert unknown["salary_min"] is None and "salary_not_comparable" in unknown["quality_flags"]
+
+
+def test_experiments_are_outside_production_package_and_cli_is_unified(monkeypatch, capsys):
+    import sys
+    from experiments.cli import main
+    repository = Path(__file__).resolve().parents[1]
+    assert not (repository / "job_rag" / "experiments").exists()
+    assert (repository / "experiments" / "runner.py").is_file()
+    assert (repository / "experiments" / "task_eval.py").is_file()
+    assert (repository / "experiments" / "cli.py").is_file()
+    config = (repository / "pyproject.toml").read_text()
+    assert 'job-rag-experiment = "experiments.cli:main"' in config
+    assert "job-rag-task =" not in config
+    monkeypatch.setattr(sys, "argv", ["job-rag-experiment", "--help"])
+    with pytest.raises(SystemExit) as exited:
+        main()
+    assert exited.value.code == 0
+    help_text = capsys.readouterr().out
+    for command in ("run", "evaluate", "prepare-review", "prepare", "recall", "rerank", "report"):
+        assert command in help_text

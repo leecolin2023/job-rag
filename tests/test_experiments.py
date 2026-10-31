@@ -4,8 +4,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from job_rag.experiments.metrics import paired_bootstrap, ranking_metrics
-from job_rag.experiments.runner import (
+from experiments.metrics import paired_bootstrap, ranking_metrics
+from experiments.runner import (
     ARMS, audit_rerank_inputs, load_prepared, pool, prepare, read_json, read_lines, recall, report, rerank, rescore, write_json,
 )
 
@@ -93,7 +93,7 @@ def test_artifact_mutation_is_rejected(tmp_path):
 
 
 def test_full_jd_keeps_tail_whitespace_and_original_section_order():
-    from job_rag.experiments.runner import _representation
+    from experiments.runner import _representation
     description = " \n岗位职责\n" + "负责系统建设。" * 600 + "\r\n任职要求\n不要求博士，满足其一即可。 \n"
     text, truncated = _representation(row(description=description))
     assert text.endswith(description)
@@ -120,7 +120,7 @@ def test_audit_and_whole_run_preflight_do_not_call_model(tmp_path):
     # A later overlong query must stop the whole run before its first API call.
     results = read_lines(recdir / "results.jsonl")
     results[-1]["query"] = "x" * 4001
-    from job_rag.experiments.runner import write_lines
+    from experiments.runner import write_lines
     from job_rag.preprocessing.normalize import digest
     write_lines(recdir / "results.jsonl", results)
     manifest = read_json(recdir / "manifest.json")

@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 from job_rag.chunking import parse_sections
-from job_rag.experiments.runner import load_prepared, read_lines, write_json
+from experiments.runner import load_prepared, read_lines, write_json
 
 
 def main():

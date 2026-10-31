@@ -3,7 +3,7 @@ import json
 import httpx
 import pytest
 
-from job_rag.experiments.bailian import BailianClient, BailianConfig, BailianError
+from experiments.bailian import BailianClient, BailianConfig, BailianError
 
 
 def config():
@@ -141,7 +141,7 @@ def test_local_counter_is_identified_and_long_full_jd_sent_unchanged(tmp_path):
     pytest.importorskip("tokenizers")
     from tokenizers import Tokenizer, models, pre_tokenizers
     from dataclasses import replace
-    from job_rag.experiments.rerank_inputs import InputCounter, inspect_inputs
+    from experiments.rerank_inputs import InputCounter, inspect_inputs
     tokenizer = Tokenizer(models.WordLevel({"[UNK]": 0}, unk_token="[UNK]"))
     tokenizer.pre_tokenizer = pre_tokenizers.Whitespace()
     path = tmp_path / "synthetic-tokenizer.json"
