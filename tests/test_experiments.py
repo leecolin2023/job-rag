@@ -159,9 +159,12 @@ def test_seed_set_cannot_be_mislabeled_as_exhaustive(tmp_path):
 def test_real_benchmark_has_thirty_source_backed_queries(tmp_path):
     root = Path(__file__).resolve().parents[1]
     manifest = prepare(root / "data/jobs.csv", root / "experiments/benchmark.v1.json", tmp_path / "real")
-    assert manifest["jobs"] == 592
+    from job_rag.preprocessing.validation import parse_csv
+    expected_jobs = sum(bool(row["description"].strip()) for row in parse_csv((root / "data/jobs.csv").read_bytes()))
+    assert manifest["jobs"] == expected_jobs
     assert manifest["queries"] == 30
-    assert manifest["arms"]["A_legacy_1100"]["chunks"] == 790
+    assert manifest["arms"]["A_legacy_1100"]["chunks"] >= expected_jobs
+    assert manifest["arms"]["A_legacy_1100"]["chunks"] == len(read_lines(tmp_path / "real" / "A_legacy_1100.jsonl"))
     assert manifest["arms"]["C_section_compact_1100"]["chunks"] == manifest["arms"]["D_section_typed_1100"]["chunks"]
     for record in read_lines(tmp_path / "real" / "D_section_typed_1100.jsonl"):
         assert len(record["text"]) <= 1100

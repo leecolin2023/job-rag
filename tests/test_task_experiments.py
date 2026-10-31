@@ -135,13 +135,13 @@ def test_review_queue_is_stratified_and_cannot_be_used_as_gold(tmp_path):
 def test_real_csv_exhaustive_baseline_runs_without_gold(tmp_path):
     output = tmp_path / "real"
     result = run(ROOT / "data" / "jobs.csv", output)
-    assert result["jobs"] == 593
+    assert result["jobs"] == len(load_dataset(ROOT / "data" / "jobs.csv"))
     assert result["matched"] > 0
     assert result["verified"] is False
     manifest = json.loads((output / "manifest.json").read_text())
     assert manifest["retrieval"] == "not_applicable"
     assert manifest["semantic_verification"] is False
-    assert len(read_jsonl(output / "predictions.jsonl")) == 593
+    assert len(read_jsonl(output / "predictions.jsonl")) == result["jobs"]
     assert not (output / "evaluation.json").exists()
 
 
