@@ -1,4 +1,4 @@
-> **任务驱动实验实现**：新增 [task_runner.py](task_runner.py)、[task_eval.py](task_eval.py) 和 [task_cli.py](task_cli.py)，独立于下述旧的 Embedding/Rerank 排名评测。运行与数据定义见 [新任务实验说明](../../experiments/rag-tech-requirements/README.md)。
+> **任务驱动实验实现**：新增 [task_runner.py](task_runner.py)、[task_eval.py](task_eval.py) 和 [task_cli.py](task_cli.py)，独立于下述旧的 Embedding/Rerank 排名评测。运行与数据定义见 [新任务实验说明](rag-tech-requirements/README.md)。
 
 # 为什么我们不能凭几次搜索结果就宣布“新 Embedding 更好”？
 
@@ -36,4 +36,4 @@
 
 第一轮真实 Qwen Embedding 实验已经完成，显示章节分块有些问题提升、有些问题退化；BM25 对明确技术词也有很强的种子表现。Qwen Rerank 的小探针已通过，但**完整第二轮重排尚未运行**，因此没有可以归因给完整 Rerank 的实际收益结论。
 
-代码中 `runner.py` 组织冻结、召回、候选池、重排与报告；`metrics.py` 负责指标，`bailian.py` 负责模型请求，`cli.py` 提供命令。具体实验如何执行见[实验入口](../../experiments/README.md)，首轮的案例与局限见[实际结果](../../docs/recall-pilot-2026-10-25.md)。这套模块最重要的价值不是指标种类，而是**让我们能解释为什么一种检索方法变好了或变差了**。
+代码中 `runner.py` 组织冻结、召回、候选池、重排与报告；`metrics.py` 负责指标，`bailian.py` 负责模型请求，`cli.py` 提供命令。具体实验如何执行见[实验入口](README.md)，首轮的案例与局限见[实际结果](../docs/recall-pilot-2026-10-25.md)。这套模块最重要的价值不是指标种类，而是**让我们能解释为什么一种检索方法变好了或变差了**。

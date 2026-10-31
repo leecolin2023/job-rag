@@ -10,10 +10,10 @@ import json
 from pathlib import Path
 import re
 
-from ..preprocessing.validation import parse_csv
-from ..querying.conditions import evidence_item
-from ..querying.sections import parse_query_sections, SECTION_RULE_VERSION
-from ..querying.technical_vocabulary import TECHNOLOGIES, VOCABULARY_VERSION
+from job_rag.preprocessing.validation import parse_csv
+from job_rag.querying.conditions import evidence_item
+from job_rag.querying.sections import parse_query_sections, SECTION_RULE_VERSION
+from job_rag.querying.technical_vocabulary import TECHNOLOGIES, VOCABULARY_VERSION
 
 
 TASK_ID = "rag-technical-requirements-v1"

@@ -8,11 +8,11 @@ from types import SimpleNamespace
 
 import numpy as np
 
-from ..chunking import CHUNKING_VERSION, PARSER_VERSION, build_documents, parse_sections
-from ..preprocessing.validation import parse_csv
-from ..preprocessing.normalize import digest, normalize
-from ..retrieval.search import SearchRequest, bm25, tokens
-from ..querying.filters import matches
+from job_rag.chunking import CHUNKING_VERSION, PARSER_VERSION, build_documents, parse_sections
+from job_rag.preprocessing.validation import parse_csv
+from job_rag.preprocessing.normalize import digest, normalize
+from job_rag.retrieval.search import SearchRequest, bm25, tokens
+from job_rag.querying.filters import matches
 from .metrics import mean_metrics, paired_bootstrap, ranking_metrics
 from .rerank_inputs import InputCounter, inspect_inputs, representation, require_admitted
 
@@ -62,7 +62,7 @@ def new_directory(path):
 
 
 def implementation_hash():
-    return digest({name: Path(__file__).parents[1].joinpath(name).read_text()
+    return digest({name: (Path(__file__).resolve().parents[1] / (name if name.startswith("experiments/") else f"job_rag/{name}")).read_text()
                    for name in ["chunking/__init__.py", "chunking/core.py", "chunking/legacy.py",
                                 "preprocessing/normalize.py", "preprocessing/validation.py",
                                 "querying/filters.py", "retrieval/search.py", "storage/serialization.py",
