@@ -4,13 +4,13 @@ from pathlib import Path
 
 import pytest
 
-from experiments.task_runner import load_dataset, read_jsonl, run, write_jsonl
-from experiments.task_eval import evaluate, load_gold
-from experiments.task_review import prepare_review_queue
+from experiments.rag_tech_requirements.task_runner import load_dataset, read_jsonl, run, write_jsonl
+from experiments.rag_tech_requirements.task_eval import evaluate, load_gold
+from experiments.rag_tech_requirements.task_review import prepare_review_queue
 
 
-ROOT = Path(__file__).resolve().parents[1]
-FIX = ROOT / "experiments" / "rag-tech-requirements"
+ROOT = Path(__file__).resolve().parents[2]
+FIX = Path(__file__).resolve().parent
 DATASET = FIX / "fixtures.json"
 GOLD = FIX / "gold.jsonl"
 

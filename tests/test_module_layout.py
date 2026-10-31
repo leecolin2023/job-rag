@@ -138,7 +138,8 @@ def test_experiments_are_outside_production_package_and_cli_is_unified(monkeypat
     repository = Path(__file__).resolve().parents[1]
     assert not (repository / "job_rag" / "experiments").exists()
     assert (repository / "experiments" / "runner.py").is_file()
-    assert (repository / "experiments" / "task_eval.py").is_file()
+    assert (repository / "experiments" / "rag_tech_requirements" / "task_eval.py").is_file()
+    assert not (repository / "experiments" / "task_eval.py").exists()
     assert (repository / "experiments" / "cli.py").is_file()
     config = (repository / "pyproject.toml").read_text()
     assert 'job-rag-experiment = "experiments.cli:main"' in config

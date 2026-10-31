@@ -28,8 +28,9 @@ include = ["job_rag*", "experiments*"]
 
 [tool.setuptools.package-data]
 "job_rag.interfaces" = ["static/*.html"]
-"experiments" = ["*.md", "*.json", "*.jsonl", "rag-tech-requirements/*.md", "rag-tech-requirements/*.json", "rag-tech-requirements/*.jsonl"]
+"experiments" = ["*.md", "*.json", "*.jsonl"]
+"experiments.rag_tech_requirements" = ["*.md", "*.json", "*.jsonl"]
 "*" = ["README.md"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "experiments/rag_tech_requirements"]

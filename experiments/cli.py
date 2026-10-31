@@ -5,9 +5,9 @@ from pathlib import Path
 
 from .bailian import BailianClient, BailianConfig, BailianError
 from .runner import ARMS, audit_rerank_inputs, pool, prepare, recall, rerank, rescore, report
-from .task_runner import run as run_task
-from .task_eval import evaluate as evaluate_task
-from .task_review import prepare_review_queue
+from .rag_tech_requirements.task_runner import run as run_task
+from .rag_tech_requirements.task_eval import evaluate as evaluate_task
+from .rag_tech_requirements.task_review import prepare_review_queue
 
 
 def main():

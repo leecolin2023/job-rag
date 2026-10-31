@@ -1,5 +1,47 @@
 # RAG 岗位技术要求统计：如何设计一场可验证的实验？
 
+## 0. 先认识文件：这个实验由哪些部分组成？
+
+本目录把**同一道业务统计题**的测试数据、标准答案、规则实现、评分逻辑和测试集中保存。按下面的顺序阅读，就能知道每个文件解决什么问题：
+
+```text
+experiments/rag_tech_requirements/
+├── README.md                 # 实验问题、评测设计、运行方法（本文件）
+├── fixtures.json             # 试卷：16 条专门设计的模拟岗位
+├── gold.jsonl                # 参考答案：逐岗位的正确范围和技术标签
+├── task_runner.py            # 答题：扫描 JD、提取技术、生成预测与统计
+├── task_eval.py              # 阅卷：预测与 gold 对比，计算指标和错误归因
+├── task_review.py            # 出真题：从真实 jobs.csv 抽样生成待人工复核的队列
+├── test_task_experiments.py  # 自动化测试：检查运行、评分、证据与数据安全边界
+└── __init__.py               # Python 包标记，让同目录代码可以相互导入
+```
+
+| 文件 | 为什么需要它？ | 什么时候看？ |
+| --- | --- | --- |
+| `README.md` | 解释我们统计什么、用什么口径、怎样判断系统是否答对 | 第一次理解或调整实验时 |
+| `fixtures.json` | 提供能覆盖否定、加分、任选、章节等边界的**模拟 JD** | 设计新的失败案例时 |
+| `gold.jsonl` | 给这些 JD 预先定义**标准答案**，不依赖程序自己的预测 | 检查标签或更新实验口径时 |
+| `task_runner.py` | 实现当前**纯规则基线**，写出逐岗位预测、过程轨迹及统计结果 | 统计数字异常，或准备替换算法时 |
+| `task_eval.py` | 拿预测和标准答案比较，评估筛选、技术提取、条件判断与计数错误 | 理解错误报告、改进评分时 |
+| `task_review.py` | 从真实岗位中分层抽样，生成**尚未审核**的人工核验队列 | 准备建立真实岗位 gold 时 |
+| `test_task_experiments.py` | 运行自动化回归测试，防止搬目录或改规则后破坏原功能 | 每次修改代码后 |
+| `__init__.py` | 支持用 `experiments.rag_tech_requirements` 导入模块 | 通常不需要修改 |
+
+最重要的文件关系：
+
+```text
+fixtures.json（模拟岗位） ──→ task_runner.py（答题） ──→ predictions.jsonl
+                                       │                           │
+gold.jsonl（标准答案） ─────────────────────────────→ task_eval.py（阅卷）
+                                                                   │
+                                                                   ▼
+                                                           evaluation.md（成绩）
+
+data/jobs.csv（真实岗位） ──→ task_review.py ──→ review_queue.jsonl（待人工核验）
+```
+
+**目录外仍有三个共享部分**：`experiments/cli.py` 是所有实验共用的命令入口；`job_rag/` 提供生产代码中的章节识别、技术词表和条件规则；`data/jobs.csv` 是所有实验都可以使用的岗位主表。它们不属于本题独有实现，因此不移动。运行生成的报告、预测与轨迹放在 `runtime/experiments/`，**不提交到 Git**。
+
 > **业务问题**：统计岗位职责或者任职要求出现 RAG 的岗位中，相关的技术要求是什么？
 
 这份实验不是先比较 Embedding、Rerank 或 Agent，而是先回答一个更基础的问题：**对于一批已知岗位，程序能否准确筛选目标岗位、提取技术要求，并生成可核对的统计结果？**
@@ -110,7 +152,7 @@
 
 ## 3. 当前规则基线，是怎样一步步产生答案的？
 
-[task_runner.py](../task_runner.py) 使用**完整 JD 扫描**，不依赖向量索引，也不使用 Top-K 检索，流程如下：
+[task_runner.py](task_runner.py) 使用**完整 JD 扫描**，不依赖向量索引，也不使用 Top-K 检索，流程如下：
 
 ```text
 完整岗位数据
@@ -133,7 +175,7 @@
 
 ## 4. 怎样判断程序到底错在哪里？
 
-[task_eval.py](../task_eval.py) 将程序输出（`predictions`）与独立标准答案（`gold`）逐岗位比较。
+[task_eval.py](task_eval.py) 将程序输出（`predictions`）与独立标准答案（`gold`）逐岗位比较。
 
 ### 4.1 先检查岗位是否筛对
 
@@ -181,8 +223,8 @@
 pip install -e '.[test,experiments]'
 
 job-rag-experiment run \
-  --dataset experiments/rag-tech-requirements/fixtures.json \
-  --gold experiments/rag-tech-requirements/gold.jsonl \
+  --dataset experiments/rag_tech_requirements/fixtures.json \
+  --gold experiments/rag_tech_requirements/gold.jsonl \
   --output runtime/experiments/rag-tech-fixture-01
 ```
 
@@ -193,8 +235,8 @@ job-rag-experiment run \
 ```bash
 job-rag-experiment evaluate \
   --run runtime/experiments/rag-tech-fixture-01 \
-  --dataset experiments/rag-tech-requirements/fixtures.json \
-  --gold experiments/rag-tech-requirements/gold.jsonl
+  --dataset experiments/rag_tech_requirements/fixtures.json \
+  --gold experiments/rag_tech_requirements/gold.jsonl
 ```
 
 ### 5.2 第二步：在真实岗位库中生成字面统计报告
@@ -216,7 +258,7 @@ job-rag-experiment prepare-review \
   --output runtime/experiments/rag-tech-review-01
 ```
 
-[task_review.py](../task_review.py) 会按字面命中、未知章节、GraphRAG/RAGFlow 边界、非目标章节命中、普通负例进行分层抽样，输出 `review_queue.jsonl`。每条保留完整 JD 和规则建议，供人独立复核。
+[task_review.py](task_review.py) 会按字面命中、未知章节、GraphRAG/RAGFlow 边界、非目标章节命中、普通负例进行分层抽样，输出 `review_queue.jsonl`。每条保留完整 JD 和规则建议，供人独立复核。
 
 这里生成的是 **pending_review 待审队列，不是 gold**。审阅后应另建真实 JD 的 `gold.jsonl`，明确 `label_source: human_reviewed`、原文证据、技术标注是否完整，并保留 `description_sha256` 防止 JD 变动后仍沿用旧标签。建议先做 20～40 条覆盖典型失败的样本，再扩大规模。
 
@@ -256,8 +298,8 @@ job-rag-experiment prepare-review \
 ```bash
 job-rag-experiment evaluate \
   --run runtime/experiments/rag-tech-fixture-01 \
-  --dataset experiments/rag-tech-requirements/fixtures.json \
-  --gold experiments/rag-tech-requirements/gold.jsonl \
+  --dataset experiments/rag_tech_requirements/fixtures.json \
+  --gold experiments/rag_tech_requirements/gold.jsonl \
   --predictions /path/to/agent-predictions.jsonl \
   --trace /path/to/agent-trace.jsonl \
   --output runtime/experiments/agent-evaluation-01
@@ -278,4 +320,4 @@ job-rag-experiment evaluate \
 3. **对照具体失败改进**：先查漏掉的技术（如 Java）、复杂条件的误判、章节识别，再尝试 LLM 结构化抽取。
 4. **最后决定是否需要 Agent 和检索**：只有当真实任务出现单次抽取解决不了的跨岗位核对、数据过大或遗漏发现问题时，才引入更复杂的步骤。
 
-相关实现：[task_runner.py](../task_runner.py)（规则运行）｜[task_eval.py](../task_eval.py)（评测）｜[task_review.py](../task_review.py)（待审抽样）｜[统一实验入口](../README.md)（旧检索实验与 CLI）。
+相关实现：[task_runner.py](task_runner.py)（规则运行）｜[task_eval.py](task_eval.py)（评测）｜[task_review.py](task_review.py)（待审抽样）｜[统一实验入口](../README.md)（旧检索实验与 CLI）。

@@ -4,10 +4,10 @@
 
 **唯一命令：`job-rag-experiment`**。保留原有检索排名子命令 `prepare / recall / pool / rescore / rerank / report / audit-rerank-inputs / probe`，任务驱动实验通过同一入口调用 `run / prepare-review / evaluate`。取消 `job-rag-task` 入口。
 
-- 执行代码：`experiments/cli.py`、`runner.py`、`task_runner.py`、`task_eval.py`、`task_review.py`、`bailian.py`、`metrics.py`。
-- 实验资料：`benchmark.v1.json`、`rag-tech-requirements/fixtures.json` 和 `gold.jsonl`。
+- 通用实验代码：`experiments/cli.py`、`runner.py`、`bailian.py`、`metrics.py`；RAG 技术要求任务的专用执行/评分/抽样代码：`rag_tech_requirements/task_runner.py`、`task_eval.py`、`task_review.py`。
+- 实验资料：`benchmark.v1.json`、`rag_tech_requirements/fixtures.json` 和 `gold.jsonl`。
 - 执行产物：`runtime/experiments/`（Git 忽略，不能作为产品事实或已核验标签）。
-- [实现细节](IMPLEMENTATION.md)｜[RAG 技术要求统计实验](rag-tech-requirements/README.md)
+- [实现细节](IMPLEMENTATION.md)｜[RAG 技术要求统计实验](rag_tech_requirements/README.md)
 
 新命令示例：
 
@@ -15,8 +15,8 @@
 pip install -e '.[test,experiments]'
 
 job-rag-experiment run \
-  --dataset experiments/rag-tech-requirements/fixtures.json \
-  --gold experiments/rag-tech-requirements/gold.jsonl \
+  --dataset experiments/rag_tech_requirements/fixtures.json \
+  --gold experiments/rag_tech_requirements/gold.jsonl \
   --output runtime/experiments/rag-task-demo
 ~~~
 

@@ -1,4 +1,4 @@
-> **任务驱动实验实现**：新增 [task_runner.py](task_runner.py)、[task_eval.py](task_eval.py) 和 [task_cli.py](task_cli.py)，独立于下述旧的 Embedding/Rerank 排名评测。运行与数据定义见 [新任务实验说明](rag-tech-requirements/README.md)。
+> **RAG 技术要求任务实验**：已将专用实现集中到 [`rag_tech_requirements/`](rag_tech_requirements/README.md)，包括 [task_runner.py](rag_tech_requirements/task_runner.py)、[task_eval.py](rag_tech_requirements/task_eval.py) 和 [task_review.py](rag_tech_requirements/task_review.py)。统一 CLI 仍为 [cli.py](cli.py)；下文主要说明旧的 Embedding/Rerank 排名实验。
 
 # 为什么我们不能凭几次搜索结果就宣布“新 Embedding 更好”？
 
