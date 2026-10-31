@@ -10,7 +10,7 @@ import json
 from pathlib import Path
 import statistics
 
-from job_rag.experiments.bailian import PRICES_CNY_PER_MILLION
+from experiments.bailian import PRICES_CNY_PER_MILLION
 
 
 def main():

@@ -33,18 +33,18 @@
 pip install -e '.[test]'
 
 # 合成数据：基线+标准规格评测
-job-rag-task run \
+job-rag-experiment run \
   --dataset experiments/rag-tech-requirements/fixtures.json \
   --gold experiments/rag-tech-requirements/gold.jsonl \
   --output runtime/experiments/rag-tech-fixture-01
 
 # 真实岗位数据：全库字面/技术共现统计（没有语义核验）
-job-rag-task run \
+job-rag-experiment run \
   --dataset data/jobs.csv \
   --output runtime/experiments/rag-tech-corpus-01
 
 # 仅重新评分，不重新计算预测
-job-rag-task evaluate \
+job-rag-experiment evaluate \
   --run runtime/experiments/rag-tech-fixture-01 \
   --dataset experiments/rag-tech-requirements/fixtures.json \
   --gold experiments/rag-tech-requirements/gold.jsonl
@@ -53,7 +53,7 @@ job-rag-task evaluate \
 ### 从真实岗位生成待复核队列
 
 ~~~bash
-job-rag-task prepare-review \
+job-rag-experiment prepare-review \
   --dataset data/jobs.csv \
   --limit 40 \
   --output runtime/experiments/rag-tech-review-01
@@ -80,7 +80,7 @@ job-rag-task prepare-review \
 当前交付了可运行的全库规则基线和独立评测器，**尚未接入 LLM/Agent 推理调用**。未来其他实验臂需要针对同一个被冻结的数据集写出 predictions.jsonl，最好同时写出自身实际的 trace.jsonl。之后调用：
 
 ~~~bash
-job-rag-task evaluate \
+job-rag-experiment evaluate \
   --run runtime/experiments/rag-tech-fixture-01 \
   --dataset experiments/rag-tech-requirements/fixtures.json \
   --gold experiments/rag-tech-requirements/gold.jsonl \

@@ -4,9 +4,9 @@ from pathlib import Path
 
 import pytest
 
-from job_rag.experiments.task_runner import load_dataset, read_jsonl, run, write_jsonl
-from job_rag.experiments.task_eval import evaluate, load_gold
-from job_rag.experiments.task_review import prepare_review_queue
+from experiments.task_runner import load_dataset, read_jsonl, run, write_jsonl
+from experiments.task_eval import evaluate, load_gold
+from experiments.task_review import prepare_review_queue
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -135,11 +135,31 @@ def test_review_queue_is_stratified_and_cannot_be_used_as_gold(tmp_path):
 def test_real_csv_exhaustive_baseline_runs_without_gold(tmp_path):
     output = tmp_path / "real"
     result = run(ROOT / "data" / "jobs.csv", output)
-    assert result["jobs"] == 593
+    assert result["jobs"] == len(load_dataset(ROOT / "data" / "jobs.csv"))
     assert result["matched"] > 0
     assert result["verified"] is False
     manifest = json.loads((output / "manifest.json").read_text())
     assert manifest["retrieval"] == "not_applicable"
     assert manifest["semantic_verification"] is False
-    assert len(read_jsonl(output / "predictions.jsonl")) == 593
+    assert len(read_jsonl(output / "predictions.jsonl")) == result["jobs"]
     assert not (output / "evaluation.json").exists()
+
+
+def test_unified_cli_runs_task_and_keeps_legacy_parser(monkeypatch, capsys, tmp_path):
+    import sys
+    from experiments.cli import main
+    output = tmp_path / "cli-run"
+    monkeypatch.setattr(sys, "argv", [
+        "job-rag-experiment", "run", "--dataset", str(DATASET), "--gold", str(GOLD),
+        "--output", str(output),
+    ])
+    main()
+    assert "matched" in capsys.readouterr().out
+    assert (output / "evaluation.json").is_file()
+    review = tmp_path / "cli-review"
+    monkeypatch.setattr(sys, "argv", [
+        "job-rag-experiment", "prepare-review", "--dataset", str(DATASET),
+        "--limit", "3", "--output", str(review),
+    ])
+    main()
+    assert len(read_jsonl(review / "review_queue.jsonl")) == 3

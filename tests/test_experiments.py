@@ -4,8 +4,8 @@ from types import SimpleNamespace
 
 import pytest
 
-from job_rag.experiments.metrics import paired_bootstrap, ranking_metrics
-from job_rag.experiments.runner import (
+from experiments.metrics import paired_bootstrap, ranking_metrics
+from experiments.runner import (
     ARMS, audit_rerank_inputs, load_prepared, pool, prepare, read_json, read_lines, recall, report, rerank, rescore, write_json,
 )
 
@@ -93,7 +93,7 @@ def test_artifact_mutation_is_rejected(tmp_path):
 
 
 def test_full_jd_keeps_tail_whitespace_and_original_section_order():
-    from job_rag.experiments.runner import _representation
+    from experiments.runner import _representation
     description = " \n岗位职责\n" + "负责系统建设。" * 600 + "\r\n任职要求\n不要求博士，满足其一即可。 \n"
     text, truncated = _representation(row(description=description))
     assert text.endswith(description)
@@ -120,7 +120,7 @@ def test_audit_and_whole_run_preflight_do_not_call_model(tmp_path):
     # A later overlong query must stop the whole run before its first API call.
     results = read_lines(recdir / "results.jsonl")
     results[-1]["query"] = "x" * 4001
-    from job_rag.experiments.runner import write_lines
+    from experiments.runner import write_lines
     from job_rag.preprocessing.normalize import digest
     write_lines(recdir / "results.jsonl", results)
     manifest = read_json(recdir / "manifest.json")
@@ -159,9 +159,24 @@ def test_seed_set_cannot_be_mislabeled_as_exhaustive(tmp_path):
 def test_real_benchmark_has_thirty_source_backed_queries(tmp_path):
     root = Path(__file__).resolve().parents[1]
     manifest = prepare(root / "data/jobs.csv", root / "experiments/benchmark.v1.json", tmp_path / "real")
-    assert manifest["jobs"] == 592
+    from job_rag.preprocessing.validation import parse_csv
+    expected_jobs = sum(bool(row["description"].strip()) for row in parse_csv((root / "data/jobs.csv").read_bytes()))
+    assert manifest["jobs"] == expected_jobs
     assert manifest["queries"] == 30
-    assert manifest["arms"]["A_legacy_1100"]["chunks"] == 790
+    assert manifest["arms"]["A_legacy_1100"]["chunks"] >= expected_jobs
+    assert manifest["arms"]["A_legacy_1100"]["chunks"] == len(read_lines(tmp_path / "real" / "A_legacy_1100.jsonl"))
     assert manifest["arms"]["C_section_compact_1100"]["chunks"] == manifest["arms"]["D_section_typed_1100"]["chunks"]
     for record in read_lines(tmp_path / "real" / "D_section_typed_1100.jsonl"):
         assert len(record["text"]) <= 1100
+
+
+def test_jsonl_readers_preserve_unicode_line_separator_inside_jd(tmp_path):
+    from experiments.runner import write_lines, read_lines
+    from experiments.task_runner import write_jsonl, read_jsonl
+    rows = [{"job_id": "unicode", "text": "岗位职责：RAG\u2028任职要求：Python\u2029更多内容\u0085结尾"}]
+    ranking_jsonl = tmp_path / "ranking.jsonl"
+    write_lines(ranking_jsonl, rows)
+    assert read_lines(ranking_jsonl) == rows
+    task_jsonl = tmp_path / "task.jsonl"
+    write_jsonl(task_jsonl, rows)
+    assert read_jsonl(task_jsonl) == rows

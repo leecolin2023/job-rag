@@ -5,7 +5,7 @@ import json
 import os
 from pathlib import Path
 
-from job_rag.experiments.runner import load_prepared, read_json, read_lines, write_json
+from experiments.runner import load_prepared, read_json, read_lines, write_json
 from job_rag.preprocessing.normalize import digest
 
 
