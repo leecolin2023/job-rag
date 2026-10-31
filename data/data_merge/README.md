@@ -7,6 +7,43 @@
 - `merge_jobs.py`：按 ID 去重、更新及补充关键词的可重复执行脚本。
 - `test_merge_jobs.py`：去重、字段保护和 CSV 转义测试。
 
+
+## 岗位标识字段的定义
+
+这几个字段不是四套不同的职位编号，而是**同一岗位在采集、汇总和数据库入库阶段的不同标识形式**。
+
+| 字段 | 所在位置 | 定义和用途 | 生成或映射规则 |
+|---|---|---|---|
+| `职位ID` | `collections/YYYY-MM-DD/*.csv` | 采集平台上的职位标识；当前快照均来自 BOSS 直聘 | 由外部采集流程提供，通常对应职位详情 URL 中 `/job_detail/` 后、`.html` 前的部分；合并脚本不自行生成 |
+| `job_id` | `data/jobs.csv`，以及数据库 `jobs.job_id` | 标准化后的**来源平台职位 ID**，用来识别同一来源上的重复采集记录 | `data_merge` 直接将 `职位ID` 映射为 `job_id`，不另外计算 UUID、哈希或自增值 |
+| `source` | 导入参数及数据库 `jobs.source` | 职位来源平台，例如 `boss`；区分不同平台上可能相同的职位 ID | `job-rag import` 的 `--source` 参数，当前默认值为 `boss`；**不是** CSV 的搜索关键词 `keywords` |
+| `key` | 数据库 `jobs.key`（主键） | 数据库中跨来源区分岗位记录的组合标识 | `key = f"{source}:{job_id}"`，例如 `boss:851936eee117332f0nx_2tu5FlZZ` |
+
+例如，BOSS 直聘岗位详情地址：
+
+```text
+https://www.zhipin.com/job_detail/851936eee117332f0nx_2tu5FlZZ.html
+```
+
+对应的标识转换：
+
+```text
+采集 CSV：职位ID = 851936eee117332f0nx_2tu5FlZZ
+             ↓ 直接映射，不重新生成 ID
+汇总 CSV：job_id = 851936eee117332f0nx_2tu5FlZZ
+             ↓ 导入时指定 source=boss
+数据库： source = boss
+        job_id = 851936eee117332f0nx_2tu5FlZZ
+        key    = boss:851936eee117332f0nx_2tu5FlZZ
+```
+
+**当前去重的实际边界：**
+
+- `data_merge/merge_jobs.py` 仅根据 `job_id` 字符串完全相等判断是否同一岗位；跨关键词、跨日期搜到相同 ID 会更新同一条记录，搜索关键词只作为来源线索合并。
+- 相同公司、名称或 JD 但 **ID 不同** 的职位，仍视为两条记录。岗位关闭后重新发布并产生新 ID，也不会自动识别为同一招聘需求。
+- `data/jobs.csv` **没有独立的 `source` 列**，目前合并流程以全部数据来自 BOSS 为前提。因此不同招聘平台出现相同 `job_id` 时，CSV 合并可能误合并；虽然数据库的 `source:job_id` 可以区分它们，但并不能自动修复主表阶段的碰撞。引入其他招聘平台前，应同步升级主表字段及合并键为 `(source, job_id)`。
+- 当前合并器检查 ID 不能为空、单份快照内不能重复，但**尚未校验 `职位ID` 是否与岗位 URL 中的 ID 一致**。这属于未来应补充的采集数据质量校验，而非已实现功能。
+
 ## 使用
 
 在仓库根目录：
