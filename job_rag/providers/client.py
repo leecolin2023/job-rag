@@ -69,7 +69,7 @@ def chat(settings, question, sources):
               "明确区分未核验、疑似失效与确认在招，不把采集成功描述为当前有效。"
               "章节与条件标签属于规则注释，必须结合原文核对，不把加分项说成必备要求，保留否定、或关系与例外。"
               "说明信息不足、冲突和数据日期；不要推断未提供的学历、薪资或技能。")
-    with httpx.Client(timeout=60, trust_env=False) as client:
+    with httpx.Client(timeout=settings.chat_timeout_seconds, trust_env=False) as client:
         response = client.post(settings.chat_base_url.rstrip("/") + "/chat/completions",
                                headers={"Authorization": f"Bearer {settings.chat_api_key}"},
                                json={"model": settings.chat_model, "temperature": 0,

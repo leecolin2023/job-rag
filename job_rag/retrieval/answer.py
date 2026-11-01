@@ -8,6 +8,11 @@ from .search import search
 
 def answer(db, settings, request):
     result = search(db, settings, request)
+    if request.rerank:
+        from .rerank import rerank_candidates
+        result["results"], result["rerank"] = rerank_candidates(db, settings, request.query, result["results"])
+        if not result["rerank"]["applied"]:
+            result["warnings"].append("模型重排未执行；原因见rerank字段。")
     sources = result["results"]
     result["answer_mode"] = "extractive"
     if not sources:

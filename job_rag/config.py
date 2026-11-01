@@ -25,6 +25,7 @@ class Settings:
     chat_base_url: str = os.getenv("CHAT_BASE_URL", "https://api.openai.com/v1")
     chat_api_key: str = os.getenv("CHAT_API_KEY", "")
     chat_model: str = os.getenv("CHAT_MODEL", "")
+    chat_timeout_seconds: float = float(os.getenv("CHAT_TIMEOUT_SECONDS", "60"))
     rerank_base_url: str = os.getenv("RERANK_BASE_URL", "")
     rerank_api_key: str = os.getenv("RERANK_API_KEY", "")
     rerank_model: str = os.getenv("RERANK_MODEL", "")

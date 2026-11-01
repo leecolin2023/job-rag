@@ -16,6 +16,7 @@ class SearchRequest(StructuredFilters):
     query: str = Field(default="", max_length=2000)
     limit: int = Field(default=8, ge=1, le=30)
     generate: bool = False
+    rerank: bool = False
     infer_filters: bool = True
 
 

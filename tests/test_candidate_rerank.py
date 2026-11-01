@@ -75,3 +75,38 @@ def test_invalid_provider_permutation_is_rejected(settings, monkeypatch):
     configured = replace(settings, rerank_base_url="https://example.com/api/v1", rerank_api_key="test", rerank_model="qwen3.7-text-rerank")
     with pytest.raises(ValueError, match="permutation"):
         rerank(configured, "RAG", ["a", "b"])
+
+
+def test_builtin_generation_uses_reranked_source_order(db, settings, monkeypatch):
+    from job_rag.retrieval.answer import answer
+    from job_rag.retrieval.search import SearchRequest
+    import_csv(db, settings, csv_bytes(row('a'), row('b')))
+    run_index_tasks(db, settings)
+    configured = replace(settings, rerank_base_url='https://example.com/api/v1',
+                         rerank_api_key='test', rerank_model='qwen3.7-text-rerank',
+                         chat_api_key='test', chat_model='test')
+    original = answer(db, configured, SearchRequest(query='RAG'))
+    order = [j['key'] for j in original['results']]
+    monkeypatch.setattr('job_rag.retrieval.rerank.rerank', lambda *_: (
+        [{'index': 1, 'relevance_score': .9}, {'index': 0, 'relevance_score': .1}], {}))
+    received = []
+    def generate(_settings, _question, sources):
+        received.extend(j['key'] for j in sources)
+        return '重排后的第一个岗位提供相关能力 [1]'
+    monkeypatch.setattr('job_rag.retrieval.answer.chat', generate)
+    result = answer(db, configured, SearchRequest(query='RAG', rerank=True, generate=True))
+    assert result['rerank']['applied'] and result['answer_mode'] == 'llm'
+    assert received == list(reversed(order)) == [j['key'] for j in result['results']]
+
+
+def test_builtin_generation_reports_rerank_fallback(db, settings, monkeypatch):
+    from job_rag.retrieval.answer import answer
+    from job_rag.retrieval.search import SearchRequest
+    import_csv(db, settings, csv_bytes(row()))
+    run_index_tasks(db, settings)
+    configured = replace(settings, chat_api_key='test', chat_model='test')
+    monkeypatch.setattr('job_rag.retrieval.answer.chat', lambda *_: '来源岗位 [1]')
+    result = answer(db, configured, SearchRequest(query='RAG', rerank=True, generate=True))
+    assert result['rerank']['reason'] == 'not_configured'
+    assert result['answer_mode'] == 'llm'
+    assert any('重排未执行' in warning for warning in result['warnings'])
