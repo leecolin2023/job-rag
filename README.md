@@ -51,7 +51,7 @@ data/jobs.csv → 预处理（校验、标准化、版本）
 
 ## 三、当前边界与阅读路线
 
-当前主表包含 **1,093 条岗位，1,092 条有正文**；仓库已具备 CSV 导入、规则标准化、版本追踪、BM25、多查询候选、MCP、全库字面查询和批量全文。第一轮真实 Qwen Embedding 离线实验已完成，完整 Qwen Rerank 对照尚未执行。**配置了 pgvector 不等于线上已启用 Embedding，GitHub main 的更新也不等于在线容器已经切换。**
+当前主表包含 **2,111 条岗位，2,110 条有正文**；仓库已具备 CSV 导入、规则标准化、版本追踪、BM25、多查询候选、MCP、全库字面查询和批量全文。第一轮真实 Qwen Embedding 离线实验已完成，完整 Qwen Rerank 对照尚未执行。**配置了 pgvector 不等于线上已启用 Embedding，GitHub main 的更新也不等于在线容器已经切换。**
 
 最适合读代码的顺序是先看两个具体问题：岗位更新如何安全重建索引，以及为什么检索 Top-K 不能当全库统计。对应模块文档围绕这些机制展开，而不是仅介绍文件名。实验如何检验分块收益见[实验入口](experiments/README.md)、[首轮结论](docs/recall-pilot-2026-10-25.md)；当前运行状态和任务约束见[状态说明](docs/current-status.md)、[任务路由说明](docs/task-routing.md)。
 
@@ -236,7 +236,7 @@ job-rag status 岗位ID closed --reason '原页面明确显示职位已关闭'
 
 状态变更不需要重新 Embedding；默认检索仅包含 `unknown` / `active`，历史查询才包含 `closed` / `suspected_expired`。重新导入不会自动恢复已关闭岗位。`active_only` 只返回确认在招的岗位。
 
-原 593 条数据初始导入时的 `job_status` 均为 `unknown`，无描述的 1 条仍保留供审计但无检索分块。现有 1,093 条主表的 `status` 是本次采集比较标记；即使 CSV 写成 `招聘中` 或 `下线`，重新导入也不会自动将它们变成数据库的 `active` 或 `closed`。网页“仅确认在招”初始可能无结果，这是正常现象。
+原 593 条数据初始导入时的 `job_status` 均为 `unknown`，无描述的 1 条仍保留供审计但无检索分块。现有 2,111 条主表的 `status` 是本次采集比较标记；即使 CSV 写成 `招聘中` 或 `下线`，重新导入也不会自动将它们变成数据库的 `active` 或 `closed`。网页“仅确认在招”初始可能无结果，这是正常现象。
 
 `last_seen_at` 表示本系统最近导入观察时间，不是页面在线证明；`last_verified_at` 仅在明确设置 `active` / `closed` 时更新，具体核验依据见状态历史。原采集时间始终保留在 `collected_at`。
 
@@ -302,9 +302,9 @@ PostgreSQL 检查使用唯一命名的临时数据库，不改岗位业务库；
 
 ## 数据来源与范围
 
-来源：原始 2026-10-23 BOSS 岗位主表，以及 2026-10-30 新增的广州 Agent、广州 RAG 和深圳 Agent 三份采集。按职位 ID 去重并保留历史岗位；完整合并口径见 [10 月 30 日合并报告](data/collections/2026-10-30/MERGE_REPORT.md)。
+来源：原始 2026-10-23 BOSS 岗位主表，以及 2026-10-30、2026-10-31、2026-11-01 的增量采集。按职位 ID 去重并保留历史岗位；合并规则与批次记录见 [data_merge](data/data_merge/README.md)。
 
-当前主表共 **1,093 条职位**，其中 **1,092 条有实际岗位描述**，**1 条历史岗位因链接失效未取得描述**。所有岗位保留在一份 CSV 中，无丢失、无重复职位 ID。
+当前主表共 **2,111 条职位**，其中 **2,110 条有实际岗位描述**，**1 条历史岗位因链接失效未取得描述**。所有岗位保留在一份 CSV 中，无丢失、无重复职位 ID。
 
 数据仅供学习、研究与分析。招聘状态、薪资与岗位要求可能发生变化，不代表当前职位仍在招聘。
 
@@ -312,10 +312,10 @@ PostgreSQL 检查使用唯一命名的临时数据库，不改岗位业务库；
 
 ```text
 data/
-└── jobs.csv  # 标准化岗位主表，1,093 条
+└── jobs.csv  # 标准化岗位主表，2,111 条
 ```
 
-`data/jobs.csv` 保留 12 个字段（1,093 个不同职位 ID）：
+`data/jobs.csv` 保留 12 个字段（2,111 个不同职位 ID）：
 
 `job_id, title, company, location, salary, experience, education, url, description, status, collected_at, keywords`
 

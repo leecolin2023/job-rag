@@ -68,3 +68,4 @@ python -m unittest discover -s data/data_merge -p 'test_merge_jobs.py'
 ## 合并记录
 
 - [2026-10-31 AI应用开发批次](merge_report_2026-10-31.md)：合并前 1,324，新增 472，合并后 1,796。
+- [2026-11-01 大模型应用开发批次](merge_report_2026-11-01.md)：合并前 1,796，新增 315，合并后 2,111。
