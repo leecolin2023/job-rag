@@ -1,24 +1,15 @@
-# Job-RAG 离线实验：统一目录与命令
+# Job-RAG 离线实验
 
-实验定义、评测数据和实验执行程序均在根目录 `experiments/`，生产包 `job_rag/` 只保留业务与检索等核心实现。实验程序可以调用生产核心模块，但生产模块不依赖实验代码。
+实验定义、评测数据和执行程序位于 `experiments/`，生产包 `job_rag/` 保留核心实现；生产模块不依赖实验代码。
 
-**唯一命令：`job-rag-experiment`**。保留原有检索排名子命令 `prepare / recall / pool / rescore / rerank / report / audit-rerank-inputs / probe`，任务驱动实验通过同一入口调用 `run / prepare-review / evaluate`。取消 `job-rag-task` 入口。
+- **RAG 岗位技术要求分析**：入口见 [实验 README](rag_tech_requirements/README.md)。输入与首轮参考分别在 `data/`、`baseline/`，执行/打包代码在 `scripts/`，结果按日期归档在 `results/`。
+- **当前主交付**：[2026-11-01 完整模型报告](rag_tech_requirements/results/2026-11-01/models/report.md)，包括真实 Embedding、重排、内置生成及人工复核材料。
+- **历史检索排名实验**：代码为 `cli.py`、`runner.py`、`bailian.py`、`metrics.py`，查询种子为 `benchmark.v1.json`；下文保留其方法和命令说明。
+- **运行时原始产物**：`runtime/experiments/` 受 Git 忽略；可携带的报告及复核材料另归档在任务目录。
 
-- 通用实验代码：`experiments/cli.py`、`runner.py`、`bailian.py`、`metrics.py`；RAG 技术要求任务的专用执行/评分/抽样代码：`rag_tech_requirements/task_runner.py`、`task_eval.py`、`task_review.py`。
-- 实验资料：`benchmark.v1.json`、`rag_tech_requirements/fixtures.json` 和 `gold.jsonl`。
-- 执行产物：`runtime/experiments/`（Git 忽略，不能作为产品事实或已核验标签）。
-- [实现细节](IMPLEMENTATION.md)｜[RAG 技术要求统计实验](rag_tech_requirements/README.md)
+当前已移除旧任务 `task_runner/task_eval/task_review` 模块及其 CLI 子命令，不再保留失效导入。RAG 技术要求任务使用其 README 列出的四个脚本；`job-rag-experiment` 只保留历史检索排名实验的 `prepare / recall / pool / rescore / rerank / report / audit-rerank-inputs / probe` 命令。
 
-新命令示例：
-
-~~~bash
-pip install -e '.[test,experiments]'
-
-job-rag-experiment run \
-  --dataset experiments/rag_tech_requirements/fixtures.json \
-  --gold experiments/rag_tech_requirements/gold.jsonl \
-  --output runtime/experiments/rag-task-demo
-~~~
+[实现细节](IMPLEMENTATION.md)
 
 ## 历史检索排名实验说明
 

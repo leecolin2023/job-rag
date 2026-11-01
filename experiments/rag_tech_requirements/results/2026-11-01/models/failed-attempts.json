@@ -1,0 +1,1146 @@
+{
+  "retrieval-attempt-1.json": {
+    "results": [
+      {
+        "title": "知识库开发工程师（RAG方向）",
+        "company": "深圳联友科技有限公司",
+        "location": "广州·花都区·炭步",
+        "salary": "20-35K",
+        "experience": "3-5年",
+        "education": "硕士",
+        "url": "https://www.zhipin.com/job_detail/1565396211cbed010nNy39W_GFJS.html",
+        "collected_at": "2026-10-23",
+        "key": "boss:1565396211cbed010nNy39W_GFJS",
+        "source": "boss",
+        "job_id": "1565396211cbed010nNy39W_GFJS",
+        "job_status": "unknown",
+        "status_reason": "尚未核验招聘状态",
+        "last_verified_at": null,
+        "last_seen_at": "2026-11-01T03:43:28.102122+00:00",
+        "first_seen_at": "2026-11-01T03:43:28.102122+00:00",
+        "version": 1,
+        "indexed_version": 1,
+        "normalized": {
+          "city": "广州",
+          "district": "花都区",
+          "salary_min": 20000.0,
+          "salary_max": 35000.0,
+          "salary_period": "month",
+          "salary_months": null,
+          "experience_min": 3,
+          "experience_max": 5,
+          "education_level": "硕士",
+          "employment_type": "unknown",
+          "quality_flags": []
+        },
+        "collection_status": "已获取描述（详情字段已核验）",
+        "score": 0.032787,
+        "evidence": [
+          "岗位：知识库开发工程师（RAG方向）\n章节：岗位职责\n条件性质：未明确条件性质\n原文：\n\n1、负责企业级知识库平台的架构设计与核心开发，覆盖知识接入→解析→索引→检索→服务全链路；\n2、建设多源知识接入能力：对接⽂档（PDF/Word/Excel/PPT）、⽹页、IM消息、业务系统数据库等数据源，实现增量同步与版本管理；\n3、负责⽂档解析与处理管线：版面分析、表格/图片提取、切⽚策略（Chunking）、元数据标注，持续优化知识切分质量；\n4、设计并优化混合检索体系：向量检索（Embedding/多路召回）、关键词检索（BM25）、重排序（Rerank）、查询改写与意图理解，提升召回准确率与命中率；\n5、构建面向RAG/Agent场景的知识服务能力：知识挂载、权限过滤（数据级/行列级）、引用溯源、答案可信度控制；\n6、建设知识治理与质量评估体系：知识时效性管理、冲突检测、去重归并、检索效果评测集与自动化评估流水线；\n7、探索知识图谱/本体（Ontology）在知识组织与推理场景的应用，推动非结构化知识向结构化沉淀。\n8、设计知识库端到端架构，主导 RAG 技术方案（分块策略、混合检索、融合与重排、上下文组装）；\n9、建立效果评估体系，主导 badcase 分层归因，持续提升检索与问答准确率；\n10、制定知识内容标准与生命周期机制，推动业务侧建立内容 Owner；\n11、深入业务场景输出产品方案并跟踪迭代；⑤ 负责项目全周期管理与多方资源协调。\n",
+          "岗位：知识库开发工程师（RAG方向）\n章节：任职要求\n条件性质：任职要求（保留原文中的或关系、否定和例外）\n原文：\n\n1、本科及以上学历，计算机、人工智能、信息检索等相关专业，3年以上搜索/推荐/NLP/LLM应用开发经验；\n2、熟练掌握Python，具备扎实的工程能力：高并发检索服务、异步任务管线、分布式存储与索引；\n3、深入理解RAG技术栈：Embedding模型选型与微调、向量数据库（Milvus/Qdrant/Elasticsearch向量检索）、Rerank模型（bge-reranker/ColBERT等）、检索评测方法；\n"
+        ],
+        "evidence_chunk_ids": [
+          1980,
+          1981
+        ],
+        "evidence_details": [
+          {
+            "raw_text": "\n1、负责企业级知识库平台的架构设计与核心开发，覆盖知识接入→解析→索引→检索→服务全链路；\n2、建设多源知识接入能力：对接⽂档（PDF/Word/Excel/PPT）、⽹页、IM消息、业务系统数据库等数据源，实现增量同步与版本管理；\n3、负责⽂档解析与处理管线：版面分析、表格/图片提取、切⽚策略（Chunking）、元数据标注，持续优化知识切分质量；\n4、设计并优化混合检索体系：向量检索（Embedding/多路召回）、关键词检索（BM25）、重排序（Rerank）、查询改写与意图理解，提升召回准确率与命中率；\n5、构建面向RAG/Agent场景的知识服务能力：知识挂载、权限过滤（数据级/行列级）、引用溯源、答案可信度控制；\n6、建设知识治理与质量评估体系：知识时效性管理、冲突检测、去重归并、检索效果评测集与自动化评估流水线；\n7、探索知识图谱/本体（Ontology）在知识组织与推理场景的应用，推动非结构化知识向结构化沉淀。\n8、设计知识库端到端架构，主导 RAG 技术方案（分块策略、混合检索、融合与重排、上下文组装）；\n9、建立效果评估体系，主导 badcase 分层归因，持续提升检索与问答准确率；\n10、制定知识内容标准与生命周期机制，推动业务侧建立内容 Owner；\n11、深入业务场景输出产品方案并跟踪迭代；⑤ 负责项目全周期管理与多方资源协调。\n",
+            "source_start": 4,
+            "source_end": 592,
+            "source_offset_unit": "unicode_codepoints",
+            "section_type": "responsibilities",
+            "section_title": "岗位职责",
+            "section_id": "section-0",
+            "section_start": 4,
+            "section_end": 592,
+            "heading_start": 0,
+            "heading_end": 4,
+            "requirement_level": "unspecified",
+            "label_method": "conservative_rules",
+            "item_spans": [
+              {
+                "start": 4,
+                "end": 51,
+                "continuation_id": "item-4-51"
+              },
+              {
+                "start": 51,
+                "end": 122,
+                "continuation_id": "item-51-122"
+              },
+              {
+                "start": 122,
+                "end": 182,
+                "continuation_id": "item-122-182"
+              },
+              {
+                "start": 182,
+                "end": 264,
+                "continuation_id": "item-182-264"
+              },
+              {
+                "start": 264,
+                "end": 322,
+                "continuation_id": "item-264-322"
+              },
+              {
+                "start": 322,
+                "end": 374,
+                "continuation_id": "item-322-374"
+              },
+              {
+                "start": 374,
+                "end": 425,
+                "continuation_id": "item-374-425"
+              },
+              {
+                "start": 425,
+                "end": 474,
+                "continuation_id": "item-425-474"
+              },
+              {
+                "start": 474,
+                "end": 515,
+                "continuation_id": "item-474-515"
+              },
+              {
+                "start": 515,
+                "end": 551,
+                "continuation_id": "item-515-551"
+              },
+              {
+                "start": 551,
+                "end": 592,
+                "continuation_id": "item-551-592"
+              }
+            ],
+            "hard_split": false,
+            "strategy": "section_typed",
+            "parser_version": "headings-items-v1",
+            "chunking_version": "sections-v1",
+            "budget_unit": "chars",
+            "budget_size": 1100,
+            "rendered_units": 632
+          },
+          {
+            "raw_text": "\n1、本科及以上学历，计算机、人工智能、信息检索等相关专业，3年以上搜索/推荐/NLP/LLM应用开发经验；\n2、熟练掌握Python，具备扎实的工程能力：高并发检索服务、异步任务管线、分布式存储与索引；\n3、深入理解RAG技术栈：Embedding模型选型与微调、向量数据库（Milvus/Qdrant/Elasticsearch向量检索）、Rerank模型（bge-reranker/ColBERT等）、检索评测方法；\n",
+            "source_start": 596,
+            "source_end": 808,
+            "source_offset_unit": "unicode_codepoints",
+            "section_type": "requirements",
+            "section_title": "任职要求",
+            "section_id": "section-1",
+            "section_start": 596,
+            "section_end": 1161,
+            "heading_start": 592,
+            "heading_end": 596,
+            "requirement_level": "required",
+            "label_method": "conservative_rules",
+            "item_spans": [
+              {
+                "start": 596,
+                "end": 651,
+                "continuation_id": "item-596-651"
+              },
+              {
+                "start": 651,
+                "end": 699,
+                "continuation_id": "item-651-699"
+              },
+              {
+                "start": 699,
+                "end": 808,
+                "continuation_id": "item-699-808"
+              }
+            ],
+            "hard_split": false,
+            "strategy": "section_typed",
+            "parser_version": "headings-items-v1",
+            "chunking_version": "sections-v1",
+            "budget_unit": "chars",
+            "budget_size": 1100,
+            "rendered_units": 270
+          }
+        ],
+        "qualification_context": [
+          {
+            "section_type": "requirements",
+            "title": "任职要求",
+            "text": "\n1、本科及以上学历，计算机、人工智能、信息检索等相关专业，3年以上搜索/推荐/NLP/LLM应用开发经验；\n2、熟练掌握Python，具备扎实的工程能力：高并发检索服务、异步任务管线、分布式存储与索引；\n3、深入理解RAG技术栈：Embedding模型选型与微调、向量数据库（Milvus/Qdrant/Elasticsearch向量检索）、Rerank模型（bge-reranker/ColBERT等）、检索评测方法；\n4、熟悉文档智能处理：OCR、版面分析（LayoutAnalysis）、表格结构识别，有MinerU/Unstructured/LlamaParse等工具链使用或改造经验者优先；\n5、熟悉主流LLM的API特性与Prompt工程，有RAG问答或企业知识库系统的生产级上线经验；\n6、对检索质量有系统性认知：能建立离线评测集、设计AB实验、定位\"召回缺失/排序错误/生成幻觉\"等不同层级的问题；\n7、自驱力强，能跟踪GraphRAG、AgenticRAG、长上下文与记忆机制等前沿方向并评估落地价值。\n8、至少完整主导过1个知识库或检索问答系统从0到1的建设；\n9、熟悉RAG技术链路，能解释分块策略对召回质量的影响；\n10、具备独立的badcase归因能力；\n11、有知识治理与产品设计经验；能独立带项目。",
+            "source_start": 596,
+            "source_end": 1161,
+            "truncated": false
+          }
+        ],
+        "rerank_score": 0.9976050046377012
+      },
+      {
+        "title": "知识库运营工程师（AI方向）",
+        "company": "中大咨询",
+        "location": "广州·海珠区·工业大道",
+        "salary": "15-25K",
+        "experience": "1-3年",
+        "education": "本科",
+        "url": "https://www.zhipin.com/job_detail/20de435767de769a0nFy0t-1FVNS.html",
+        "collected_at": "2026-10-23",
+        "key": "boss:20de435767de769a0nFy0t-1FVNS",
+        "source": "boss",
+        "job_id": "20de435767de769a0nFy0t-1FVNS",
+        "job_status": "unknown",
+        "status_reason": "尚未核验招聘状态",
+        "last_verified_at": null,
+        "last_seen_at": "2026-11-01T03:43:28.102122+00:00",
+        "first_seen_at": "2026-11-01T03:43:28.102122+00:00",
+        "version": 1,
+        "indexed_version": 1,
+        "normalized": {
+          "city": "广州",
+          "district": "海珠区",
+          "salary_min": 15000.0,
+          "salary_max": 25000.0,
+          "salary_period": "month",
+          "salary_months": null,
+          "experience_min": 1,
+          "experience_max": 3,
+          "education_level": "本科",
+          "employment_type": "unknown",
+          "quality_flags": []
+        },
+        "collection_status": "已获取描述",
+        "score": 0.029514,
+        "evidence": [
+          "岗位：知识库运营工程师（AI方向）\n章节：任职要求\n条件性质：任职要求（保留原文中的或关系、否定和例外）\n原文：\n\t熟悉知识库 / ⽂档管理，会做资料清洗与结构化整理\n\t了解 RAG、向量检索的基本原理\n\t细致、有耐⼼，对内容质量敏感\n\t能设计知识库架构与 RAG 检索优化方案\n\t熟悉向量数据库、Embedding、切分与召回策略\n\t有知识治理、数据标注体系搭建经验\n\t能用指标衡量并持续提升检索质量\n",
+          "岗位：知识库运营工程师（AI方向）\n章节：岗位职责\n条件性质：未明确条件性质\n原文：\n\t\n采集、清洗行业与咨询资料，构建结构化知识库\n\t设计文档切分、标注、向量化策略，优化 RAG 检索效果\n\t建立知识更新与质量校验机制，保障知识时效与准确\n\t与智能体开发协作，针对具体场景调优知识调⽤效果\n"
+        ],
+        "evidence_chunk_ids": [
+          1669,
+          1668
+        ],
+        "evidence_details": [
+          {
+            "raw_text": "\t熟悉知识库 / ⽂档管理，会做资料清洗与结构化整理\n\t了解 RAG、向量检索的基本原理\n\t细致、有耐⼼，对内容质量敏感\n\t能设计知识库架构与 RAG 检索优化方案\n\t熟悉向量数据库、Embedding、切分与召回策略\n\t有知识治理、数据标注体系搭建经验\n\t能用指标衡量并持续提升检索质量\n",
+            "source_start": 120,
+            "source_end": 272,
+            "source_offset_unit": "unicode_codepoints",
+            "section_type": "requirements",
+            "section_title": "任职要求",
+            "section_id": "section-1",
+            "section_start": 119,
+            "section_end": 272,
+            "heading_start": 114,
+            "heading_end": 119,
+            "requirement_level": "required",
+            "label_method": "conservative_rules",
+            "item_spans": [
+              {
+                "start": 120,
+                "end": 148,
+                "continuation_id": "item-120-148"
+              },
+              {
+                "start": 148,
+                "end": 167,
+                "continuation_id": "item-148-167"
+              },
+              {
+                "start": 167,
+                "end": 184,
+                "continuation_id": "item-167-184"
+              },
+              {
+                "start": 184,
+                "end": 207,
+                "continuation_id": "item-184-207"
+              },
+              {
+                "start": 207,
+                "end": 235,
+                "continuation_id": "item-207-235"
+              },
+              {
+                "start": 235,
+                "end": 254,
+                "continuation_id": "item-235-254"
+              },
+              {
+                "start": 254,
+                "end": 272,
+                "continuation_id": "item-254-272"
+              }
+            ],
+            "hard_split": false,
+            "strategy": "section_typed",
+            "parser_version": "headings-items-v1",
+            "chunking_version": "sections-v1",
+            "budget_unit": "chars",
+            "budget_size": 1100,
+            "rendered_units": 209
+          },
+          {
+            "raw_text": "\t\n采集、清洗行业与咨询资料，构建结构化知识库\n\t设计文档切分、标注、向量化策略，优化 RAG 检索效果\n\t建立知识更新与质量校验机制，保障知识时效与准确\n\t与智能体开发协作，针对具体场景调优知识调⽤效果\n",
+            "source_start": 7,
+            "source_end": 114,
+            "source_offset_unit": "unicode_codepoints",
+            "section_type": "responsibilities",
+            "section_title": "岗位职责",
+            "section_id": "section-0",
+            "section_start": 6,
+            "section_end": 114,
+            "heading_start": 0,
+            "heading_end": 6,
+            "requirement_level": "unspecified",
+            "label_method": "conservative_rules",
+            "item_spans": [
+              {
+                "start": 7,
+                "end": 10,
+                "continuation_id": "item-7-10"
+              },
+              {
+                "start": 10,
+                "end": 32,
+                "continuation_id": "item-10-32"
+              },
+              {
+                "start": 32,
+                "end": 62,
+                "continuation_id": "item-32-62"
+              },
+              {
+                "start": 62,
+                "end": 88,
+                "continuation_id": "item-62-88"
+              },
+              {
+                "start": 88,
+                "end": 114,
+                "continuation_id": "item-88-114"
+              }
+            ],
+            "hard_split": false,
+            "strategy": "section_typed",
+            "parser_version": "headings-items-v1",
+            "chunking_version": "sections-v1",
+            "budget_unit": "chars",
+            "budget_size": 1100,
+            "rendered_units": 150
+          }
+        ],
+        "qualification_context": [
+          {
+            "section_type": "requirements",
+            "title": "任职要求",
+            "text": "\n\t熟悉知识库 / ⽂档管理，会做资料清洗与结构化整理\n\t了解 RAG、向量检索的基本原理\n\t细致、有耐⼼，对内容质量敏感\n\t能设计知识库架构与 RAG 检索优化方案\n\t熟悉向量数据库、Embedding、切分与召回策略\n\t有知识治理、数据标注体系搭建经验\n\t能用指标衡量并持续提升检索质量\n",
+            "source_start": 119,
+            "source_end": 272,
+            "truncated": false
+          },
+          {
+            "section_type": "preferred",
+            "title": "加分项",
+            "text": "\n\t有咨询 / 专业服务⾏业知识管理经验\n\t熟悉主流 RAG 框架与向量库（Milvus / Qdrant 等）",
+            "source_start": 275,
+            "source_end": 333,
+            "truncated": false
+          }
+        ],
+        "rerank_score": 0.9491255226512534
+      },
+      {
+        "title": "化工知识库开发工程师",
+        "company": "辛孚科技",
+        "location": "广州·黄埔区·东圃",
+        "salary": "20-40K",
+        "experience": "3-5年",
+        "education": "本科",
+        "url": "https://www.zhipin.com/job_detail/eb870264e10da0680nFz39m9FFJQ.html",
+        "collected_at": "2026-10-23",
+        "key": "boss:eb870264e10da0680nFz39m9FFJQ",
+        "source": "boss",
+        "job_id": "eb870264e10da0680nFz39m9FFJQ",
+        "job_status": "unknown",
+        "status_reason": "尚未核验招聘状态",
+        "last_verified_at": null,
+        "last_seen_at": "2026-11-01T03:43:28.102122+00:00",
+        "first_seen_at": "2026-11-01T03:43:28.102122+00:00",
+        "version": 1,
+        "indexed_version": 1,
+        "normalized": {
+          "city": "广州",
+          "district": "黄埔区",
+          "salary_min": 20000.0,
+          "salary_max": 40000.0,
+          "salary_period": "month",
+          "salary_months": null,
+          "experience_min": 3,
+          "experience_max": 5,
+          "education_level": "本科",
+          "employment_type": "unknown",
+          "quality_flags": []
+        },
+        "collection_status": "已获取描述（详情字段已核验）",
+        "score": 0.031281,
+        "evidence": [
+          "岗位：化工知识库开发工程师\n章节：未明确分节\n条件性质：混合或带例外条件，请逐句核对\n原文：\n岗位职责负责化工知识库规划与建设，建立术语、分类、标签、元数据及版本管理规范；治理工艺包、操作规程、设备手册、SDS、标准等资料，建设 PDF、Word、Excel、扫描件等复杂⽂档的解析、清洗、切分与溯源流程；设计关键词、向量及混合检索、RAG 问答和评测优化⽅案，⽀撑大模型、智能体及业务系统调用；建⽴权限、脱敏、审计和知识更新机制，协同工艺、设备、安全等团队推进应用落地。岗位要求本科及以上学历，化工、炼化、过程装备、计算机等相关专业；3 年以上知识工程、智能文档或 RAG 项目经验，参与过从文档治理到检索问答上线的完整项目；熟悉 OCR、文档解析、元数据、版本管理及知识建模；熟悉 Python、向量检索或 Elasticsearch、混合检索、重排序及 RAG 评测，能完成接口集成与效果验证；具备化工资料理解能力，有炼化、化工或工业知识库项目经验者优先。"
+        ],
+        "evidence_chunk_ids": [
+          2058
+        ],
+        "evidence_details": [
+          {
+            "raw_text": "岗位职责负责化工知识库规划与建设，建立术语、分类、标签、元数据及版本管理规范；治理工艺包、操作规程、设备手册、SDS、标准等资料，建设 PDF、Word、Excel、扫描件等复杂⽂档的解析、清洗、切分与溯源流程；设计关键词、向量及混合检索、RAG 问答和评测优化⽅案，⽀撑大模型、智能体及业务系统调用；建⽴权限、脱敏、审计和知识更新机制，协同工艺、设备、安全等团队推进应用落地。岗位要求本科及以上学历，化工、炼化、过程装备、计算机等相关专业；3 年以上知识工程、智能文档或 RAG 项目经验，参与过从文档治理到检索问答上线的完整项目；熟悉 OCR、文档解析、元数据、版本管理及知识建模；熟悉 Python、向量检索或 Elasticsearch、混合检索、重排序及 RAG 评测，能完成接口集成与效果验证；具备化工资料理解能力，有炼化、化工或工业知识库项目经验者优先。",
+            "source_start": 0,
+            "source_end": 384,
+            "source_offset_unit": "unicode_codepoints",
+            "section_type": "unknown",
+            "section_title": "未明确分节",
+            "section_id": "section-0",
+            "section_start": 0,
+            "section_end": 384,
+            "heading_start": null,
+            "heading_end": null,
+            "requirement_level": "mixed",
+            "label_method": "conservative_rules",
+            "item_spans": [
+              {
+                "start": 0,
+                "end": 384,
+                "continuation_id": "item-0-384"
+              }
+            ],
+            "hard_split": false,
+            "strategy": "section_typed",
+            "parser_version": "headings-items-v1",
+            "chunking_version": "sections-v1",
+            "budget_unit": "chars",
+            "budget_size": 1100,
+            "rendered_units": 431
+          }
+        ],
+        "qualification_context": [],
+        "rerank_score": 0.9422582826218526
+      },
+      {
+        "title": "招人｜企业 AI 知识库架构与 RAG 检索优化",
+        "company": "广州羽淼白品牌管理",
+        "location": "广州·白云区·嘉禾",
+        "salary": "35-40K",
+        "experience": "1-3年",
+        "education": "本科",
+        "url": "https://www.zhipin.com/job_detail/277a199ef6d9160e0nN53d-7GVRU.html",
+        "collected_at": "2026-10-23",
+        "key": "boss:277a199ef6d9160e0nN53d-7GVRU",
+        "source": "boss",
+        "job_id": "277a199ef6d9160e0nN53d-7GVRU",
+        "job_status": "unknown",
+        "status_reason": "尚未核验招聘状态",
+        "last_verified_at": null,
+        "last_seen_at": "2026-11-01T03:43:28.102122+00:00",
+        "first_seen_at": "2026-11-01T03:43:28.102122+00:00",
+        "version": 1,
+        "indexed_version": 1,
+        "normalized": {
+          "city": "广州",
+          "district": "白云区",
+          "salary_min": 35000.0,
+          "salary_max": 40000.0,
+          "salary_period": "month",
+          "salary_months": null,
+          "experience_min": 1,
+          "experience_max": 3,
+          "education_level": "本科",
+          "employment_type": "unknown",
+          "quality_flags": []
+        },
+        "collection_status": "已获取描述（详情字段已核验）",
+        "score": 0.031498,
+        "evidence": [
+          "岗位：招人｜企业 AI 知识库架构与 RAG 检索优化\n章节：未明确分节\n条件性质：混合或带例外条件，请逐句核对\n原文：\n我们在做的事情：**为企业搭建一套「能查、查得准、用得起来」的 AI 知识库系统**——它不是 demo，而是真正在企业里被业务⼈员天天⽤到的产品。**你将⾯对的挑战：**- 设计文档切分、标注、向量化策略，让知识被机器真正理解；- 优化 RAG 检索效果（召回率 / 准确率 / 时延），用指标衡量并持续迭代；- 搭建知识更新与质量校验机制，保障知识时效与准确；- 熟悉向量数据库（Milvus / Qdrant 等）、Embedding、召回策略；- 与智能体开发协作，让知识在具体业务场景中「被⽤对」。**我们希望你有：**- 知识库 / 文档管理经验，能做资料清洗与结构化整理；- 知识治理 / 数据标注体系搭建经验；- 对内容质量有极高敏感度，细致、有耐心；- AI 应用 0 到 1 落地经验，能独立交付 MVP；- 熟悉主流 RAG 框架与向量库（Milvus / Qdrant 等）。**加分：**- 有咨询 / 专业服务行业知识管理经验；- 熟悉 RAG、向量检索、MCP、Prompt Engineering 全套技术体系。"
+        ],
+        "evidence_chunk_ids": [
+          2433
+        ],
+        "evidence_details": [
+          {
+            "raw_text": "我们在做的事情：**为企业搭建一套「能查、查得准、用得起来」的 AI 知识库系统**——它不是 demo，而是真正在企业里被业务⼈员天天⽤到的产品。**你将⾯对的挑战：**- 设计文档切分、标注、向量化策略，让知识被机器真正理解；- 优化 RAG 检索效果（召回率 / 准确率 / 时延），用指标衡量并持续迭代；- 搭建知识更新与质量校验机制，保障知识时效与准确；- 熟悉向量数据库（Milvus / Qdrant 等）、Embedding、召回策略；- 与智能体开发协作，让知识在具体业务场景中「被⽤对」。**我们希望你有：**- 知识库 / 文档管理经验，能做资料清洗与结构化整理；- 知识治理 / 数据标注体系搭建经验；- 对内容质量有极高敏感度，细致、有耐心；- AI 应用 0 到 1 落地经验，能独立交付 MVP；- 熟悉主流 RAG 框架与向量库（Milvus / Qdrant 等）。**加分：**- 有咨询 / 专业服务行业知识管理经验；- 熟悉 RAG、向量检索、MCP、Prompt Engineering 全套技术体系。",
+            "source_start": 0,
+            "source_end": 472,
+            "source_offset_unit": "unicode_codepoints",
+            "section_type": "unknown",
+            "section_title": "未明确分节",
+            "section_id": "section-0",
+            "section_start": 0,
+            "section_end": 472,
+            "heading_start": null,
+            "heading_end": null,
+            "requirement_level": "mixed",
+            "label_method": "conservative_rules",
+            "item_spans": [
+              {
+                "start": 0,
+                "end": 472,
+                "continuation_id": "item-0-472"
+              }
+            ],
+            "hard_split": false,
+            "strategy": "section_typed",
+            "parser_version": "headings-items-v1",
+            "chunking_version": "sections-v1",
+            "budget_unit": "chars",
+            "budget_size": 1100,
+            "rendered_units": 533
+          }
+        ],
+        "qualification_context": [],
+        "rerank_score": 0.9244566604585487
+      },
+      {
+        "title": "招人｜企业 AI 知识库架构与 RAG 检索优化",
+        "company": "广州羽淼白品牌管理",
+        "location": "广州·白云区·嘉禾",
+        "salary": "26-27K",
+        "experience": "1-3年",
+        "education": "本科",
+        "url": "https://www.zhipin.com/job_detail/256de0e152e67aec0nN509i-ElRV.html",
+        "collected_at": "2026-10-23",
+        "key": "boss:256de0e152e67aec0nN509i-ElRV",
+        "source": "boss",
+        "job_id": "256de0e152e67aec0nN509i-ElRV",
+        "job_status": "unknown",
+        "status_reason": "尚未核验招聘状态",
+        "last_verified_at": null,
+        "last_seen_at": "2026-11-01T03:43:28.102122+00:00",
+        "first_seen_at": "2026-11-01T03:43:28.102122+00:00",
+        "version": 1,
+        "indexed_version": 1,
+        "normalized": {
+          "city": "广州",
+          "district": "白云区",
+          "salary_min": 26000.0,
+          "salary_max": 27000.0,
+          "salary_period": "month",
+          "salary_months": null,
+          "experience_min": 1,
+          "experience_max": 3,
+          "education_level": "本科",
+          "employment_type": "unknown",
+          "quality_flags": []
+        },
+        "collection_status": "已获取描述",
+        "score": 0.029572,
+        "evidence": [
+          "岗位：招人｜企业 AI 知识库架构与 RAG 检索优化\n章节：未明确分节\n条件性质：未明确条件性质\n原文：\n我们在做的事\n情：\n**为\n企业搭建一套「能查、查得准、用得起来」的 AI 知识库系统**——它不是 demo，而是真正在企业里被业务⼈员天天⽤到的产品。\n**你将⾯对的挑战：**\n- 设计文档切分、标注、向量化策略，让知识被机器真正理解；\n- 优化 RAG 检索效果（召回率 / 准确率 / 时延），用指标衡量并持续迭代；\n- 搭建知识更新与质量校验机制，保障知识时效与准确；\n- 熟悉向量数据库（Milvus / Qdrant 等）、Embedding、召回策略；\n- 与智能体开发协作，让知识在具体业务场景中「被⽤对」。\n**我们希望你有：**\n- 知识库 / 文档管理经验，能做资料清洗与结构化整理；\n- 知识治理 / 数据标注体系搭建经验；\n- 对内容质量有极高敏感度，细致、有耐心；\n- AI 应用 0 到 1 落地经验，能独立交付 MVP；\n",
+          "岗位：招人｜企业 AI 知识库架构与 RAG 检索优化\n章节：未明确分节\n条件性质：混合或带例外条件，请逐句核对\n原文：\n- 熟悉主流 RAG 框架与向量库（Milvus / Qdrant 等）。\n**加分：**\n"
+        ],
+        "evidence_chunk_ids": [
+          397,
+          398
+        ],
+        "evidence_details": [
+          {
+            "raw_text": "我们在做的事\n情：\n**为\n企业搭建一套「能查、查得准、用得起来」的 AI 知识库系统**——它不是 demo，而是真正在企业里被业务⼈员天天⽤到的产品。\n**你将⾯对的挑战：**\n- 设计文档切分、标注、向量化策略，让知识被机器真正理解；\n- 优化 RAG 检索效果（召回率 / 准确率 / 时延），用指标衡量并持续迭代；\n- 搭建知识更新与质量校验机制，保障知识时效与准确；\n- 熟悉向量数据库（Milvus / Qdrant 等）、Embedding、召回策略；\n- 与智能体开发协作，让知识在具体业务场景中「被⽤对」。\n**我们希望你有：**\n- 知识库 / 文档管理经验，能做资料清洗与结构化整理；\n- 知识治理 / 数据标注体系搭建经验；\n- 对内容质量有极高敏感度，细致、有耐心；\n- AI 应用 0 到 1 落地经验，能独立交付 MVP；\n",
+            "source_start": 0,
+            "source_end": 378,
+            "source_offset_unit": "unicode_codepoints",
+            "section_type": "unknown",
+            "section_title": "未明确分节",
+            "section_id": "section-0",
+            "section_start": 0,
+            "section_end": 490,
+            "heading_start": null,
+            "heading_end": null,
+            "requirement_level": "unspecified",
+            "label_method": "conservative_rules",
+            "item_spans": [
+              {
+                "start": 0,
+                "end": 91,
+                "continuation_id": "item-0-91"
+              },
+              {
+                "start": 91,
+                "end": 121,
+                "continuation_id": "item-91-121"
+              },
+              {
+                "start": 121,
+                "end": 163,
+                "continuation_id": "item-121-163"
+              },
+              {
+                "start": 163,
+                "end": 190,
+                "continuation_id": "item-163-190"
+              },
+              {
+                "start": 190,
+                "end": 235,
+                "continuation_id": "item-190-235"
+              },
+              {
+                "start": 235,
+                "end": 276,
+                "continuation_id": "item-235-276"
+              },
+              {
+                "start": 276,
+                "end": 305,
+                "continuation_id": "item-276-305"
+              },
+              {
+                "start": 305,
+                "end": 326,
+                "continuation_id": "item-305-326"
+              },
+              {
+                "start": 326,
+                "end": 348,
+                "continuation_id": "item-326-348"
+              },
+              {
+                "start": 348,
+                "end": 378,
+                "continuation_id": "item-348-378"
+              }
+            ],
+            "hard_split": false,
+            "strategy": "section_typed",
+            "parser_version": "headings-items-v1",
+            "chunking_version": "sections-v1",
+            "budget_unit": "chars",
+            "budget_size": 1100,
+            "rendered_units": 432
+          },
+          {
+            "raw_text": "- 熟悉主流 RAG 框架与向量库（Milvus / Qdrant 等）。\n**加分：**\n",
+            "source_start": 378,
+            "source_end": 424,
+            "source_offset_unit": "unicode_codepoints",
+            "section_type": "unknown",
+            "section_title": "未明确分节",
+            "section_id": "section-0",
+            "section_start": 0,
+            "section_end": 490,
+            "heading_start": null,
+            "heading_end": null,
+            "requirement_level": "mixed",
+            "label_method": "conservative_rules",
+            "item_spans": [
+              {
+                "start": 378,
+                "end": 424,
+                "continuation_id": "item-378-424"
+              }
+            ],
+            "hard_split": false,
+            "strategy": "section_typed",
+            "parser_version": "headings-items-v1",
+            "chunking_version": "sections-v1",
+            "budget_unit": "chars",
+            "budget_size": 1100,
+            "rendered_units": 107
+          }
+        ],
+        "qualification_context": [],
+        "rerank_score": 0.9168083101197828
+      },
+      {
+        "title": "RAG工程师",
+        "company": "广州黄埔星数智科技",
+        "location": "广州·黄埔区·九佛",
+        "salary": "24-30K·14薪",
+        "experience": "3-5年",
+        "education": "本科",
+        "url": "https://www.zhipin.com/job_detail/9f466960019f782e0nx50tW4EFFU.html",
+        "collected_at": "2026-10-23",
+        "key": "boss:9f466960019f782e0nx50tW4EFFU",
+        "source": "boss",
+        "job_id": "9f466960019f782e0nx50tW4EFFU",
+        "job_status": "unknown",
+        "status_reason": "尚未核验招聘状态",
+        "last_verified_at": null,
+        "last_seen_at": "2026-11-01T03:43:28.102122+00:00",
+        "first_seen_at": "2026-11-01T03:43:28.102122+00:00",
+        "version": 1,
+        "indexed_version": 1,
+        "normalized": {
+          "city": "广州",
+          "district": "黄埔区",
+          "salary_min": 24000.0,
+          "salary_max": 30000.0,
+          "salary_period": "month",
+          "salary_months": 14,
+          "experience_min": 3,
+          "experience_max": 5,
+          "education_level": "本科",
+          "employment_type": "unknown",
+          "quality_flags": []
+        },
+        "collection_status": "已获取描述（详情字段已核验）",
+        "score": 0.027118,
+        "evidence": [
+          "岗位：RAG工程师\n章节：任职要求\n条件性质：任职要求（保留原文中的或关系、否定和例外）\n原文：\n2.扎实掌握 RAG 完整技术链路：文档处理、文本分块策略、向量检索、Embedding、Rerank、Prompt 工程、幻觉治理。具备 RAG 问题排查能力，能够定位 bad case，并有对应的调优实践。\n3.熟悉至少一种向量数据库，如 Milvus、Chroma、Qdrant、PGVector 等，了解向量库索引原理、性能调优。\n4.熟悉RAGFlow等常见的知识库开源项目，熟悉Mem\n0、Hindsight等常见的Memory开源项目；掌握基础后端开发，了解 API 服务、并发、缓存等工程化能力。",
+          "岗位：RAG工程师\n章节：岗位职责\n条件性质：未明确条件性质\n原文：\n\n1.负责从0到1 重构和优化RAG系统，基于实际的业务场景、bad case和最前沿研究优化RAG系统的能力，提升RAG系统的准确性。监控⽂档解析、分块、向量化选型、排序算法改善的全链路质量。\n2.负责统筹调优 Agent Memory 系统，完成 Memory ⽣成、减枝、路径强化等模块指标优化，提⾼模型任务执行效率。\n3.持续学习与跟进 RAG、大模型、知识⼯程领域前沿技术。\n"
+        ],
+        "evidence_chunk_ids": [
+          2115,
+          2113
+        ],
+        "evidence_details": [
+          {
+            "raw_text": "2.扎实掌握 RAG 完整技术链路：文档处理、文本分块策略、向量检索、Embedding、Rerank、Prompt 工程、幻觉治理。具备 RAG 问题排查能力，能够定位 bad case，并有对应的调优实践。\n3.熟悉至少一种向量数据库，如 Milvus、Chroma、Qdrant、PGVector 等，了解向量库索引原理、性能调优。\n4.熟悉RAGFlow等常见的知识库开源项目，熟悉Mem\n0、Hindsight等常见的Memory开源项目；掌握基础后端开发，了解 API 服务、并发、缓存等工程化能力。",
+            "source_start": 318,
+            "source_end": 574,
+            "source_offset_unit": "unicode_codepoints",
+            "section_type": "requirements",
+            "section_title": "任职要求",
+            "section_id": "section-2",
+            "section_start": 254,
+            "section_end": 574,
+            "heading_start": 250,
+            "heading_end": 254,
+            "requirement_level": "required",
+            "label_method": "conservative_rules",
+            "item_spans": [
+              {
+                "start": 318,
+                "end": 424,
+                "continuation_id": "item-318-424"
+              },
+              {
+                "start": 424,
+                "end": 488,
+                "continuation_id": "item-424-488"
+              },
+              {
+                "start": 488,
+                "end": 517,
+                "continuation_id": "item-488-517"
+              },
+              {
+                "start": 517,
+                "end": 574,
+                "continuation_id": "item-517-574"
+              }
+            ],
+            "hard_split": false,
+            "strategy": "section_typed",
+            "parser_version": "headings-items-v1",
+            "chunking_version": "sections-v1",
+            "budget_unit": "chars",
+            "budget_size": 1100,
+            "rendered_units": 305
+          },
+          {
+            "raw_text": "\n1.负责从0到1 重构和优化RAG系统，基于实际的业务场景、bad case和最前沿研究优化RAG系统的能力，提升RAG系统的准确性。监控⽂档解析、分块、向量化选型、排序算法改善的全链路质量。\n2.负责统筹调优 Agent Memory 系统，完成 Memory ⽣成、减枝、路径强化等模块指标优化，提⾼模型任务执行效率。\n3.持续学习与跟进 RAG、大模型、知识⼯程领域前沿技术。\n",
+            "source_start": 57,
+            "source_end": 250,
+            "source_offset_unit": "unicode_codepoints",
+            "section_type": "responsibilities",
+            "section_title": "岗位职责",
+            "section_id": "section-1",
+            "section_start": 57,
+            "section_end": 250,
+            "heading_start": 53,
+            "heading_end": 57,
+            "requirement_level": "unspecified",
+            "label_method": "conservative_rules",
+            "item_spans": [
+              {
+                "start": 57,
+                "end": 155,
+                "continuation_id": "item-57-155"
+              },
+              {
+                "start": 155,
+                "end": 220,
+                "continuation_id": "item-155-220"
+              },
+              {
+                "start": 220,
+                "end": 250,
+                "continuation_id": "item-220-250"
+              }
+            ],
+            "hard_split": false,
+            "strategy": "section_typed",
+            "parser_version": "headings-items-v1",
+            "chunking_version": "sections-v1",
+            "budget_unit": "chars",
+            "budget_size": 1100,
+            "rendered_units": 228
+          }
+        ],
+        "qualification_context": [
+          {
+            "section_type": "requirements",
+            "title": "任职要求",
+            "text": "\n1.本科及以上学历，3年及以上后端 / 大模型应用开发经验，有完整企业级 RAG 项目落地经验。对知识工程有独到了解者优先。\n2.扎实掌握 RAG 完整技术链路：文档处理、文本分块策略、向量检索、Embedding、Rerank、Prompt 工程、幻觉治理。具备 RAG 问题排查能力，能够定位 bad case，并有对应的调优实践。\n3.熟悉至少一种向量数据库，如 Milvus、Chroma、Qdrant、PGVector 等，了解向量库索引原理、性能调优。\n4.熟悉RAGFlow等常见的知识库开源项目，熟悉Mem\n0、Hindsight等常见的Memory开源项目；掌握基础后端开发，了解 API 服务、并发、缓存等工程化能力。",
+            "source_start": 254,
+            "source_end": 574,
+            "truncated": false
+          }
+        ],
+        "rerank_score": 0.8665332692001744
+      },
+      {
+        "title": "大模型算法研究员/专家",
+        "company": "纵横",
+        "location": "广州",
+        "salary": "45-75K·15薪",
+        "experience": "5-10年",
+        "education": "硕士",
+        "url": "https://www.zhipin.com/job_detail/a0f1836697c8bf710nN-09i5E1BS.html",
+        "collected_at": "2026-10-23",
+        "key": "boss:a0f1836697c8bf710nN-09i5E1BS",
+        "source": "boss",
+        "job_id": "a0f1836697c8bf710nN-09i5E1BS",
+        "job_status": "unknown",
+        "status_reason": "尚未核验招聘状态",
+        "last_verified_at": null,
+        "last_seen_at": "2026-11-01T03:43:28.102122+00:00",
+        "first_seen_at": "2026-11-01T03:43:28.102122+00:00",
+        "version": 1,
+        "indexed_version": 1,
+        "normalized": {
+          "city": "广州",
+          "district": null,
+          "salary_min": 45000.0,
+          "salary_max": 75000.0,
+          "salary_period": "month",
+          "salary_months": 15,
+          "experience_min": 5,
+          "experience_max": 10,
+          "education_level": "硕士",
+          "employment_type": "unknown",
+          "quality_flags": [
+            "source_fields_unknown"
+          ]
+        },
+        "collection_status": "已获取描述（详情字段已核验）",
+        "score": 0.027222,
+        "evidence": [
+          "岗位：大模型算法研究员/专家\n章节：未明确分节\n条件性质：混合或带例外条件，请逐句核对\n原文：\n25、倒排索引、Embedding语义检索、HNSW/ANN近似最近邻检索等技术，熟练使用Faiss、Milvus、Qdrant等检索与向量数据库，具备混合检索算法优化实战经验。4. 深入掌握RAG全链路算法，精通文本/多模态知识库搭建、分块策略优化、检索排序、重排优化、幻觉抑制等核心技术，有GraphRAG、工业场景RAG落地经验优先。5. 熟练掌握Prompt Engineering、Few-shot、思维链等大模型提示工程技巧，具备智能体效果评测、badcase分析、算法迭代优化能力，能够针对性解决工业场景智能问答、自主决策的业务痛点。6. 具备工业（制造、能源、化工等）数据处理、智能算法落地经验优先，熟悉工业异构数据处理逻辑，能够适配工业复杂业务场景进行算法定制化优化。7. 代码功底扎实，熟练使用Python，具备独立算法开发、调试、优化能力，具备良好的逻辑思维、方案设计和跨团队协作能力。\n加分项1. 熟悉AutoGen、LangGraph、MetaGPT等主流多智能体框架，有框架二次开发、智能体编排调度优化经验；2. 具备多模态（文本、图表、工艺图纸、设备数据）知识库搭建与检索优化经验；3. 了解智能体对齐优化、强化学习（GRPO/DPO）、自主决策迭代优化相关技术；4. 有工业数字孪生、工业智能运维、设备故障问答、工业数据分析智能体落地项目经验。【语音交互-大模型算法工程师/专家-】 广州/杭州、深圳/上海/苏州*有ASR/TTS 模型调优、语音链路开发落地经验优先\n",
+          "岗位：大模型算法研究员/专家\n章节：岗位职责\n条件性质：未明确条件性质\n原文：\n负责设计与实现下一代销售智能体，面向工业销售场景，通过智能体实现知识检索、竞对分析、销售策略指导、售后复盘，降低销售认知负担。参与构建面向工业场景的 LLM 智能 Agent 系统，负责任务规划、工具调用、记忆管理、多轮对话优化，同时参与智能体多模态认知能力建设，包含 ASR 语音识别、TTS 语音合成模型调优、语音链路全流程落地，支撑语音交互类智能体能力；主导大规模结构化 / 半结构化 / 音视频多模态数据存储与检索架构优化，熟练使用 MySQL、PostgreSQL、ClickHouse、MongoDB、Redis、Doris 等主流数据库，以及 Milvus、Qdrant、OceanBase 等向量数据库，完成架构选型、性能调优与容量规划；联动产品、工程团队，将检索、大模型 Agent、语音多模态算法能力落地工业业务场景，覆盖智能问数、工业智能客服、知识问答、RAG 知识库、语音交互助手、工业推荐系统等业务；跟踪Agent、多模态大模型、语音 ASR/TTS、信息检索领域前沿技术，评估技术可行性，推动现有技术方案迭代与能力升级；编写高质量工程代码，输出技术方案、接口与设计文档，参与 Code Review，保障整套多模态智能体系统的性能、稳定性、可扩展性。\n"
+        ],
+        "evidence_chunk_ids": [
+          2140,
+          2141
+        ],
+        "evidence_details": [
+          {
+            "raw_text": "25、倒排索引、Embedding语义检索、HNSW/ANN近似最近邻检索等技术，熟练使用Faiss、Milvus、Qdrant等检索与向量数据库，具备混合检索算法优化实战经验。4. 深入掌握RAG全链路算法，精通文本/多模态知识库搭建、分块策略优化、检索排序、重排优化、幻觉抑制等核心技术，有GraphRAG、工业场景RAG落地经验优先。5. 熟练掌握Prompt Engineering、Few-shot、思维链等大模型提示工程技巧，具备智能体效果评测、badcase分析、算法迭代优化能力，能够针对性解决工业场景智能问答、自主决策的业务痛点。6. 具备工业（制造、能源、化工等）数据处理、智能算法落地经验优先，熟悉工业异构数据处理逻辑，能够适配工业复杂业务场景进行算法定制化优化。7. 代码功底扎实，熟练使用Python，具备独立算法开发、调试、优化能力，具备良好的逻辑思维、方案设计和跨团队协作能力。\n加分项1. 熟悉AutoGen、LangGraph、MetaGPT等主流多智能体框架，有框架二次开发、智能体编排调度优化经验；2. 具备多模态（文本、图表、工艺图纸、设备数据）知识库搭建与检索优化经验；3. 了解智能体对齐优化、强化学习（GRPO/DPO）、自主决策迭代优化相关技术；4. 有工业数字孪生、工业智能运维、设备故障问答、工业数据分析智能体落地项目经验。【语音交互-大模型算法工程师/专家-】 广州/杭州、深圳/上海/苏州*有ASR/TTS 模型调优、语音链路开发落地经验优先\n",
+            "source_start": 800,
+            "source_end": 1450,
+            "source_offset_unit": "unicode_codepoints",
+            "section_type": "unknown",
+            "section_title": "未明确分节",
+            "section_id": "section-0",
+            "section_start": 0,
+            "section_end": 1450,
+            "heading_start": null,
+            "heading_end": null,
+            "requirement_level": "mixed",
+            "label_method": "conservative_rules",
+            "item_spans": [
+              {
+                "start": 800,
+                "end": 1450,
+                "continuation_id": "item-800-1450"
+              }
+            ],
+            "hard_split": false,
+            "strategy": "section_typed",
+            "parser_version": "headings-items-v1",
+            "chunking_version": "sections-v1",
+            "budget_unit": "chars",
+            "budget_size": 1100,
+            "rendered_units": 698
+          },
+          {
+            "raw_text": "负责设计与实现下一代销售智能体，面向工业销售场景，通过智能体实现知识检索、竞对分析、销售策略指导、售后复盘，降低销售认知负担。参与构建面向工业场景的 LLM 智能 Agent 系统，负责任务规划、工具调用、记忆管理、多轮对话优化，同时参与智能体多模态认知能力建设，包含 ASR 语音识别、TTS 语音合成模型调优、语音链路全流程落地，支撑语音交互类智能体能力；主导大规模结构化 / 半结构化 / 音视频多模态数据存储与检索架构优化，熟练使用 MySQL、PostgreSQL、ClickHouse、MongoDB、Redis、Doris 等主流数据库，以及 Milvus、Qdrant、OceanBase 等向量数据库，完成架构选型、性能调优与容量规划；联动产品、工程团队，将检索、大模型 Agent、语音多模态算法能力落地工业业务场景，覆盖智能问数、工业智能客服、知识问答、RAG 知识库、语音交互助手、工业推荐系统等业务；跟踪Agent、多模态大模型、语音 ASR/TTS、信息检索领域前沿技术，评估技术可行性，推动现有技术方案迭代与能力升级；编写高质量工程代码，输出技术方案、接口与设计文档，参与 Code Review，保障整套多模态智能体系统的性能、稳定性、可扩展性。\n",
+            "source_start": 1455,
+            "source_end": 1995,
+            "source_offset_unit": "unicode_codepoints",
+            "section_type": "responsibilities",
+            "section_title": "岗位职责",
+            "section_id": "section-1",
+            "section_start": 1455,
+            "section_end": 1995,
+            "heading_start": 1450,
+            "heading_end": 1455,
+            "requirement_level": "unspecified",
+            "label_method": "conservative_rules",
+            "item_spans": [
+              {
+                "start": 1455,
+                "end": 1995,
+                "continuation_id": "item-1455-1995"
+              }
+            ],
+            "hard_split": false,
+            "strategy": "section_typed",
+            "parser_version": "headings-items-v1",
+            "chunking_version": "sections-v1",
+            "budget_unit": "chars",
+            "budget_size": 1100,
+            "rendered_units": 580
+          }
+        ],
+        "qualification_context": [
+          {
+            "section_type": "requirements",
+            "title": "任职要求",
+            "text": "计算机、人工智能、信息检索、语音信号处理等相关专业硕士及以上学历，3 年及以上算法研发落地经验；深入理解大模型应用，具备 RAG、智能 Agent、Prompt 工程完整项目落地经验，熟悉 Agent 任务拆解、工具调用、长短记忆模块实现；具备 ASR/TTS 模型调优、语音链路开发落地经验，熟悉语音数据处理、模型微调、推理优化，有端侧 / 服务端语音服务开发经验优先；有工业领域（制造、能源、化工）数据处理或者智能应用落地经验，能够理解工业业务痛点，完成算法技术与业务场景适配；",
+            "source_start": 2000,
+            "source_end": 2241,
+            "truncated": false
+          }
+        ],
+        "rerank_score": 0.7787358999645883
+      },
+      {
+        "title": "智算/训练/推理/AI/开放/智能体/agent",
+        "company": "元象点",
+        "location": "广州·天河区·长兴",
+        "salary": "70-100K·16薪",
+        "experience": "经验不限",
+        "education": "本科",
+        "url": "https://www.zhipin.com/job_detail/2c6cbf21427b8e7e0nN62Nq6ElZQ.html",
+        "collected_at": "2026-10-23",
+        "key": "boss:2c6cbf21427b8e7e0nN62Nq6ElZQ",
+        "source": "boss",
+        "job_id": "2c6cbf21427b8e7e0nN62Nq6ElZQ",
+        "job_status": "unknown",
+        "status_reason": "尚未核验招聘状态",
+        "last_verified_at": null,
+        "last_seen_at": "2026-11-01T03:43:28.102122+00:00",
+        "first_seen_at": "2026-11-01T03:43:28.102122+00:00",
+        "version": 1,
+        "indexed_version": 1,
+        "normalized": {
+          "city": "广州",
+          "district": "天河区",
+          "salary_min": 70000.0,
+          "salary_max": 100000.0,
+          "salary_period": "month",
+          "salary_months": 16,
+          "experience_min": 0,
+          "experience_max": null,
+          "education_level": "本科",
+          "employment_type": "unknown",
+          "quality_flags": []
+        },
+        "collection_status": "已获取描述",
+        "score": 0.029877,
+        "evidence": [
+          "岗位：智算/训练/推理/AI/开放/智能体/agent\n章节：工作要求\n条件性质：混合或带例外条件，请逐句核对\n原文：\n4、深入理解LLM原理及RAG技术栈，熟练掌握向量数据库（如Milvus/Pinecone/Weaviate）、Embedding模型（如OpenAI embed、BGE、M3E）、重排序模型（如Cohere rerank）、稀疏-稠密混合检索等；了解知识图谱构建与推理（如Neo4j、RDF、SPARQL）者优先。\n",
+          "岗位：智算/训练/推理/AI/开放/智能体/agent\n章节：工作职责\n条件性质：未明确条件性质\n原文：\n\n1、知识库架构设计与研发：主导企业级AI知识库平台的架构设计，构建支持海量异构知识接入、语义理解、多模态检索及动态知识更新的高可用智能系统，实现知识的高效组织、存储与推理。\n2、知识集成与语义编排：深入理解企业内部业务系统（如CRM、ERP、文档库、数据库等），设计标准化的知识接入规范与数据管道，将非结构化/半结构化数据（文档、邮件、日志、工单等）转化为可计算的语义知识，并实现跨系统知识融合与自动化知识流编排。\n3、复杂场景落地与优化：针对业务痛点（如智能知识问答、产品文档辅助、合规审查、研发知识检索、决策支持等），设计端到端的知识AI解决方案；通过RAG（检索增强生成）、Query改写、重排序策略、知识图谱推理及Embedding模型调优等手段，持续提升知识召回率、答案准确性与推理鲁棒性。\n4、安全合规与评测体系：建立企业级知识库的安全与权限管控机制（数据脱敏、权限隔离、内容溯源），确保知识使用符合隐私与合规要求；搭建知识库效果评测基准（涵盖检索指标、生成质量、用户满意度等），量化业务价值并驱动系统迭代。\n5、技术前瞻与团队赋能：跟踪RAG、GraphRAG、Agentic RAG、多模态知识检索等前沿技术演进，引入合适的新工具与框架；沉淀知识库开发最佳实践，指导初中级工程师，提升团队在知识工程与AI工程化方面的综合能力。\n"
+        ],
+        "evidence_chunk_ids": [
+          104,
+          100
+        ],
+        "evidence_details": [
+          {
+            "raw_text": "4、深入理解LLM原理及RAG技术栈，熟练掌握向量数据库（如Milvus/Pinecone/Weaviate）、Embedding模型（如OpenAI embed、BGE、M3E）、重排序模型（如Cohere rerank）、稀疏-稠密混合检索等；了解知识图谱构建与推理（如Neo4j、RDF、SPARQL）者优先。\n",
+            "source_start": 1674,
+            "source_end": 1833,
+            "source_offset_unit": "unicode_codepoints",
+            "section_type": "requirements",
+            "section_title": "工作要求",
+            "section_id": "section-4",
+            "section_start": 1469,
+            "section_end": 2080,
+            "heading_start": 1465,
+            "heading_end": 1469,
+            "requirement_level": "mixed",
+            "label_method": "conservative_rules",
+            "item_spans": [
+              {
+                "start": 1674,
+                "end": 1833,
+                "continuation_id": "item-1674-1833"
+              }
+            ],
+            "hard_split": false,
+            "strategy": "section_typed",
+            "parser_version": "headings-items-v1",
+            "chunking_version": "sections-v1",
+            "budget_unit": "chars",
+            "budget_size": 1100,
+            "rendered_units": 219
+          },
+          {
+            "raw_text": "\n1、知识库架构设计与研发：主导企业级AI知识库平台的架构设计，构建支持海量异构知识接入、语义理解、多模态检索及动态知识更新的高可用智能系统，实现知识的高效组织、存储与推理。\n2、知识集成与语义编排：深入理解企业内部业务系统（如CRM、ERP、文档库、数据库等），设计标准化的知识接入规范与数据管道，将非结构化/半结构化数据（文档、邮件、日志、工单等）转化为可计算的语义知识，并实现跨系统知识融合与自动化知识流编排。\n3、复杂场景落地与优化：针对业务痛点（如智能知识问答、产品文档辅助、合规审查、研发知识检索、决策支持等），设计端到端的知识AI解决方案；通过RAG（检索增强生成）、Query改写、重排序策略、知识图谱推理及Embedding模型调优等手段，持续提升知识召回率、答案准确性与推理鲁棒性。\n4、安全合规与评测体系：建立企业级知识库的安全与权限管控机制（数据脱敏、权限隔离、内容溯源），确保知识使用符合隐私与合规要求；搭建知识库效果评测基准（涵盖检索指标、生成质量、用户满意度等），量化业务价值并驱动系统迭代。\n5、技术前瞻与团队赋能：跟踪RAG、GraphRAG、Agentic RAG、多模态知识检索等前沿技术演进，引入合适的新工具与框架；沉淀知识库开发最佳实践，指导初中级工程师，提升团队在知识工程与AI工程化方面的综合能力。\n",
+            "source_start": 892,
+            "source_end": 1465,
+            "source_offset_unit": "unicode_codepoints",
+            "section_type": "responsibilities",
+            "section_title": "工作职责",
+            "section_id": "section-3",
+            "section_start": 892,
+            "section_end": 1465,
+            "heading_start": 888,
+            "heading_end": 892,
+            "requirement_level": "unspecified",
+            "label_method": "conservative_rules",
+            "item_spans": [
+              {
+                "start": 892,
+                "end": 980,
+                "continuation_id": "item-892-980"
+              },
+              {
+                "start": 980,
+                "end": 1101,
+                "continuation_id": "item-980-1101"
+              },
+              {
+                "start": 1101,
+                "end": 1244,
+                "continuation_id": "item-1101-1244"
+              },
+              {
+                "start": 1244,
+                "end": 1354,
+                "continuation_id": "item-1244-1354"
+              },
+              {
+                "start": 1354,
+                "end": 1465,
+                "continuation_id": "item-1354-1465"
+              }
+            ],
+            "hard_split": false,
+            "strategy": "section_typed",
+            "parser_version": "headings-items-v1",
+            "chunking_version": "sections-v1",
+            "budget_unit": "chars",
+            "budget_size": 1100,
+            "rendered_units": 626
+          }
+        ],
+        "qualification_context": [
+          {
+            "section_type": "requirements",
+            "title": "工作要求",
+            "text": "\n1、大学本科及以上学历，并取得相应学位，计算机科学、人工智能、数学等相关专业优先，或有丰富的AI、LLM相关实践经验；\n2、兼备较强的AICoding能力，以及强悍的编码基本功，擅长将算力转化为生产力，用AI构建AI；\n3、具备良好的沟通表达能力、数据驱动的分析能力，以及面向具体业务问题出色的问题定义和抽象能力；\n4、对于AI产品有热情与好奇心，深度参与过AI Native产品研发，或对AI原生应用有独到见解；\n5、熟悉LLM与Agent等相关算法原理，尤其是在后训练、大规模强化学习、持续学习、自蒸馏等算法方向有研究或实践者优先；\n6、在人工智能相关顶会发表过论文者优先、在开源社区有高质量的 Agent 框架贡献或独立开发过成熟的 Agent 应用优先。\n二、研发专家（AI知识库）\t上海\t\n",
+            "source_start": 537,
+            "source_end": 888,
+            "truncated": false
+          },
+          {
+            "section_type": "requirements",
+            "title": "工作要求",
+            "text": "\n1、大学本科及以上学历，并取得相应学位，计算机、人工智能、软件工程、自然语言处理等相关专业。\n2、8年以上后端/架构或数据平台开发经验，其中至少2年知识库、搜索引擎、推荐系统或LLM+RAG应用的落地实战经验，有完整的企业级知识管理/智能问答项目从0到1交付案例者优先。\n3、精通Python/Java/Go至少一门语言，具备扎实的工程化与系统设计能力，熟悉如Elasticsearch高性能检索系统架构。\n4、深入理解LLM原理及RAG技术栈，熟练掌握向量数据库（如Milvus/Pinecone/Weaviate）、Embedding模型（如OpenAI embed、BGE、M3E）、重排序模型（如Cohere rerank）、稀疏-稠密混合检索等；了解知识图谱构建与推理（如Neo4j、RDF、SPARQL）者优先。\n5、熟悉语义理解、信息抽取（实体识别、关系抽取）、文本分块策略、多轮对话管理等NLP技术，能够针对不同业务场景设计最优的检索与生成策略。\n6、业务集成能力：有丰富的企业系统集成经验，能够快速将各类数据源（关系型DB、对象存储、消息队列、API服务）封装为知识库可消费的标准数据流或工具接口。\n7、复合素养：具备优秀的业务抽象与需求拆解能力，能将模糊的业务知识需求转化为可执行的技术方案；拥有极强的自驱力与技术好奇心，能在快速演进的技术生态中持续探索最优解。\n三、研发专家（AI智能体）\t上海\t\n",
+            "source_start": 1469,
+            "source_end": 2080,
+            "truncated": false
+          },
+          {
+            "section_type": "requirements",
+            "title": "工作要求",
+            "text": "\n1、大学本科及以上学历，并取得相应学位，计算机、人工智能、软件工程等相关专业；\n2、8年以上后端/架构开发经验，其中至少2年AI Agent或LLM应用落地实战经验，有完整的企业级Agent项目从0到1交付案例者优先。\n3、精通Python/Java/Go至少一门语言，具备扎实的工程化与系统设计能力。\n4、深入理解LLM原理及主流Agent框架（如LangChain/LangGraph、LlamaIndex、AutoGen、CrewAI、OpenAI Agents SDK等），熟悉ReAct、Plan-and-Solve、Reflection等Agent范式。\n5、熟练掌握RAG技术栈（向量数据库、Embedding模型、重排序策略）及Function Calling/Tool Use机制。\n6、业务集成能力： 有丰富的企业系统集成经验，能够快速将遗留系统封装为Agent可调用的标准化工具。\n7、复合素养： 具备优秀的业务抽象能力，能将模糊的业务需求转化为可执行的Agent工作流；拥有极强的自驱力与技术好奇心，能在不确定性中探索最优解。\n四、研发专家（大模型推理引擎调优方向）北京\t\n",
+            "source_start": 2588,
+            "source_end": 3088,
+            "truncated": false
+          },
+          {
+            "section_type": "requirements",
+            "title": "工作要求",
+            "text": "\n1、大学本科及以上学历，并取得相应学位，计算机相关专业，具备扎实的计算机基础知识。\n2、具备8年及以上工作经验，熟练使用C/C++和Python语言，具备系统软件开发及架构设计经验。\n3、深入理解Transformer架构，了解语言和多模态API及调用链，掌握至少一种机器学习推理框架（如TensorRT、ONNXRuntime、vLLM、SGLang、TensorRT-LLM或其他自研框架）。\n4、具备机器学习框架、异构并行计算、分布式存储、高性能网络或云计算调度中至少一项的知识和开发经验。\n5、熟悉性能建模、性能分析与优化，或拥有CPU/GPU架构相关经验。\n研发专家（大模型推理引擎方向）\t北京、上海、广州、深圳\t\n1. 推理引擎模块设计与开发：参与大模型推理引擎的核心模块设计及开发，协同架构师完成技术方案落地，支撑千卡级AI算力集群的稳定运行。\n2. 推理引擎构建：负责推理引擎核心功能的开发与优化，深入研究KVCache管理、量化推理、投机采样、PD分离等关键技术，推动低延迟、高并发推理方案在百炼平台的产品化落地。有大模型训练经验优先，有RLHF、GRPO、DAPO等强化学习经验优先。\n3. 软硬协同与性能调优：通过CUDA/Triton算子开发、编译优化等手段挖掘硬件算力，参与昇腾等国产硬件的适配与性能调优工作；负责推理全链路稳定性与可观测性体系建设，保障服务SLA。\n4. 技术攻坚与团队协作：跟踪AI系统领域前沿技术，主导或参与关键技术难点攻关，指导初级工程师，与算法、产品等跨域团队高效协同\n研发专家（大模型推理引擎工程方向）北京\t\n",
+            "source_start": 3316,
+            "source_end": 3999,
+            "truncated": false
+          },
+          {
+            "section_type": "requirements",
+            "title": "工作要求",
+            "text": "\n1、大学本科及以上学历，并取得相应学位，计算机及相关专业优先；\n2、具备8年及以上工作经验，熟练掌握C/C++、Python编程语言，具备良好的coding 和调试能力;\n3、熟悉 PyTorch/TensorRT-LLM/vLLM/SGLang 等推理框架，具备 CUDA、算子优化、KV Cache、量化（INT4/INT8）、动态批处理、连续批处理（Continuous Batching）或分布式推理实战经验;\n4、熟悉各类深度学习网络和算子底层实现细节，训练和推理模型调试、调优有实操经验优先；\n5、熟悉并行策略，如模型并行、流水线并行等，了解 NVLINK、GPU通信者优先;\n6、具备GPU、AI芯片体系结构知识，熟悉芯片特性，具备 系统性能分析和调优经验优先；\n研发专家（训练框架、推理优化）\t上海 广州 深圳\t\n",
+            "source_start": 4238,
+            "source_end": 4604,
+            "truncated": false
+          },
+          {
+            "section_type": "requirements",
+            "title": "工作要求",
+            "text": "\n1.大学本科及以上学历，并取得相应学位，计算机及相关专业优先；\n2.五年及以上工作经验，其中至少三年及以上算法后端开发相关经验；\n3.具有较强的编程能力，熟练 Python/C/C++/Go 一种或多种编程语言，有良好的代码习惯；\n4.熟悉主流的机器学习框架和推理框架如 Pytorch 、TensorFlow、TensorRT、ONNXRuntime、 PaddlePaddle、DeepStream、VLLM、TensorRT-LLM 、Mindspore等，有实际模型工程化经验优先；\n5.熟悉 Linux 操作系统，能熟练使用 Git、CMake、Docker、k8s 等工具；\n6.诚实守信、作风踏实严谨、责任心强，具备良好团队协作能力精神，学习能力强，善于解决复杂问题；\n",
+            "source_start": 4932,
+            "source_end": 5275,
+            "truncated": false
+          },
+          {
+            "section_type": "preferred",
+            "title": "加分项",
+            "text": "CUDA开发优化经验、模型压缩和编译优化经验，不同平台AI芯片适配经验等。\n训练框架：\n1. 有扎实的工程能力和算法基础，具备大模型分布式训练性能优化经验；\n2. 掌握PPO/DPO/GRPO等RLHF技术，有大模型微调、蒸馏、强化学习相关经验者优先；\n3. 熟悉PyTorch/Megatron/DeepSpeed等业界主流训练框架，熟悉TensorRT-LLM/vLLM/SGLang等大模型推理引擎；\n4.具备国产算力硬件实操经验者优先。",
+            "source_start": 5281,
+            "source_end": 5503,
+            "truncated": false
+          }
+        ],
+        "rerank_score": 0.7624275979679442
+      }
+    ],
+    "total_matched": 97,
+    "mode": "hybrid",
+    "count_kind": "bounded_chunk_recall_not_corpus_count",
+    "count_complete": false,
+    "filters": {
+      "city": null,
+      "district": null,
+      "min_salary": null,
+      "max_salary": null,
+      "salary_period": "month",
+      "salary_mode": "lower_bound",
+      "experience_years": null,
+      "education": null,
+      "employment_type": null,
+      "skills": [],
+      "active_only": false,
+      "include_closed": true,
+      "query": "RAG知识库文档解析、切分、Embedding、向量数据库、混合检索、重排与检索效果评测有哪些具体岗位要求？只总结提供的来源，逐项引用，不能推算总体数量。",
+      "limit": 8,
+      "rerank": true,
+      "infer_filters": false
+    },
+    "warnings": [
+      "结果含未确认在招或历史岗位，采集成功不代表目前仍在招聘。",
+      "生成服务不可用，已返回可核对的岗位列表。"
+    ],
+    "rerank": {
+      "requested": true,
+      "applied": true,
+      "pool_jobs": 8,
+      "input_representation": "full_title_and_exact_jd",
+      "scores_are_probabilities": false,
+      "model": "qwen3.7-text-rerank",
+      "input_preflight": {
+        "document_count": 8,
+        "document_utf8_bytes": 28360,
+        "max_document_utf8_bytes": 13771,
+        "query_utf8_bytes": 207,
+        "provider_formula_utf8_bytes": 30016,
+        "http_json_utf8_bytes": 29102,
+        "estimated_input_units_with_reserve": 33048,
+        "counter": {
+          "method": "utf8_bytes_plus_64_per_text",
+          "provider_tokens_verified": false
+        },
+        "limits_tokens": {
+          "documents": 500,
+          "query": 4000,
+          "document": 30000,
+          "request": 120000
+        },
+        "request_limit_is_provider_recommendation": true,
+        "admitted": true,
+        "issues": []
+      },
+      "changed_jobs_excluded": 0
+    },
+    "answer_mode": "extractive",
+    "answer": "以下是候选岗位，请结合原招聘页面确认最新信息：\n[1] 知识库开发工程师（RAG方向）｜深圳联友科技有限公司｜20-35K｜广州·花都区·炭步；状态：未核验，采集于 2026-10-23。\n[2] 知识库运营工程师（AI方向）｜中大咨询｜15-25K｜广州·海珠区·工业大道；状态：未核验，采集于 2026-10-23。\n[3] 化工知识库开发工程师｜辛孚科技｜20-40K｜广州·黄埔区·东圃；状态：未核验，采集于 2026-10-23。\n[4] 招人｜企业 AI 知识库架构与 RAG 检索优化｜广州羽淼白品牌管理｜35-40K｜广州·白云区·嘉禾；状态：未核验，采集于 2026-10-23。\n[5] 招人｜企业 AI 知识库架构与 RAG 检索优化｜广州羽淼白品牌管理｜26-27K｜广州·白云区·嘉禾；状态：未核验，采集于 2026-10-23。\n[6] RAG工程师｜广州黄埔星数智科技｜24-30K·14薪｜广州·黄埔区·九佛；状态：未核验，采集于 2026-10-23。\n[7] 大模型算法研究员/专家｜纵横｜45-75K·15薪｜广州；状态：未核验，采集于 2026-10-23。\n[8] 智算/训练/推理/AI/开放/智能体/agent｜元象点｜70-100K·16薪｜广州·天河区·长兴；状态：未核验，采集于 2026-10-23。"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "attempt-manifests.json": "76a2187532361d7d7b1c9e28ae78bfa7997959ac5dfae83045e8894d798c9905",
+  "failed-attempts.json": "ac433e64be28e95510647f4514658f67fe1434564d8f5946489210eff3ecc298",
+  "generated_answers.json": "d0e40e82bd7844fc1e456c697b42f3fba2f0c3cf8c833ccf7513c7655df2c0e4",
+  "metrics.json": "8f65b0c8be485d3b10d45d7e5189e0b407465679fa6672a532ffec06c1360b21",
+  "model-manifest.json": "b132927515c2502f6962ed679d198bc5e3adc51cbb736dab815ba8325ab79055",
+  "provider_calls.jsonl": "5332d798fe7fbf0d56fe0120994901f32c6837af3c0974c84c315f4f728f30ca",
+  "report.md": "fc850832a40bddf06fdd1eca976355adbaf9cdd2e4cc7a38fe7fa888cab6099f",
+  "review_evidence.csv": "252ea84412e8d413d8bba134a59e45e7039676c63b12dc2d535dba169ee1b65f",
+  "review_generation.csv": "6285195d66addfcfdf406dc07e6d7f69cd1e585baf1a919cd786dbc4720b8ad1",
+  "review_jobs.csv": "e528a27c92789ad5b7e6e7269196e35394ba7094292b2d0c138e972e116d50af",
+  "rule-manifest.json": "9b60da9543e30fa0933b88bffe36829b0fd1c0f75e17b6e2d46df22d017f0978"
+}

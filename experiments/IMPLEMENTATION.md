@@ -1,4 +1,4 @@
-> **RAG 技术要求任务实验**：已将专用实现集中到 [`rag_tech_requirements/`](rag_tech_requirements/README.md)，包括 [task_runner.py](rag_tech_requirements/task_runner.py)、[task_eval.py](rag_tech_requirements/task_eval.py) 和 [task_review.py](rag_tech_requirements/task_review.py)。统一 CLI 仍为 [cli.py](cli.py)；下文主要说明旧的 Embedding/Rerank 排名实验。
+> **RAG 技术要求实验**：当前执行入口、数据、参考回答与结果归档见 [实验 README](rag_tech_requirements/README.md)，[完整模型报告](rag_tech_requirements/results/2026-11-01/models/report.md)为主交付。执行与打包脚本集中在 `rag_tech_requirements/scripts/`；下文保留历史 Embedding/Rerank 排名实验的实现说明。
 
 # 为什么我们不能凭几次搜索结果就宣布“新 Embedding 更好”？
 

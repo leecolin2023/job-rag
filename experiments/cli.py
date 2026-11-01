@@ -5,33 +5,15 @@ from pathlib import Path
 
 from .bailian import BailianClient, BailianConfig, BailianError
 from .runner import ARMS, audit_rerank_inputs, pool, prepare, recall, rerank, rescore, report
-from .rag_tech_requirements.task_runner import run as run_task
-from .rag_tech_requirements.task_eval import evaluate as evaluate_task
-from .rag_tech_requirements.task_review import prepare_review_queue
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Job-RAG offline experiments: retrieval rankings and business task evaluations")
+    parser = argparse.ArgumentParser(description="Job-RAG offline experiments: retrieval ranking evaluation")
     parser.add_argument("--env-file", default=".env.experiments")
     parser.add_argument("--cache", default="runtime/experiments/cache.sqlite3")
     parser.add_argument("--max-requests", type=int, default=1000)
     parser.add_argument("--max-cost-cny", type=float, help="Conservative software guard using published Beijing list prices, not a provider billing limit")
     commands = parser.add_subparsers(dest="command", required=True)
-    task = commands.add_parser("run", help="Run a full-corpus task baseline (no paid APIs)")
-    task.add_argument("--dataset", required=True)
-    task.add_argument("--output", required=True)
-    task.add_argument("--gold", help="Optional separately authored gold labels")
-    review = commands.add_parser("prepare-review", help="Create unreviewed real-JD annotation queue")
-    review.add_argument("--dataset", required=True)
-    review.add_argument("--output", required=True)
-    review.add_argument("--limit", type=int, default=40)
-    evaluation = commands.add_parser("evaluate", help="Score task predictions with independent gold")
-    evaluation.add_argument("--run", required=True)
-    evaluation.add_argument("--dataset", required=True)
-    evaluation.add_argument("--gold", required=True)
-    evaluation.add_argument("--predictions", help="Optional external predictions JSONL")
-    evaluation.add_argument("--trace", help="Optional external run trace JSONL")
-    evaluation.add_argument("--output", help="New score directory required for external predictions")
     prep = commands.add_parser("prepare", help="Freeze corpus, benchmark and ablation arms; no API calls")
     prep.add_argument("--csv", default="data/jobs.csv")
     prep.add_argument("--benchmark", default="experiments/benchmark.v1.json")
@@ -69,15 +51,7 @@ def main():
     try:
         if args.max_requests < 1:
             raise ValueError("max-requests must be positive")
-        if args.command == "run":
-            result = run_task(args.dataset, args.output)
-            if args.gold:
-                result["evaluation"] = evaluate_task(args.output, args.dataset, args.gold)
-        elif args.command == "prepare-review":
-            result = prepare_review_queue(args.dataset, args.output, args.limit)
-        elif args.command == "evaluate":
-            result = evaluate_task(args.run, args.dataset, args.gold, args.predictions, args.trace, args.output)
-        elif args.command == "prepare":
+        if args.command == "prepare":
             result = prepare(args.csv, args.benchmark, args.output)
         elif args.command == "pool":
             result = pool(args.recall_run, args.output, args.depth)

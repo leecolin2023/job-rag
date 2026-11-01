@@ -138,7 +138,11 @@ def test_experiments_are_outside_production_package_and_cli_is_unified(monkeypat
     repository = Path(__file__).resolve().parents[1]
     assert not (repository / "job_rag" / "experiments").exists()
     assert (repository / "experiments" / "runner.py").is_file()
-    assert (repository / "experiments" / "rag_tech_requirements" / "task_eval.py").is_file()
+    task_root = repository / "experiments" / "rag_tech_requirements"
+    for script in ("run_pipeline.py", "build_report.py", "run_models.py", "build_model_report.py"):
+        assert (task_root / "scripts" / script).is_file()
+    assert (task_root / "data" / "jobs-20261023.csv").is_file()
+    assert (task_root / "baseline" / "rag-job-requirements-baseline-v1.md").is_file()
     assert not (repository / "experiments" / "task_eval.py").exists()
     assert (repository / "experiments" / "cli.py").is_file()
     config = (repository / "pyproject.toml").read_text()
@@ -149,5 +153,7 @@ def test_experiments_are_outside_production_package_and_cli_is_unified(monkeypat
         main()
     assert exited.value.code == 0
     help_text = capsys.readouterr().out
-    for command in ("run", "evaluate", "prepare-review", "prepare", "recall", "rerank", "report"):
+    for command in ("prepare", "recall", "pool", "rescore", "rerank", "report", "audit-rerank-inputs", "probe"):
         assert command in help_text
+    assert "prepare-review" not in help_text
+    assert "\n    evaluate " not in help_text

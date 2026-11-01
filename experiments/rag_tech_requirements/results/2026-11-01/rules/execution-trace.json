@@ -1,0 +1,2958 @@
+[
+  {
+    "tool": "get_knowledge_base_stats",
+    "arguments": {},
+    "elapsed_ms": 363.25,
+    "request_id": "30bb73d27a154413b3c3475c9bda6287",
+    "is_error": false
+  },
+  {
+    "tool": "query_job_catalog",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "fields": [
+        "description"
+      ],
+      "aliases": {
+        "RAG": [
+          "GraphRAG",
+          "RAGFlow"
+        ]
+      },
+      "match_mode": "ascii_token",
+      "filters": {
+        "include_closed": true
+      },
+      "page_size": 100
+    },
+    "elapsed_ms": 1539.12,
+    "request_id": "36789ad4f2cf4d14b6cde0206fc4a10e",
+    "is_error": false
+  },
+  {
+    "tool": "query_job_catalog",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "fields": [
+        "description"
+      ],
+      "aliases": {
+        "RAG": [
+          "GraphRAG",
+          "RAGFlow"
+        ]
+      },
+      "match_mode": "ascii_token",
+      "filters": {
+        "include_closed": true
+      },
+      "page_size": 100,
+      "offset": 100,
+      "snapshot_id": "a8a97358da7246bc1f13c22b66dcccf657c8919fb73cb4f34d11405015e5a72d"
+    },
+    "elapsed_ms": 1684.06,
+    "request_id": "c9bffe53bb244e18a12b2a4b3d2fc484",
+    "is_error": false
+  },
+  {
+    "tool": "query_job_catalog",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "fields": [
+        "description"
+      ],
+      "aliases": {
+        "RAG": [
+          "GraphRAG",
+          "RAGFlow"
+        ]
+      },
+      "match_mode": "ascii_token",
+      "filters": {
+        "include_closed": true
+      },
+      "page_size": 100,
+      "offset": 200,
+      "snapshot_id": "a8a97358da7246bc1f13c22b66dcccf657c8919fb73cb4f34d11405015e5a72d"
+    },
+    "elapsed_ms": 1553.5,
+    "request_id": "d17907a164d6441ab6f91f44550bc7db",
+    "is_error": false
+  },
+  {
+    "tool": "query_job_catalog",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "fields": [
+        "description"
+      ],
+      "aliases": {
+        "RAG": [
+          "GraphRAG",
+          "RAGFlow"
+        ]
+      },
+      "match_mode": "ascii_token",
+      "filters": {
+        "include_closed": true
+      },
+      "page_size": 100,
+      "offset": 300,
+      "snapshot_id": "a8a97358da7246bc1f13c22b66dcccf657c8919fb73cb4f34d11405015e5a72d"
+    },
+    "elapsed_ms": 1482.99,
+    "request_id": "f5174225940148dc922d9d1fae5d41d0",
+    "is_error": false
+  },
+  {
+    "tool": "query_job_catalog",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "fields": [
+        "description"
+      ],
+      "aliases": {
+        "RAG": [
+          "GraphRAG",
+          "RAGFlow"
+        ]
+      },
+      "match_mode": "ascii_token",
+      "filters": {
+        "include_closed": true
+      },
+      "page_size": 100,
+      "offset": 400,
+      "snapshot_id": "a8a97358da7246bc1f13c22b66dcccf657c8919fb73cb4f34d11405015e5a72d"
+    },
+    "elapsed_ms": 1673.3,
+    "request_id": "c926b6583e88449680d7858cd68baa36",
+    "is_error": false
+  },
+  {
+    "tool": "query_job_catalog",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "fields": [
+        "description"
+      ],
+      "aliases": {},
+      "match_mode": "ascii_token",
+      "filters": {
+        "include_closed": true
+      },
+      "page_size": 100,
+      "count_only": true
+    },
+    "elapsed_ms": 871.54,
+    "request_id": "6be53629365843af81e08df57a6efb5c",
+    "is_error": false
+  },
+  {
+    "tool": "summarize_job_technical_mentions",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "aliases": {
+        "RAG": [
+          "GraphRAG",
+          "RAGFlow"
+        ]
+      },
+      "sections": [
+        "responsibilities",
+        "requirements",
+        "preferred",
+        "company_intro",
+        "benefits",
+        "unknown"
+      ],
+      "technical_sections": [
+        "responsibilities",
+        "requirements",
+        "preferred",
+        "company_intro",
+        "benefits",
+        "unknown"
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed",
+      "filters": {
+        "include_closed": true
+      },
+      "evidence_samples_per_technology": 1
+    },
+    "elapsed_ms": 2093.98,
+    "request_id": "a2d3fad7a0a948d188109a5815047ee6",
+    "is_error": false
+  },
+  {
+    "tool": "query_job_catalog",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "fields": [
+        "description"
+      ],
+      "sections": [
+        "responsibilities",
+        "requirements"
+      ],
+      "aliases": {
+        "RAG": [
+          "GraphRAG",
+          "RAGFlow"
+        ]
+      },
+      "match_mode": "ascii_token",
+      "filters": {
+        "include_closed": true
+      },
+      "page_size": 100
+    },
+    "elapsed_ms": 1592.83,
+    "request_id": "2e55c328945841b2b433b7e98b698d0e",
+    "is_error": false
+  },
+  {
+    "tool": "query_job_catalog",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "fields": [
+        "description"
+      ],
+      "sections": [
+        "responsibilities",
+        "requirements"
+      ],
+      "aliases": {
+        "RAG": [
+          "GraphRAG",
+          "RAGFlow"
+        ]
+      },
+      "match_mode": "ascii_token",
+      "filters": {
+        "include_closed": true
+      },
+      "page_size": 100,
+      "offset": 100,
+      "snapshot_id": "ac586f6e143953635d97e2104023274de80862767b9fad34e0df9e2ae6fafece"
+    },
+    "elapsed_ms": 1387.87,
+    "request_id": "781dcaa912ed449f86c67347632959dc",
+    "is_error": false
+  },
+  {
+    "tool": "query_job_catalog",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "fields": [
+        "description"
+      ],
+      "sections": [
+        "responsibilities",
+        "requirements"
+      ],
+      "aliases": {
+        "RAG": [
+          "GraphRAG",
+          "RAGFlow"
+        ]
+      },
+      "match_mode": "ascii_token",
+      "filters": {
+        "include_closed": true
+      },
+      "page_size": 100,
+      "offset": 200,
+      "snapshot_id": "ac586f6e143953635d97e2104023274de80862767b9fad34e0df9e2ae6fafece"
+    },
+    "elapsed_ms": 1349.31,
+    "request_id": "4ef486114df84dcebc1eff1e21272403",
+    "is_error": false
+  },
+  {
+    "tool": "query_job_catalog",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "fields": [
+        "description"
+      ],
+      "sections": [
+        "responsibilities",
+        "requirements"
+      ],
+      "aliases": {
+        "RAG": [
+          "GraphRAG",
+          "RAGFlow"
+        ]
+      },
+      "match_mode": "ascii_token",
+      "filters": {
+        "include_closed": true
+      },
+      "page_size": 100,
+      "offset": 300,
+      "snapshot_id": "ac586f6e143953635d97e2104023274de80862767b9fad34e0df9e2ae6fafece"
+    },
+    "elapsed_ms": 1387.05,
+    "request_id": "2673a5393bfd49af9cb9ceb8beee656a",
+    "is_error": false
+  },
+  {
+    "tool": "summarize_job_technical_mentions",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "sections": [
+        "responsibilities",
+        "requirements"
+      ],
+      "aliases": {
+        "RAG": [
+          "GraphRAG",
+          "RAGFlow"
+        ]
+      },
+      "match_mode": "ascii_token",
+      "filters": {
+        "include_closed": true
+      },
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed",
+      "evidence_samples_per_technology": 1
+    },
+    "elapsed_ms": 1957.43,
+    "request_id": "5d1d913096794e9f99ef6d574d2691a0",
+    "is_error": false
+  },
+  {
+    "tool": "summarize_job_technical_mentions",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "sections": [
+        "responsibilities",
+        "requirements"
+      ],
+      "aliases": {
+        "RAG": [
+          "GraphRAG",
+          "RAGFlow"
+        ]
+      },
+      "match_mode": "ascii_token",
+      "filters": {
+        "include_closed": true
+      },
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed",
+      "evidence_samples_per_technology": 0,
+      "include_details": true,
+      "page_size": 100,
+      "snapshot_id": "d8bbff3be63e9139b301d5df05ab586e62c5a5c0302b2927569683724624d722"
+    },
+    "elapsed_ms": 1933.21,
+    "request_id": "4009d2d50a33463187be739f6677921e",
+    "is_error": false
+  },
+  {
+    "tool": "summarize_job_technical_mentions",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "sections": [
+        "responsibilities",
+        "requirements"
+      ],
+      "aliases": {
+        "RAG": [
+          "GraphRAG",
+          "RAGFlow"
+        ]
+      },
+      "match_mode": "ascii_token",
+      "filters": {
+        "include_closed": true
+      },
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed",
+      "evidence_samples_per_technology": 0,
+      "include_details": true,
+      "page_size": 100,
+      "snapshot_id": "d8bbff3be63e9139b301d5df05ab586e62c5a5c0302b2927569683724624d722",
+      "offset": 100
+    },
+    "elapsed_ms": 1824.16,
+    "request_id": "b8ef84c58d00469f8968321f8dbcbc66",
+    "is_error": false
+  },
+  {
+    "tool": "summarize_job_technical_mentions",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "sections": [
+        "responsibilities",
+        "requirements"
+      ],
+      "aliases": {
+        "RAG": [
+          "GraphRAG",
+          "RAGFlow"
+        ]
+      },
+      "match_mode": "ascii_token",
+      "filters": {
+        "include_closed": true
+      },
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed",
+      "evidence_samples_per_technology": 0,
+      "include_details": true,
+      "page_size": 100,
+      "snapshot_id": "d8bbff3be63e9139b301d5df05ab586e62c5a5c0302b2927569683724624d722",
+      "offset": 200
+    },
+    "elapsed_ms": 2040.35,
+    "request_id": "446a1767c91340adb2f18687f2d8cd1b",
+    "is_error": false
+  },
+  {
+    "tool": "summarize_job_technical_mentions",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "sections": [
+        "responsibilities",
+        "requirements"
+      ],
+      "aliases": {
+        "RAG": [
+          "GraphRAG",
+          "RAGFlow"
+        ]
+      },
+      "match_mode": "ascii_token",
+      "filters": {
+        "include_closed": true
+      },
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed",
+      "evidence_samples_per_technology": 0,
+      "include_details": true,
+      "page_size": 100,
+      "snapshot_id": "d8bbff3be63e9139b301d5df05ab586e62c5a5c0302b2927569683724624d722",
+      "offset": 300
+    },
+    "elapsed_ms": 1977.21,
+    "request_id": "68bc461879e4436fa32b573c9fea5fa6",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "00107f904fe485a60nx729m6E1VV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "00f54e7a63dc90650nN92dy9FlNU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "0198a5c8cb08f8ba0nx42d-1GVRU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "027dc0fa98dce4a50nF73d68FlBU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "0316dadeabf400710nF92t61F1ZW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "05b6947850b310020nN52Ni5F1RU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "05f51c68cd1d4f530ndz3t28GFZX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "099ef78f8e9266da0nx-2960ElpR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "09e04699e0bd7f8203Z-2t-_GFVX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "09f739bb931a91100nx73dW7FlVR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "0a0b3fa18724f4300nVy3N--EFJY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "0a361b9bc8cbeb870nJ529y_E1ZZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "0a94fd25fe824dfb0nF409y7F1RU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "0b9a7bfb8f640d670nJz3ti8GVBX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "0c0705833b1383c30nx53di5EVpY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "0c409974e88c28d20nF92NW6E1JT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "0cdfc933d514eea80nx439y4EFFV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "0d6b7fa1fc88231e0nN929q8ElpY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "0df86900235378ed0nx42t6_FFFZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "0ec3b659b91a22c00nJ53dq6FldV",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 140.84,
+    "request_id": "9a416b0793204d52b6622f0ffede2e5c",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "0f9ea6023f32ec040nN40tm4ElBW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "102e7161982e9ff60nN82tS7FlZW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "10b0a0475b3521640nx43ti8FFJY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "113702978f9a0e6e0nJ90t61FVtW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "11669e5e48533f770nx70925F1tV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "12477aaccaf1ec260nZ93tq0ElBZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "1418b1aeac64f6ab0nJ70t-6GFZX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "144255f4a88d0a3b0nJ82dq9FVBQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "1550d370f66ed2a30nN429y9FFpU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "1565396211cbed010nNy39W_GFJS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "15811b1e4f49fc010nx60tS6GVNQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "15fe73935d48906d0nVy3dS7GVRY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "162f72ff6390e9e10nx73dW_FVBZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "16501e8a5db2a2a00nx72dS5GVNW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "1682051ab05969d30nFz2929GVRR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "1728f1c6dfa405860nF72d-8ElFR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "174b31dd407113850nx439i_F1RR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "178a46d7316f1a360nNy3d60FlNR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "183c05f57364e5a70nx-2921FFJR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "18452beb5001b2e70nx43NW_F1ZV",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 135.68,
+    "request_id": "7e6340351f424aee95af1ff928239f4b",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "18b3c7ee3ee9bba60nB_09q7EldR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "19848dd1ba2186220nN-0tW0EVpS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "1ae1e1de6c746a990nN-39-0FFNY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "1b1924b441f483be0nN93t21GFZY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "1b29d9797fe318520nJy2dy5GFNW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "1c332109bbbb76a70nx409m8F1RV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "1d288f27913758f50nJ-2dm-GVBQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "1db22d12ad98a5640nx53dq9EVFR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "1dd04ea92382f7430nFy2928EFBW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "1ddc43a5df2393910nx-29m5FFRS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "1dffe94b054e39170nNy3di5FFJT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "1f06b4bdb6c0464e0nN93dm8FldT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "1fc3deba8964a4930nN63Nq6EVZS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "2041f510a5b057c20nF_3N68GVBR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "208f0854934048610nx70tS1GFRW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "20b3b483077001880nJ929S9GVNQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "20de435767de769a0nFy0t-1FVNS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "21162965af28442d0nZ709y-EVdU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "21578c6bb62a3ea40nF92d-_EVRR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "223e89ec3ba7bbf60nBy09W5ElFY",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 151.13,
+    "request_id": "c447a011a2fe428f85f1a1b82945f99b",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "229e37780a3192ba0nJ629y0F1dW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "230d0928f72370420nJ43N64F1JR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "231c5865f0f9474b0nF-3tW4ElNX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "2361ddabfb768f840nx709i9E1ZV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "23e5c8e4ae89cb0c0nN73dS-GVRY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "23e68b418dab22630nFz0t-4ElFW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "254784eaedec60db0nN93d--FFVZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "25675d061cab9afb0nJ529W1F1ZY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "256de0e152e67aec0nN509i-ElRV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "263511704b18ca490nx53dq5EVVY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "277a199ef6d9160e0nN53d-7GVRU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "278ad1c50c950eee0nJ_3920EFRQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "27dcc1b566f318a50nN_3tW9E1VW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "285da249c381a74e0nx62d-_E1NY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "286e426b145fe6720nF909u_ElRV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "296842c07bce47db0nFz2966GVFW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "2a31affad8782c520nx639-4EltY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "2aa1f04f7e0683a80nd42NW1FFBX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "2b962f96d6689b780nx42t60EVtZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "2bbcaa20817b149c0nN829-9EVpQ",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 183.14,
+    "request_id": "f43fcde7fa5d4729ac60f50478203d31",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "2c6cbf21427b8e7e0nN62Nq6ElZQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "2d38eff6b310b45e0nNy39q5GVVU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "2d3bea67271372080nJ50tm9E1pQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "2efe15a400a9ae530nNy2NS5FVdV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "2fdbdc3c891240940nN_3di8ElZV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3074cb0a30c6c5ab0nBy2Nu_FVtV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "309616a26e8c25cb0nZy3d21FlFR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "30f0c0d59b2063e90nx62dy-ElNR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "30f2d68cc33f5c200nJ_2Ni4GVZU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "313a300a83b556ba0nJ82du8F1pU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "31e425b1a226970a0nF_2t-1FlRY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3294f91372fc01da0nBy0tS8F1dX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "32f840529266d7fd0nN-0tS8FlZW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "335cb39b78bc3b8f0nF43tS8E1NW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "33e5b64ffc94cbca0nx73N21GFVX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "344138bbc1ff631d0nJ43N-6EFBV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "34a3b9695c8315f20nN83dy5FVpY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "34ad8e7b64699b480nB-29i0FVBQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "34b0ea94faa7e77f0nx509i1E1dY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "351afe6bb55c080e0nx52d-4E1VU",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 182.54,
+    "request_id": "e59eec408db9403cb7224e0a79c6b10d",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "3531cd48922e1fc40nZ93di8ElpV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "35ac779d5e28ea0e0nJz2Nm1EVVY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "35ffa883fbece59c0nJ_29i8E1RR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "37bf3f6943fb53fa0nN909i6E1BS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "37c65152263e42490nN93dW-EVRW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "37c78605aae1614c0ndy3dq9GVFU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "37d5b1acce717ef00nV40tq_ElZU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3952fa37eca8e1380nZ40ti9GFdY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "398a0453f1b29f7a0nx42t--F1JQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3aa00961cc4608120nx429S-GFdR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3b14f83cdd5b9ecc0nx52Ny8FlVX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3b363e9bd75e45ed0nF43t21F1ZT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3b46f2039cd5b0b00nJ42tm8EVVZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3b6c439e8231ab0a0nx42tS9EVNW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3bb9669da78034a20nB429S5ElpX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3c388d3708d0a68c0nNy2Ny-F1JZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3c7917c4eed53d330nF-3du7GVFV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3d2ab4dab5128aae0nF_39W6E1RQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3d33e3ce18abd70b0nB63t-0FlZZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3e1a0bd37a407ff60nJ82d67FVVQ",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 176.0,
+    "request_id": "4b4297f421ee4a1ab7ef006a6bf883e9",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "3e5fde50d2c5d3980nF93dW6GFRZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3eb8fc4d12d155810nJ90ti9FlZX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3ec07ddcae1ed90d0nR_39y4GFJQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3eebce03264c36520nx50tW5FFVU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3f993ff77ed9912c0nB90ti-ElRR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "3fd94a10fabc21640nx539W4E1dW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "405f82b01da865490nx53dW8F1tW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "41706987b773020b0nF_3t-5ElFQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "417f18ce59dfb4610nN439m7F1BR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "41f2aa31f7663cea0nN-2t--EVZR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "43a3e6c41cdc34ce0nd43N-1FFFV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "43bb4aaf55a6a8990nx729i0FlpW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "43f1a9af7220d9700nx53tW7E1ZT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "44d69e08630ef4830nN83dS4EFJQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "44f451ba3a3da76e0nN92d-6F1JX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "45156f79c9f9d33a0nN50tS9FlBS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "45b35736bb7ed5460nJ50tm8FVNW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "45f1ff6606a2f6c30nFz2N21E1BR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "4753d22d14214dc90nJ53dy4FVZQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "48072d7bafd8fbfb0nN72Nm5FlpX",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 155.33,
+    "request_id": "e59904c20f9449098a2d9c04f9e12b50",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "493f1257adf34baf0nNz3NS9ElBU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "4975ecace36038c70nFy39q6GVtR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "49ac953f6c4b48c10nF539y7FlFT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "49dce94092f40d170nd_3tm7F1RZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "4a772bd5ad89ac6b0nx639m6GVFV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "4ad9cb1d425459500nJ93d24GFNZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "4b02a8db5b2725b50nN73ty5EFdR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "4c0a3d43e8995d7e0nV63tS_F1dY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "4c27591d7729b1420nx52t60GVBR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "4d0e53bd65f86f910nN93dW-FFRU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "4f1911fdbb27b85d0nN53965ElBY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "4f2ffda4ea3def300nB409m8ElNT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "52f2867d43f62c410nN92d27FVtU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "54e2219f7087243a0nx72tq5F1NR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "55222512c97a75cb0nx52924FlNY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "560bcde7e49336020nF-2dS-FVdQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "564bdc0f081f4edb0nN92d64EFJY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "58cb864ae4f6b6450nJ82921E1BX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "59235c376517fc850nF439W9ElZR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "593200049fb6bdc50nJy0t61EFVY",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 138.94,
+    "request_id": "a01a1830534a445a82d26652b22e7f4f",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "599548f8d17a83680nd42tm4E1ZT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "5a8aa14f8f3c8bb50ndz29y_FlZU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "5b4d8f1f74b397190nN-2tm8E1VW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "5c34a8c528e376420nx52N28FlRQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "5cd58c1eaed7deee0nB63dm9EFRZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "5d0d90d73d2d50e80nx6092_FFBZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "5ea39247f73c6d110nFz29m8FVVW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "5f0405f3b4b3fc510nV-39i7EldT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "5f16133bdf5134180ndy39-6EFFY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "60023e7805336c290nN-3d6-FFFT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "60ac1f76b2a228190nJ-0t60EFFT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "60c0b77ca3da08f10nNy3d-7F1JZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "60fb283d75ad078b0nx43NW_ElRT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "61667fc0c0d801680nx7392-GVBQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "620a1ec6277f595f0ndz0tq6GVRT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "62a1793659fe48940nd_2Ny8F1BW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "62abb3d4287e2d120nJ73tu5E1JT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "6300a7bedcbc21050nZy0t24E1tY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "63145ac1ed89a1fd0nJy29y7EVNS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "6329a9b377d86bd20nB-39-_FFZR",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 249.84,
+    "request_id": "844356e0523e4a3cae607b5d5706311c",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "64eb90da46f472760nV72du7FFVZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "667ddcf8594f153a0nB939-6EVdX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "6685e2c88588abbe0nN40tW-GVZX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "66eca18d5d8851811XN73Ni4FFtR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "67eccb05eedb2dce0nB92Nm4EVRS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "682f48e7c84507980nF63t69GVNS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "687e39edd172bf460nN93N28GVtV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "68982b521c29a68a0nx539i0EFFQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "699041d1142c51530nJy0tq8E1BW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "6aa7b18a8a5c7d970nx53tS4FlVT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "6bb7e60b51b853e50nNy3Nq_GVFW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "6d3feb2d7a6f48400nx52NS0FFJQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "6d8e55ab8c21329b03x72Ny-GVFS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "6da386a38bd61d850nF73t-4GVZW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "6eda4c72cdea895d0nJ_3di9EVNV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "702e9b55496ff9ea0nx60t6_FFRU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "708a1c46fcfabad30nNz0ti_E1RS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "7257c0cf78f48cf20nJ93ty-FVZQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "73aca7de750576db0nd63929F1RU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "754494bc6d85780d0nx53du6EVZQ",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 127.84,
+    "request_id": "cf247f3fdc5b4bc3b34d92e285177108",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "755bb9c9e76f51190nx72dy6EVZU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "763148cb3d55b0540nJ73dq0EFFY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "766cd6e797ed7c670nN50tq6EVpZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "766db54001e656800nx-29-7GVNT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "767782893109eaf203x42Nq9EVdV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "7733412ad0b819e10nx40t60ElBZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "77d4f2976eeee4530nN929S5E1BR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "781ec606324df4cf03J53Ny7EVdW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "7954cfb7f93cdb6e0nB_29q-E1JX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "796425e0a79c07a10nZ53tu_EFpR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "7a0abe5dbaebd6660nx729y5GFRU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "7aeeed59f79d9b170nN80tu4EFpW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "7b001398c567b4560nx73Nq8EVFT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "7b9df0cbf459cd260nF92NW8EVZW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "7c251be6bf29f8790nNz3N2_FlZR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "7c3d310d6c3cec2f03Jy0924ElBT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "7c9b226c0cf5189e0nx539q-FlFZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "7d0bd7e32ed1477c0nJz3Ni1FFRS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "7e2e816fd5a14cc20nx43N-8E1dV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "7e70bed638b5315203J_0ty9E1BZ",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 127.51,
+    "request_id": "15db7269b25845b5bae77906c159ca3f",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "7ed7eaf4332ab9d40nx73tq6ElBZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "80756fd56c5f96de0nJ829S0EVNV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "82b21269e044e57b0ndy3d60F1VY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "84300d380f6fcc310nx539q5F1NS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "84b6def4f39c45220nF83di5EFVQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "84c1d0ea53a20ecd0nR82dS7F1dU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "8571307a88c9b8120nB63Nq1GVFU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "8618b846c2f4df130nF80t--GFNR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "8636e441374b9d0c0nB829m6ElBZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "876703ab7a989bdd0nZ93t69FVdZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "8782c863d23cff670nV509u1GFFR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "87850b97bf82651c0nN80927GFZR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "879f8f106dec8e000nNy3tm1GFBV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "87d8ab412ac8d8b10nR529i1FVRX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "88a3f545edb465540ndz2ty9FVJV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "88dc9a2be61656950nx73t66FlBS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "89e9a790df40bffb0nFy39m5EVtS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "8a5d5bed007d05060nJ429S5F1ZZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "8be484a48559eabf0nZ53dS1FFdV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "8c11d99e277237810nB62tW7FFVU",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 138.57,
+    "request_id": "e5ac932fbc4b47928b461afee0b585f1",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "8c1f6d1bc8bd15430nx53d20FFFX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "8d14e186abf7b5000nFz3tq8EVNQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "8ebfb32f377900eb0nZ93N-9FlBS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "8f44852050bb0da70nx73t69GVFT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "90879c1f7755b46b0nN82NW4EFZR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "913620393850e6e00nF90969FVVZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "913e3a6698ef07a70nFz39m_GVBV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "91738acb5e08f58a0ndy0tm5EFVQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "92c7ed5d0f77d1e90nx53dq6GVNR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "931abaabd18738130nJ_29u4F1tY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9378e8d7fe913fe70nN80t66F1FQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "94333c3efc6187c90nx52d-9EVNY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9434d738e289c1780nB42Ni0GVVQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "945a64fbb01064930nx42du-FVJT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "95bbf247e74450da0nZ42d27EldW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "95cb25394bd73ea20nN92N26ElVS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9628a7438d3560ba0nNz0t20E1pX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "965d038c5075ce280nB82Ni_EVNT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "979357c24dbbd5590nN93925GVtR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "97a1f37f1faaecc20nB92N24FVBR",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 129.28,
+    "request_id": "003fb7c7b01c49278f12d58f4f9ba97f",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "9846e7859a5e79a70nNy0966F1FZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9867260a1cb28dce0nZ72N-5FldU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9881f727b082873f0nN62d25FlFW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9a1506e2591cdd4c0nBy0924FlBU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9a50ed44536c43010nx73t61FVpX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9a523e480e7d10db0nJy09m9FlVY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9a5950e9d4fd202a0nx70t67GFpV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9addf921e82ba8270nNz2dS8ElZZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9bbd15d0d5ee33c10nJ42ty4EVFX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9cee73e9309f51d30nN52NW_EFFT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9d3b778a560da9570nF62dq4EltQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9d903adef4ea498f0nN92925F1dS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9e0c075bd54b93d60nN929m5ElNV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9ecf1e425c6da3d10nF_09q1EVpX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9f16b03f80d230480nx53dm5FltX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9f364de897a8c14f0nx73du7F1FY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9f466960019f782e0nx50tW4EFFU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "9f860a7d25b61f830nB63Nq6E1VT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "a03b59a28dde52360nN82d29GVRR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "a0ad88269bfd7ee00nx62d2_E1FT",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 135.64,
+    "request_id": "16ea5ff0b2bc4577930cbbe691f34415",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "a0f1836697c8bf710nN-09i5E1BS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "a1815ef2ba9777b80nB92d65ElBS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "a1b4e41b872911770nx4292_ElZY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "a22f5153c47252ae0nN93tW_FFBV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "a2c9598f4e54d3920nx72di5FFtU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "a364bf6a5f456df50nJ82di1EFBQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "a51dbb578b206c260nV509y5EFpQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "a5d7696017ec95300nx52NW5GVFQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "a71bfefd496aba830nR_3Ni0EVJU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "a76938203b6ca35b0nB82N67E1VW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "a78aae9eae3674a70nN90t26GFZR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "a78c87f6e0be55e30nRz2d26EVJQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "a82c6ea53e7a59970nN809-_FlZX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "a876bb8df83ec3ce0nN-0tu6FFpT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "a9a6b35f036c30080nZy0968FFFV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "ab0b8731435c62900nd43tu9ElpU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "ab661ef9e6d19a790nN53Nm4FFRR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "ab85e6a63f38e5810nRy2tW_EVJY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "aba4077c9dfe454a0nJ90t-8GFNR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "abbab3bb4e8a7f530nN42ty1EVtS",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 136.45,
+    "request_id": "f6a47fa568b3412e88f222cf1dc9c5f8",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "abc830b24846e1960nx609S5FltW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "abd3bece81623f420nNy0tq7GVBT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "ac98bb24fa17d92f0nN82d65FlpT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "adf98aeff76ee2ac0nR92NW8FVtW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "ae80798c88a78bd70nx53tS_FVpY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "b12a3aad75f507450nB42di6EFJS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "b1a2331750dafd520nR_3Nq9ElNT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "b28365264eb5f5180nx50tS0GVRW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "b298fedad8e38c9e0nx53dq8FlFW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "b42ea94507e6ee8b0nx63d27GVpQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "b46ce48fb1b830350nFy2920FVJW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "b49fdb0d8e271c7f0nx429W-E1JT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "b4c532b37c7b3bf803Ny3N25FVVY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "b5896c9bbe13c8c40nV63N-_GVZW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "b63c6042f471ea8e0nF909u5F1pV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "b79464e41497f0370nB839q5EVZW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "b87a7a61335d1be203xz3dq7FlVX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "b8af0f4092097e4a0nJ-2dq4EVFY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "b96695cdee83d60c0nFy09i8E1VU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "bb36e9f8059125810nJ83tW4GFNY",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 119.12,
+    "request_id": "c009f50cb4bf478ea1cc86fd745b9d03",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "bb6edc1f50a11ffe0nN92Nu1FVZY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "bc6f3ea96e2b1ea80nN50tS9FFRZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "bd2d2687f424c7750nNy39u5FlZW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "bdad8c2cbe4768550nN_2ti7ElRU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "bdb51d76b224fd5d0nBz2tm6GVtQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "becdca379f7037230nN83di7FltU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "bfcf52715d6d83ab03F83dm9E1NX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "c111bdaeebea16b00ndz2tm4GVNT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "c1f30691eb02e2840nx60tS9EVBR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "c27b7e4c5d859faa0nJ-09q1FlJW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "c2de82feb97947660nNy39i4F1NX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "c3013031f76f20fd0nJz3N21FVVU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "c31cc9241e2878440nN92d-9EFpY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "c353e561ada158f20nx72N25E1RS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "c468d504cc3d6e7903J_3d65FlpX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "c48082eb499fff0f0nN_3NS0F1JZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "c8270d6f25b56ad60nJz0ti4E1BT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "c865568ed84e1cfc0nJ72dy_GFtU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "c8804339480c55d30nJ93ty4EFNR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "c9d6b3a9c92e51050ndz3NW7ElNQ",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 123.74,
+    "request_id": "c4a542f17bad42a0a52fc50f8a1b65f6",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "ca50b127053dac4d0nJ82N25FFJT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "ca5c53bf2640c0c50nJ709m6FFJU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "ca9122b0af1156d80nN_3t-6F1RR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "cb9b330f3de98b8d0nN50tm_FVBV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "cbc0a65038ec11340nJ_3tq_FVdT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "cbd23a4ad6d0417f0nx50tm0F1FU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "cbf2ac40684800b10nx63ti6EVdT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "cc67c479fbdedfbf0nN92Nq7EVFS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "cd935c2ea14678490nV72Nq0GVdT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "cebf7e74c4a67f070nF83tW9FVBZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "cefe0c6c466256160nJ_09m7E1JX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "cf595e23672fb22f0nJ90966GVNX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "d037f1cab74fcfa70nN90921FlNS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "d1a9c9b7741968f50nN73di0EVNX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "d1bbd02f315f47880nN93tq6FFFX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "d207c08e63cf84d70nN53Nq9FVRW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "d26286b0fb6fc5150nN50ty5FVJS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "d32881e91dde0e020nF53tW7FlBX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "d44455e3a2a294d70nB-3927ElZR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "d576cab95dc6b1eb0nx70tW4FVRR",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 123.92,
+    "request_id": "c72d0fd32022409b8ae9c3bda323b66a",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "d61edc46f25177750nJ529i0GVBY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "d68c51ac188236b80nZ539m8FVNW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "d6bb4d3e5ff4866f0nx629S7FVFW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "d6f6cc441040d0c10nx43tu_EFNV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "d790ed65d8af4d8d0nx529y6GFBY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "d7b3628341ea645e0nNz3Ni6EVZX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "d7ddd513ed5af8d20nJz2dW7F1tY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "d7fedf624e6a518c0nF53tS9EFFR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "d81c4e0645d0026e0nN-2N-4EFJT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "d923816f33cb170b0nR80tu1FlVQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "daf59d98ddf853da0nx62961FVVV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "daf6ca5c188c1d7e0nx70tW_FFJV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "dbefd071660d2e770nx50967FFZZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "dcd561fa7ff973e20nN509i-EFtW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "df3c6508add3702d0nJy3d-_GVpW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "dfed84bb4ab905290nN53t-6EVNY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "e056a7f204799b8c0ndz0966EVJW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "e1405c9b49e2a02f0nB92Nq6F1RT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "e164e38fbbf1b4690nx70tS6ElJW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "e21bfd96f24d4fe00nJ-3N-_EFdR",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 124.62,
+    "request_id": "c13a2889a2d6454da7699d64de116423",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "e2d8eec16923ffdc0nNz2ty0E1JR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "e3e2dfbd2b8753ba0nZ_2dS7GVtV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "e4fc87eee3327c760nF93dS4F1BS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "e51e766d46099de60nx43t24FVRW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "e57ebddc96ae9ba00nx73tu1GVtX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "e62257cee10c20b20nx72Nu6F1RU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "e62af7b635b1ba060nZ53d-1E1RR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "e6e857ac2bb227180nN42ty9FFZT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "e72d242297dda6b00nx52Nu9E1FV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "e7707b9dedc7cec60nV739u6E1VQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "e89659baf7a538911H1_3dy6FFNS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "e8f20ff8bf1d557d0nVy3tm1EVJV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "e9181ab8456b19230nR_2NS_FVtY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "e91bef56caa3a2d90nx509S7FlJU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "ea6d67ae6bd10f8503x_0tS5GFVQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "eab4ebb914c0d0ba0nx-2961GFFT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "eafa4e6dc1fde56b03x509S-GVFT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "eb648e07523cd2ef0nN629S-EVNU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "eb870264e10da0680nFz39m9FFJQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "ebd16fc7cd61503c0nx43NW6EVZZ",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 210.32,
+    "request_id": "68e79804d9c74483b1a613d347ae6924",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "ec18171f770a8ed20nx72d61F1JY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "edd6a24cae30d5fc031939-8E1tS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "ee550e7772f61c410nN72Nm0FFFZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "eec4199fd295cc480nx739S-FFVS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "f0af55d6eadae6c90nF82966FFBR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "f1140d74980359020nN929m8EFFT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "f1795dac3b2443740nx63t6-GVBS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "f1be70d161967c330nB82tS4EVJW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "f1f76583810ccf020nJ92t-7EFpU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "f34d5beb82af4b340nFy2Ni-EFtQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "f3f03ae153eae4810nF42t-9FVJY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "f3fd56cf149da00d0nZ609-0GVFT",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "f509fba147f59eb60nJz2dS8GFRS",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "f57585f86d52b8060nJz2NW-FFNW",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "f5a0714abc54fb380nB-3N-_FVNR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "f6bc1f8c2b2c30f60nN50t6_FlZX",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "f88a431917385e4a0nN-3N69FVFQ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "f9a359769bae8f860nx73ty8GVNR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "fa59a96c54c4f8050nx62ti9FVNU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "fac9304c488497bd0nd62du0ElBQ",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 133.2,
+    "request_id": "5d0d6a8e65cf464e8f3b3ce2072b6990",
+    "is_error": false
+  },
+  {
+    "tool": "get_jobs_batch",
+    "arguments": {
+      "jobs": [
+        {
+          "job_id": "fbf512a0231d59200nx539-0F1BV",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "fc77a89c476a404703Nz3t-5GVVZ",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "fd1a3d366f85cde60nJ609y9FVdU",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "fdd2d1c57faebeb20nF_3du9EFNY",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "fe90ac3040ac2fa60nN42N25GFBR",
+          "source": "boss",
+          "version": 1
+        },
+        {
+          "job_id": "fed4163cedcd52600nx52Nq9F1VZ",
+          "source": "boss",
+          "version": 1
+        }
+      ],
+      "corpus_id": "e8431eea2af0b296bb335d427f52edcbcaf251695dd51e14241a8c1abf6035ed"
+    },
+    "elapsed_ms": 118.89,
+    "request_id": "3b1ddd24f17d4552827a0560e97ef40f",
+    "is_error": false
+  },
+  {
+    "tool": "query_job_catalog",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "fields": [
+        "description"
+      ],
+      "sections": [
+        "unknown"
+      ],
+      "aliases": {
+        "RAG": [
+          "GraphRAG",
+          "RAGFlow"
+        ]
+      },
+      "match_mode": "ascii_token",
+      "filters": {
+        "include_closed": true
+      },
+      "page_size": 100
+    },
+    "elapsed_ms": 652.23,
+    "request_id": "b5e6605878c842b68bb2bddb08eba7e6",
+    "is_error": false
+  },
+  {
+    "tool": "query_job_catalog",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "fields": [
+        "description"
+      ],
+      "sections": [
+        "preferred"
+      ],
+      "aliases": {
+        "RAG": [
+          "GraphRAG",
+          "RAGFlow"
+        ]
+      },
+      "match_mode": "ascii_token",
+      "filters": {
+        "include_closed": true
+      },
+      "page_size": 100
+    },
+    "elapsed_ms": 584.34,
+    "request_id": "4509269df0fa4f5b9a402bc47defe1a4",
+    "is_error": false
+  },
+  {
+    "tool": "search_job_candidates",
+    "arguments": {
+      "query": "企业RAG知识库建设",
+      "city": "广州",
+      "min_salary": 20000,
+      "reformulations": [
+        "文档解析 向量检索 重排序"
+      ],
+      "candidate_limit": 5,
+      "rerank": true
+    },
+    "elapsed_ms": 712.23,
+    "request_id": "4e0c92b5e75845cd84e629303344d029",
+    "is_error": false
+  },
+  {
+    "tool": "get_job",
+    "arguments": {
+      "job_id": "1565396211cbed010nNy39W_GFJS",
+      "source": "boss"
+    },
+    "elapsed_ms": 40.69,
+    "request_id": "33dfa7388ebb40b692f465edb88a0b0c",
+    "is_error": false
+  },
+  {
+    "tool": "query_job_catalog",
+    "arguments": {
+      "terms": [
+        "RAG"
+      ],
+      "fields": [
+        "description"
+      ],
+      "sections": [
+        "responsibilities",
+        "requirements"
+      ],
+      "aliases": {
+        "RAG": [
+          "GraphRAG",
+          "RAGFlow"
+        ]
+      },
+      "match_mode": "ascii_token",
+      "filters": {
+        "include_closed": true
+      },
+      "page_size": 100,
+      "count_only": true,
+      "snapshot_id": "ac586f6e143953635d97e2104023274de80862767b9fad34e0df9e2ae6fafece"
+    },
+    "elapsed_ms": 1248.99,
+    "request_id": "dd017162d6104c269b2d8bfc6d69be28",
+    "is_error": false
+  }
+]
