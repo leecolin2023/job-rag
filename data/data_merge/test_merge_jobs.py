@@ -4,7 +4,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from data.data_merge.merge_jobs import MASTER_COLUMNS, merge, read_csv, write_csv
+from data.data_merge.merge_jobs import MASTER_COLUMNS, merge, output_columns, read_csv, write_csv
 
 
 def source(job_id="id", date="2026-10-31", company="公司", city="广州",
@@ -65,6 +65,45 @@ class CollectionMergeTests(unittest.TestCase):
             write_csv(path, [item])
             self.assertEqual(read_csv(path, set(MASTER_COLUMNS)), [item])
             self.assertEqual(path.read_bytes()[:3], b"\xef\xbb\xbf")
+
+    def test_merge_preserves_analysis_manual_status_and_future_columns(self):
+        """An analyst's annotations must survive the scheduled CSV merge."""
+        old = existing()
+        old["status"] = "下线"  # Explicitly verified: never re-open from a crawl.
+        old["analysis"] = "这家公司的岗位要求分析"
+        old["application_note"] = "已人工沟通"
+        fresh = source(date="2026-11-02", text="更新后的完整 JD")
+        inserted = source(job_id="new-job", date="2026-11-02")
+
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "jobs.csv"
+            rows, stats = merge([old], [[fresh, inserted]])
+            self.assertEqual(stats["inserted"], 1)
+            self.assertEqual(output_columns(rows)[-2:], ["analysis", "application_note"])
+            write_csv(path, rows)
+            actual = read_csv(path, set(MASTER_COLUMNS))
+            self.assertEqual(len(actual), 2)
+            self.assertEqual(actual[0]["status"], "下线")
+            self.assertEqual(actual[0]["analysis"], old["analysis"])
+            self.assertEqual(actual[0]["application_note"], old["application_note"])
+            self.assertEqual(actual[0]["description"], "更新后的完整 JD")
+            self.assertEqual(actual[1]["analysis"], "")
+            self.assertEqual(actual[1]["application_note"], "")
+            self.assertEqual(actual[1]["status"], "招聘中")
+
+            repeated, stats = merge(actual, [[fresh, inserted]])
+            self.assertEqual(stats["inserted"], 0)
+            write_csv(path, repeated)
+            self.assertEqual(read_csv(path, set(MASTER_COLUMNS)), actual)
+
+    def test_extra_columns_survive_round_trip_without_crawl_updates(self):
+        old = existing()
+        old["analysis"] = "已分析"
+        with tempfile.TemporaryDirectory() as directory:
+            path = Path(directory) / "jobs.csv"
+            write_csv(path, [old])
+            result = read_csv(path, set(MASTER_COLUMNS))
+            self.assertEqual(result, [old])
 
 
 if __name__ == "__main__":

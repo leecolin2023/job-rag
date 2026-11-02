@@ -114,6 +114,21 @@ def merge(master: list[dict[str, str]], sources: list[list[dict[str, str]]]):
     return master, dict(stats)
 
 
+def output_columns(rows: list[dict[str, str]]) -> list[str]:
+    """Keep canonical import fields first, then preserve all application-owned columns.
+
+    Analysis, manual status and later human annotations must survive repeated
+    collection merges. New collection rows may omit these optional columns.
+    """
+    extras = dict.fromkeys(
+        column
+        for row in rows
+        for column in row
+        if column not in MASTER_COLUMNS
+    )
+    return [*MASTER_COLUMNS, *extras]
+
+
 def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(
@@ -121,7 +136,7 @@ def write_csv(path: Path, rows: list[dict[str, str]]) -> None:
         prefix=".jobs-merge-", delete=False,
     ) as file:
         temp = Path(file.name)
-        writer = csv.DictWriter(file, fieldnames=MASTER_COLUMNS, lineterminator="\r\n")
+        writer = csv.DictWriter(file, fieldnames=output_columns(rows), lineterminator="\r\n")
         writer.writeheader()
         writer.writerows(rows)
     try:
