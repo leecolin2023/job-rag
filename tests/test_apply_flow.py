@@ -1,0 +1,72 @@
+"""Cross-workflow regression: application analysis must survive a new job crawl."""
+import csv
+import subprocess
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[1]
+PYTHON = sys.executable
+
+MASTER_FIELDS = [
+    "job_id", "title", "company", "location", "salary", "experience",
+    "education", "url", "description", "status", "collected_at", "keywords", "analysis",
+]
+SOURCE_FIELDS = [
+    "搜索关键词", "职位名称", "公司（卡片）", "工作区域", "薪资（页面展示）",
+    "经验或实习要求", "学历要求", "职位详情链接",
+    "岗位职责与任职要求原文", "职位ID", "采集日期",
+]
+
+
+def write_rows(path, fields, rows):
+    with path.open("w", encoding="utf-8-sig", newline="") as stream:
+        writer = csv.DictWriter(stream, fieldnames=fields)
+        writer.writeheader()
+        writer.writerows(rows)
+
+
+def test_apply_analysis_survives_incremental_merge(tmp_path):
+    master = tmp_path / "jobs.csv"
+    write_rows(master, MASTER_FIELDS, [{
+        "job_id": "old", "title": "Agent 工程师", "company": "某科技公司",
+        "location": "广州", "salary": "20-30K", "experience": "3-5年",
+        "education": "本科", "url": "https://example.org/old",
+        "description": '初始职位要求：Python, RAG\\n"检索系统"',
+        "status": "下线", "collected_at": "2026-10-31",
+        "keywords": "RAG", "analysis": "",
+    }])
+    subprocess.run([
+        PYTHON, str(ROOT / "apply-flow" / "set_analysis.py"),
+        "--job-id", "old", "--jobs-csv", str(master),
+        "--analysis", "公司在做什么：企业服务。岗位具体做什么：建设 RAG。",
+    ], check=True, capture_output=True, text=True)
+
+    snapshot = tmp_path / "new-batch.csv"
+    def crawl(job_id):
+        return {
+            "搜索关键词": "AI", "职位名称": "Agent 工程师",
+            "公司（卡片）": "某科技公司", "工作区域": "广州",
+            "薪资（页面展示）": "20-30K",
+            "经验或实习要求": "3-5年", "学历要求": "本科",
+            "职位详情链接": f"https://example.org/{job_id}",
+            "岗位职责与任职要求原文": "新版完整 JD" if job_id == "old" else "新岗位 JD",
+            "职位ID": job_id, "采集日期": "2026-11-02",
+        }
+    write_rows(snapshot, SOURCE_FIELDS, [crawl("old"), crawl("new")])
+    command = [
+        PYTHON, str(ROOT / "data" / "data_merge" / "merge_jobs.py"),
+        "--master", str(master), "--input", str(snapshot),
+    ]
+    subprocess.run(command, check=True, capture_output=True, text=True)
+    with master.open(encoding="utf-8-sig", newline="") as stream:
+        rows = list(csv.DictReader(stream))
+    assert len(rows) == 2
+    assert rows[0]["description"] == "新版完整 JD"
+    assert rows[0]["status"] == "下线"
+    assert rows[0]["analysis"] == "公司在做什么：企业服务。岗位具体做什么：建设 RAG。"
+    assert rows[1]["status"] == "招聘中"
+    assert rows[1]["analysis"] == ""
+
+    first_output = master.read_bytes()
+    subprocess.run(command, check=True, capture_output=True, text=True)
+    assert master.read_bytes() == first_output

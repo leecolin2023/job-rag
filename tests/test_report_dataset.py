@@ -1,6 +1,8 @@
 import csv
-
-from scripts.report_dataset import summarize
+import json
+import subprocess
+import sys
+from pathlib import Path
 
 
 def test_summary_includes_application_columns_without_changing_data(tmp_path):
@@ -11,7 +13,9 @@ def test_summary_includes_application_columns_without_changing_data(tmp_path):
         writer.writerow({"job_id": "a", "description": "完整 JD", "status": "招聘中", "collected_at": "2026-11-01", "analysis": "已分析"})
         writer.writerow({"job_id": "b", "description": "", "status": "下线", "collected_at": "2026-11-02", "analysis": ""})
     before = file.read_bytes()
-    result = summarize(file)
+    command = [sys.executable, str(Path(__file__).resolve().parents[1] / "scripts" / "report_dataset.py"), "--csv", str(file)]
+    completed = subprocess.run(command, check=True, capture_output=True, text=True)
+    result = json.loads(completed.stdout)
     assert result["total_rows"] == result["unique_job_ids"] == 2
     assert result["description_present"] == result["analysis_present"] == 1
     assert result["status_counts"] == {"下线": 1, "招聘中": 1}
