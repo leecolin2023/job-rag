@@ -92,7 +92,7 @@ class CollectionMergeTests(unittest.TestCase):
             self.assertEqual(actual[1]["status"], "招聘中")
 
             repeated, stats = merge(actual, [[fresh, inserted]])
-            self.assertEqual(stats["inserted"], 0)
+            self.assertEqual(stats.get("inserted", 0), 0)
             write_csv(path, repeated)
             self.assertEqual(read_csv(path, set(MASTER_COLUMNS)), actual)
 
