@@ -1,5 +1,13 @@
 # 更新记录
 
+## 开发中 — 2026-11-02 数据字段兼容与文档整理
+
+- 自动采集合并不再因为主表新增 `analysis` 等人工字段而报错；输出保留额外字段及人工状态，不依据关键词搜索差集判断旧岗位下线；补充专门回归测试并加入常规 CI。
+- 按职责拆分公司资料和投递资料的存放位置；应用层分析仍不参与岗位正文索引，MCP 保持只读。
+- 更新数据字段、功能现状、Rerank 源码边界与历史实验链接；保留旧实验与线上快照，不把离线结果宣称为线上状态。
+- 新增主表实时统计命令 `python scripts/report_dataset.py`，避免在说明文档中维护不断过期的状态分布。
+
+
 ## 开发中 — CSV 删列与导入版本语义
 
 - `data/jobs.csv` 删除 `first_keyword/keyword_count/is_guangzhou/address` 后，版本判定改用内容字段的 `content_hash`；采集元数据（`status/keywords/collected_at`）或 CSV 列结构变化只原位刷新 `raw`，不升版本、不写 `revisions`、不登记索引任务。

@@ -32,6 +32,6 @@ Embedding 的输出是数值向量，用于**寻找**与问题接近的候选；
 
 ## 四、在线模型和离线实验为什么分开？
 
-`job_rag/experiments/bailian.py` 使用单独的模型客户端、缓存、请求日志和费用保护，用于控制变量实验，不自动写线上索引。实验里验证了 Rerank API，不等于生产 `client.py` 已经提供在线 Reranker。
+`experiments/bailian.py`（仓库根目录）负责历史离线 Embedding/Rerank 比较、缓存与用量保护；`experiments/rag_tech_requirements/` 另有 2026-11-01 的真实模型实验。生产源码已有 `job_rag/providers/rerank.py` 及 `job_rag/retrieval/rerank.py`，当 `RERANK_BASE_URL/API_KEY/MODEL` 已配置、查询显式要求重排且请求通过完整 JD 输入预检时，可对候选做岗位级 Rerank；失败则返回原融合顺序并报告未执行。**代码具备该能力不代表当前线上容器已部署或启用它**。
 
 配置从顶层 `Settings` 读取，不在源码中写 API Key。远程调用会把招聘 Chunk 或用户问题发送给供应商，应检查数据合规与费用预算。最后记住这层的边界：**它把模型能力包装为稳定调用，而不决定业务事实、检索策略或最终招聘结论**。

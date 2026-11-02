@@ -44,16 +44,16 @@
 
 ## 三、为什么还有一套独立的 experiments？
 
-增加章节分块或 Embedding 后，搜索“看起来更聪明”并不能证明效果改进。数据、文本表示、查询和人工标注任何一项变化，都可能改变排名。`experiments` 因此冻结原始数据和评测问题，分别比较召回与重排；其缓存和结果不自动替换线上索引。阅读[实验机制](experiments/README.md)及[实验使用](../experiments/README.md)。
+增加章节分块或 Embedding 后，搜索“看起来更聪明”并不能证明效果改进。数据、文本表示、查询和人工标注任何一项变化，都可能改变排名。`experiments` 因此冻结原始数据和评测问题，分别比较召回与重排；其缓存和结果不自动替换线上索引。阅读[实验原理与执行入口](../experiments/README.md)和 [RAG 技术要求实验](../experiments/rag_tech_requirements/README.md)。
 
 ## 四、怎样在代码中顺着调用看？
 
 不必把下面当作需要背诵的模块目录。它们是上述状态变化对应的实际入口：
 
 - **岗位更新**：`preprocessing/importer.py` → `indexing/tasks.py` → `indexing/worker.py` → `storage/database.py`。
-- **候选查找**：`interfaces/api.py` → `retrieval/search.py` → `retrieval/candidates.py` → `retrieval/answer.py`。
-- **字面统计**：`interfaces/mcp_server.py` → `querying/catalog.py` → `storage/serialization.py`。
-- **模型调用**：`providers/client.py`（在线）与 `experiments/bailian.py`（离线实验）互相独立。
+- **候选查找**：`interfaces/api.py` → `retrieval/candidates.py` → `retrieval/answer.py` → `retrieval/search.py`。
+- **字面统计**：`interfaces/mcp_server.py` → `interfaces/mcp_tools/query_job_catalog.py` → HTTP API → `querying/catalog.py` → `storage/serialization.py`。
+- **模型调用**：`providers/client.py`（在线 Embedding/Chat）、`providers/rerank.py`（在线可选重排）和 `../experiments/bailian.py`（历史离线实验）各自有明确职责。
 
 顶层 `config.py` 生成包含模型与分块条件的索引签名，帮助保证新旧版本不混用。当前 Python 命令在 `pyproject.toml` 中指定为 `job-rag`、`job-rag-mcp`、`job-rag-experiment`。改动代码位置后需重新安装或重建镜像；目录重组不会自动改变既有数据库、生产索引或服务器运行状态。
 

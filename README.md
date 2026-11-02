@@ -51,9 +51,9 @@ data/jobs.csv → 预处理（校验、标准化、版本）
 
 ## 三、当前边界与阅读路线
 
-当前主表包含 **2,111 条岗位，2,110 条有正文**；仓库已具备 CSV 导入、规则标准化、版本追踪、BM25、多查询候选、MCP、全库字面查询和批量全文。第一轮真实 Qwen Embedding 离线实验已完成，完整 Qwen Rerank 对照尚未执行。**配置了 pgvector 不等于线上已启用 Embedding，GitHub main 的更新也不等于在线容器已经切换。**
+截至 2026-11-01 的采集合并基线为 **2,111 条岗位，2,110 条有正文**；2026-11-02 又新增 `analysis` 人工分析字段并修正部分人工状态。仓库已具备 CSV 导入、规则标准化、版本追踪、BM25、多查询候选、MCP、全库字面查询和批量全文。2026-11-01 的 RAG 技术要求实验已运行真实 Embedding、重排与生成链路；另一套历史检索排名实验的完整第二轮 Rerank 对照仍未执行。**配置了 pgvector 不等于线上已启用 Embedding，GitHub main 的更新也不等于在线容器已经切换。**
 
-最适合读代码的顺序是先看两个具体问题：岗位更新如何安全重建索引，以及为什么检索 Top-K 不能当全库统计。对应模块文档围绕这些机制展开，而不是仅介绍文件名。实验如何检验分块收益见[实验入口](experiments/README.md)、[首轮结论](docs/recall-pilot-2026-10-25.md)；当前运行状态和任务约束见[状态说明](docs/current-status.md)、[任务路由说明](docs/task-routing.md)。
+最适合读代码的顺序是先看两个具体问题：岗位更新如何安全重建索引，以及为什么检索 Top-K 不能当全库统计。对应模块文档围绕这些机制展开，而不是仅介绍文件名。实验如何检验分块收益见[实验入口](experiments/README.md)、[首轮结论](docs/recall-pilot-2026-10-25.md)；当前源码能力和部署验证边界见[源码状态快照](docs/source-status-2026-11-02.md)，2026-10-25 的[历史线上快照](docs/current-status.md)保留作对照；工具选择规则见[任务路由说明](docs/task-routing.md)。
 
 以下保留可执行的安装、部署、更新、备份和故障处理说明。请注意本项目包版本仍为 `0.1.0`，线上状态需单独核查；目录重组或 README 修改不会自动迁移数据库、重新索引或重启远端服务。
 
@@ -236,7 +236,7 @@ job-rag status 岗位ID closed --reason '原页面明确显示职位已关闭'
 
 状态变更不需要重新 Embedding；默认检索仅包含 `unknown` / `active`，历史查询才包含 `closed` / `suspected_expired`。重新导入不会自动恢复已关闭岗位。`active_only` 只返回确认在招的岗位。
 
-原 593 条数据初始导入时的 `job_status` 均为 `unknown`，无描述的 1 条仍保留供审计但无检索分块。现有 2,111 条主表的 `status` 是本次采集比较标记；即使 CSV 写成 `招聘中` 或 `下线`，重新导入也不会自动将它们变成数据库的 `active` 或 `closed`。网页“仅确认在招”初始可能无结果，这是正常现象。
+原 593 条数据初始导入时的 `job_status` 均为 `unknown`，无描述的 1 条仍保留供审计但无检索分块。主表 `status` 是管理台账字段：2026-10-31 已撤销“新批次未找到就自动标记下线”的错误规则；2026-11-02 又按投递与人工核验结果调整部分状态。再次采集只会新增或更新来源字段，**不会覆盖旧岗位人工状态**。无论 CSV 为 `招聘中` 还是 `下线`，导入知识库时都不会自动映射为数据库独立的 `active` 或 `closed`。网页“仅确认在招”初始可能无结果，这是正常现象。
 
 `last_seen_at` 表示本系统最近导入观察时间，不是页面在线证明；`last_verified_at` 仅在明确设置 `active` / `closed` 时更新，具体核验依据见状态历史。原采集时间始终保留在 `collected_at`。
 
@@ -294,7 +294,7 @@ sudo docker compose --env-file .env.docker run --rm --no-deps \
   -v "$PWD/scripts:/checks:ro" api python /checks/check_postgres.py
 ```
 
-PostgreSQL 检查使用唯一命名的临时数据库，不改岗位业务库；验证真实 pgvector 写入与距离查询，但向量来自测试替身，并非真实 Embedding 模型。2026-10-25 已通过 36 项 pytest、上述两项检查，以及 `opencode-go/deepseek-v4.1-flash` 实际 MCP 查询/改写/详情复核链路。真实供应商的向量生成仍未配置。
+PostgreSQL 检查使用唯一命名的临时数据库，不改岗位业务库；验证真实 pgvector 写入与距离查询，但向量来自测试替身，并非真实 Embedding 模型。2026-10-25 的历史验收曾通过 36 项 pytest 和相应 MCP/PostgreSQL 检查；此数字不是当前 main 分支的测试总数。最新源码还需执行 `pytest -q` 及 `python -m unittest discover -s data/data_merge -p 'test_merge_jobs.py'`。真实供应商的向量生成已在独立实验中运行，不代表当前服务器启用了该模型。
 
 当前 `create_all` 仅负责首次建表，不是数据库迁移工具。修改表结构前备份并编写迁移，不要直接删除正式数据库重建。SQLite 停止写入后可用 Python `sqlite3.Connection.backup` 做一致性备份（不要运行中只复制 `.db` 而遗漏 WAL）；PostgreSQL 使用 `pg_dump`。CSV 无法还原人工核验记录，必须同时备份运行时数据库。
 
@@ -312,17 +312,27 @@ PostgreSQL 检查使用唯一命名的临时数据库，不改岗位业务库；
 
 ```text
 data/
-└── jobs.csv  # 标准化岗位主表，2,111 条
+├── jobs.csv                   # 岗位主表（含人工分析列）
+├── collections/YYYY-MM-DD/    # 按日期存放采集快照
+├── company/company_info.csv   # 公司资料补充表
+└── data_merge/                # 合并、去重、保留人工字段
 ```
 
-`data/jobs.csv` 保留 12 个字段（2,111 个不同职位 ID）：
+`data/jobs.csv` 以 12 个采集字段为基础，2026-11-02 起还包含第 13 列 `analysis`（针对部分岗位的人工作业结论）；未来新增人工管理列也须由合并器原样保留：
 
-`job_id, title, company, location, salary, experience, education, url, description, status, collected_at, keywords`
+`job_id, title, company, location, salary, experience, education, url, description, status, collected_at, keywords, analysis`
+
+统计当前文件的实际字段、岗位总数及各状态，而非手工维护总数字：
+
+```bash
+python scripts/report_dataset.py
+```
 
 - `job_id`：来自 BOSS 职位 ID，是全局唯一的更新/关联键。
 - `description`：岗位职责与任职要求原文，**不做摘要、语义改写或无依据的文本修复**。链接失效且未取得描述的 1 条记录，其值为空，不使用原表中的占位符 `6`。
-- `status`：2026-10-30 起按用户要求使用 `招聘中`/`下线`，其中 `下线` 是本轮同关键词检索未命中的结果，不是逐条 BOSS 网页关闭核验；在运行时数据库中，它**不自动同步**到独立的 `job_status`。
+- `status`：岗位管理台账状态；`招聘中` 不是实时在线验证，`下线` 等调整应基于投递记录或人工核验，不再依据关键词差集自动判断。合并器保留已有状态；运行时数据库 `job_status` 独立维护，不会自动从 CSV 导入。
 - `keywords`：记录岗位通过哪些搜索关键词被发现；多个关键词按原格式用中文分号 `；` 连接，不代表 JD 明确要求这些技能。
+- `analysis`：应用层人工整理的“公司在做什么、岗位具体做什么”；不是原始 JD，也不参与内容版本和索引签名，采集合并时必须保留。
 - `first_keyword`、`keyword_count`、`is_guangzhou`、`address` 已从主表移除：首次来源应由采集记录维护；关键词数与地区过滤可由已有字段计算；具体地址不属于当前分析的核心信息。
 
 **文件编码**：UTF-8 with BOM（`utf-8-sig`）。按照标准 CSV 转义，岗位描述中的逗号、引号、换行均保留。不能直接使用换行符判断记录条数，建议使用 Python `csv` 或 `pandas.read_csv`。
@@ -337,4 +347,4 @@ data/
 
 ## 数据与隐私
 
-此仓库为公开仓库。CSV 不包含专门的招聘者身份/活跃信息字段与企业工商登记原文。请勿提交 API Key、个人简历或其他私有资料。原始 Excel 建议妥善保存于非公开位置。
+此仓库为公开仓库。CSV 不包含专门的招聘者身份/活跃信息字段与企业工商登记原文。请勿提交 API Key、私人身份信息、账户数据或不宜公开的完整个人简历。`apply-flow/` 现包含用于求职理解的技能与项目背景摘要；此仓库公开，修改该资料前应自行确认公开范围。原始 Excel 建议妥善保存于非公开位置。
