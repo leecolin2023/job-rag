@@ -85,3 +85,4 @@ node apply-flow/apply_job.mjs --job-id <job_id> --confirm
 - 不批量、不循环、不跳过人工确认
 - 脚本会检查 `analysis` 非空；按钮为“继续沟通”时不会重复点击
 - 点击后记录聊天页内容和发送结果
+- 发送成功，或按钮为“继续沟通”（已有沟通记录）时，`apply_job.mjs` 会把 `jobs.csv` 中该岗位的 `status` 自动改为 `已投递`，无需手动改状态

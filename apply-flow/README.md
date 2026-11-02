@@ -84,7 +84,9 @@ node apply-flow/apply_job.mjs --job-id <job_id> --confirm
     - 已关闭/被遮挡/验证页：停止并报告；
   - 点击成功后打开消息页，记录新会话和默认招呼语；
 - apply-flow 只把结果打印到终端，不生成 JSON/TXT 报告文件；
-- 不更新 `jobs.csv.status`，发送结果只输出到本次命令的 stdout。
+- 若按钮从“立即沟通”变为“继续沟通”（本次发送成功），或按钮本来就是“继续沟通”（已有沟通记录），脚本会把 `jobs.csv` 中该岗位的 `status` 自动改为 `已投递`；
+- 投递失败、按钮消失、验证页或其他错误不改状态，结果只输出到本次命令的 stdout；
+- 状态写入失败不会回滚已发送消息，报告里会给出 `status_error`，需按提示人工处理。
 
 如果 browser-ops 不在相邻目录，可用环境变量指定 contact 脚本：
 

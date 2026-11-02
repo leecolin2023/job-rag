@@ -10,6 +10,8 @@ const WORKSPACES = path.resolve(HERE, '../..');
 const DEFAULT_JOBS = path.join(ROOT, 'data', 'jobs.csv');
 const CONTACT_SCRIPT = process.env.BROWSER_OPS_CONTACT ||
   path.join(WORKSPACES, 'browser-ops', 'extensions', 'boss', 'contact.mjs');
+const STATUS_SCRIPT = path.join(HERE, 'set_status.py');
+const PYTHON = process.env.PYTHON || 'python3';
 
 function parseCsv(text) {
   const rows = [];
@@ -44,6 +46,38 @@ function parseContactOutput(stdout) {
   const start = text.indexOf('{');
   if (start < 0) return null;
   return JSON.parse(text.slice(start));
+}
+
+function markApplied(report, jobId, jobsFile) {
+  const isNewlyApplied = !report.error && report.clicked && report.sent;
+  const alreadyContacted = report.error === 'already_contacted';
+  if (!isNewlyApplied && !alreadyContacted) return;
+  try {
+    const proc = spawnSync(PYTHON, [
+      STATUS_SCRIPT,
+      '--job-id', jobId,
+      '--status', '已投递',
+      '--jobs-csv', jobsFile,
+    ], { encoding: 'utf8', timeout: 30000, maxBuffer: 1024 * 1024 });
+    let result = null;
+    try {
+      result = parseContactOutput(proc.stdout);
+    } catch (error) {
+      result = null;
+    }
+    if (proc.error) throw proc.error;
+    if (!result || result.error) {
+      throw new Error((proc.stderr || '').trim().slice(0, 300) ||
+        `状态写入未返回结果（exit ${proc.status}）`);
+    }
+    report.status_before = Array.isArray(result.old_status)
+      ? (result.old_status[0] ?? '')
+      : String(result.old_status ?? '');
+    report.status_after = result.new_status || report.status_after;
+    report.status_updated = true;
+  } catch (error) {
+    report.status_error = error.message;
+  }
 }
 
 const { values } = parseArgs({
@@ -100,6 +134,10 @@ const report = {
   chat_target: null,
   chat_top: [],
   error: '',
+  status_before: job.status || '',
+  status_after: job.status || '',
+  status_updated: false,
+  status_error: '',
   contact_script: CONTACT_SCRIPT,
 };
 
@@ -140,6 +178,7 @@ try {
   report.error = error.message;
   process.exitCode = 1;
 } finally {
+  markApplied(report, jobId, jobsFile);
   report.finished_at = new Date().toISOString();
   console.log(JSON.stringify({ report }, null, 2));
 }
