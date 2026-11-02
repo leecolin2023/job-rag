@@ -1,6 +1,6 @@
 ---
 name: job-apply-analysis
-description: Analyze a BOSS job as "what the company does + what the job actually does" using data/jobs.csv, data/collections/公司信息.csv and data/resume_skills_projects.md; write a two-part understanding conclusion into jobs.csv analysis. Use when the user asks to analyze a job, understand the work behind a job, or fill jobs.csv analysis for a job_id.
+description: Analyze a BOSS job as "what the company does + what the job actually does" using data/jobs.csv, data/company/company_info.csv and apply-flow/resume_skills_projects.md; write a two-part understanding conclusion into jobs.csv analysis. Use when the user asks to analyze a job, understand the work behind a job, or fill jobs.csv analysis for a job_id.
 ---
 
 # 公司与岗位工作内容分析（写入 jobs.csv.analysis）
@@ -16,8 +16,8 @@ description: Analyze a BOSS job as "what the company does + what the job actuall
 
 - 必填：`job_id`
 - 读取：`data/jobs.csv` 中该行的 `title/company/location/description/url/keywords`
-- 读取：`data/collections/公司信息.csv` 中 `职位ID == job_id` 的公司介绍和业务信息；同一职位可能重复，先去重/合并
-- 读取：`data/resume_skills_projects.md` 作为技术语境参考，帮助你理解岗位术语和可能的工作方式
+- 读取：`data/company/company_info.csv` 中 `职位ID == job_id` 的公司介绍和业务信息；同一职位可能重复，先去重/合并
+- 读取：`apply-flow/resume_skills_projects.md` 作为技术语境参考，帮助你理解岗位术语和可能的工作方式
 
 ## 分析重点
 
@@ -60,7 +60,7 @@ description: Analyze a BOSS job as "what the company does + what the job actuall
 
 ## 写回 jobs.csv
 
-不要手工编辑 CSV（description 含换行/引号）。使用：
+不要手工编辑 CSV（description 含换行/引号）。此脚本只更新指定岗位的 `analysis`；采集 CSV 合并不得覆盖它。使用：
 
 ```bash
 python3 apply-flow/set_analysis.py --job-id <job_id> --analysis '<结论>'

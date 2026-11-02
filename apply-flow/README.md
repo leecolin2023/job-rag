@@ -1,6 +1,6 @@
 # apply-flow · 公司与岗位工作内容分析 + 沟通投递
 
-这个目录只做两件事：
+这个目录是**使用 Job-RAG 数据的应用工作流**，不属于 `job_rag/` 核心知识库。它只做两件事：
 
 1. **分析**：用 skill `job-apply-analysis` 读岗位描述、公司介绍和简历技术背景，回答“公司在做什么、岗位具体做什么”，写入 `data/jobs.csv` 的 `analysis` 字段。
 2. **沟通投递**：人工确认后，运行同目录的 `apply_job.mjs`，只对指定 `job_id` 点击一次“立即沟通”，并记录聊天页内容。
@@ -13,6 +13,7 @@
 |---|---|
 | `.claude/skills/job-apply-analysis/SKILL.md` | 公司与岗位工作内容分析 skill（主流程） |
 | `set_analysis.py` | 把结论安全写回 `jobs.csv.analysis` |
+| `resume_skills_projects.md` | 供岗位理解使用的技能与项目背景摘要，不是采集源数据 |
 | `apply_job.mjs` | 招聘业务编排：校验 `analysis`、读取岗位、调用 browser-ops 沟通动作，结果只打印到终端 |
 
 浏览器动作不在本目录：`browser-ops/extensions/boss/contact.mjs` 负责打开岗位页、识别按钮、点击一次和读取聊天页；它不读取 `jobs.csv`、不做岗位分析。两者关系：
@@ -28,8 +29,8 @@ browser-ops/extensions/boss/contact.mjs   # 浏览器动作：找按钮、点击
 | 文件 | 用途 |
 |---|---|
 | `data/jobs.csv` | 岗位描述、公司、标题、关键词 |
-| `data/collections/公司信息.csv` | 公司介绍和业务信息；同一职位重复记录需去重 |
-| `data/resume_skills_projects.md` | 简历技能与项目背景，仅作技术语境参考 |
+| `data/company/company_info.csv` | 公司介绍和业务信息；同一职位重复记录需去重。该文件从旧 `collections/` 目录原样移入 |
+| `apply-flow/resume_skills_projects.md` | 简历技能与项目背景，仅作技术语境参考 |
 
 ## 使用
 
@@ -95,6 +96,8 @@ BROWSER_OPS_CONTACT=/path/to/browser-ops/extensions/boss/contact.mjs \
 ## 注意
 
 - `analysis` 必须非空；为空时脚本拒绝点击，需加 `--allow-empty-analysis` 才能绕过。
-- `jobs.csv` 可能因为同一职位多批次采集出现重复公司信息；分析时需去重。
+- `company_info.csv` 可能因为同一职位多批次采集包含重复公司信息；分析时需按职位 ID 去重。
+- 数据合并只维护采集字段，保留 `jobs.csv` 的人工 `analysis` 与既有 `status`，不会自动触发投递动作。
+- `resume_skills_projects.md` 存放在公开仓库中，请避免放入私人联系方式、凭据或其他不宜公开的履历信息。
 - 匿名/猎头岗位可能没有公司介绍，分析应标注“公司业务信息缺失/待确认”。
 - 默认招呼语是账号统一模板，不随岗位变化；批量点击前需考虑风控和消息质量。
