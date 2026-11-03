@@ -1,6 +1,7 @@
 """Regression tests for collection merge."""
 
 from pathlib import Path
+import json
 import tempfile
 import unittest
 
@@ -8,10 +9,11 @@ from data.data_merge.merge_jobs import MASTER_COLUMNS, merge, output_columns, re
 
 
 def source(job_id="id", date="2026-10-31", company="公司", city="广州",
-           text="原文", keyword="ai应用开发"):
+           text="原文", keyword="ai应用开发", skills='["Python"]'):
     return {
         "职位ID": job_id, "采集日期": date, "公司（卡片）": company,
         "工作区域": city, "岗位职责与任职要求原文": text, "搜索关键词": keyword,
+        "技能标签": skills,
         "职位名称": "开发岗", "薪资（页面展示）": "20K",
         "经验或实习要求": "3年", "学历要求": "本科",
         "职位详情链接": "https://www.zhipin.com/job_detail/id.html",
@@ -22,7 +24,7 @@ def existing():
     return {
         "job_id": "id", "collected_at": "2026-10-23", "company": "有名公司",
         "location": "广州·天河区", "description": "旧的完整 JD",
-        "keywords": "RAG", "status": "招聘中", "title": "开发岗",
+        "keywords": "RAG", "skills": "", "status": "招聘中", "title": "开发岗",
         "salary": "20K", "experience": "3年", "education": "本科",
         "url": "https://example.org",
     }
@@ -36,6 +38,7 @@ class CollectionMergeTests(unittest.TestCase):
         self.assertEqual(rows[0]["company"], "有名公司")
         self.assertEqual(rows[0]["location"], "广州·天河区")
         self.assertEqual(rows[0]["keywords"], "RAG；ai应用开发")
+        self.assertEqual(rows[0]["skills"], '["Python"]')
         self.assertEqual(rows[0]["description"], "新的完整 JD")
         expected = [dict(row) for row in rows]
         rows, _ = merge(rows, [[item]])
@@ -56,6 +59,33 @@ class CollectionMergeTests(unittest.TestCase):
     def test_duplicate_ids_rejected(self):
         with self.assertRaisesRegex(ValueError, "duplicate job_id"):
             merge([], [[source(), source()]])
+
+    def test_skills_union_and_empty_scrape_does_not_remove(self):
+        old = existing()
+        old["skills"] = '["RAG"]'
+        rows, _ = merge([old], [[source(skills='["Python", "RAG"]')]])
+        self.assertEqual(json.loads(rows[0]["skills"]), ["RAG", "Python"])
+
+        rows, _ = merge(rows, [[source(date="2026-11-02", skills="[]")]])
+        self.assertEqual(json.loads(rows[0]["skills"]), ["RAG", "Python"])
+
+    def test_missing_skills_column_is_optional(self):
+        item = source()
+        item.pop("技能标签")
+        rows, _ = merge([], [[item]])
+        self.assertEqual(rows[0]["skills"], "")
+
+    def test_master_without_skills_column_is_upgraded(self):
+        old = existing()
+        old.pop("skills")
+        rows, _ = merge([old], [[source(skills='["RAG"]')]])
+        self.assertEqual(rows[0]["skills"], '["RAG"]')
+
+    def test_skills_accept_legacy_semicolon_text(self):
+        old = existing()
+        old["skills"] = "RAG；Python"
+        rows, _ = merge([old], [[source(skills='["Agent"]')]])
+        self.assertEqual(json.loads(rows[0]["skills"]), ["RAG", "Python", "Agent"])
 
     def test_bom_and_multiline_csv(self):
         with tempfile.TemporaryDirectory() as directory:

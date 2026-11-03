@@ -23,9 +23,10 @@ def test_bom_multiline_roundtrip():
 
 
 def test_content_and_collection_fields_partition_the_csv_contract():
-    assert set(CONTENT_FIELDS) | set(COLLECTION_FIELDS) == (REQUIRED_COLUMNS | {"keywords"}) - {"job_id"}
+    assert set(CONTENT_FIELDS) | set(COLLECTION_FIELDS) == (REQUIRED_COLUMNS | {"keywords", "skills"}) - {"job_id"}
     assert not set(CONTENT_FIELDS) & set(COLLECTION_FIELDS)
     assert "address" not in CONTENT_FIELDS
+    assert "skills" not in REQUIRED_COLUMNS
 
 
 @pytest.mark.parametrize("salary,period,minimum,maximum,months", [

@@ -40,7 +40,7 @@ education=本科
 
 ## 四、为什么还需要两种哈希和岗位版本？
 
-同一个来源 ID 重新导入，可能出现三类变化：完全没变；只有采集元数据（`status/keywords/collected_at`）或 CSV 列结构变化；岗位内容字段变化。除此之外，索引签名过期也会触发重新索引，与原始行是否变化无关。
+同一个来源 ID 重新导入，可能出现三类变化：完全没变；只有采集元数据（`status/keywords/skills/collected_at`）或 CSV 列结构变化；岗位内容字段变化。除此之外，索引签名过期也会触发重新索引，与原始行是否变化无关。
 
 `importer.py` 使用 `source:job_id` 定位岗位。`raw_hash` 是整行导入字段的精确指纹，只用于判断当前 `raw` 是否需要原地刷新并留下审计依据；是否增加 `version` 由 `content_hash` 决定。`content_hash` 只覆盖会影响岗位证据与检索文档的字段：`title/company/location/salary/experience/education/description/url`。采集字段、以及像 `address` 这样被删掉的列，都不参与版本判定。
 

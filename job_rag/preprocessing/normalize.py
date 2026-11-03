@@ -9,9 +9,9 @@ IDENTITY_FIELDS = ("job_id",)
 CONTENT_FIELDS = ("title", "company", "location", "salary", "experience", "education", "description", "url")
 # Collection metadata: refreshed in place, never part of the version decision.
 # status remains required and is still exposed as collection_status.
-COLLECTION_FIELDS = ("status", "keywords", "collected_at")
+COLLECTION_FIELDS = ("status", "keywords", "skills", "collected_at")
 SOURCE_FIELDS = IDENTITY_FIELDS + CONTENT_FIELDS + COLLECTION_FIELDS
-REQUIRED_COLUMNS = set(SOURCE_FIELDS) - {"keywords"}
+REQUIRED_COLUMNS = set(SOURCE_FIELDS) - {"keywords", "skills"}
 
 
 def digest(value):

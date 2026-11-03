@@ -14,6 +14,7 @@ DATA_DIR = Path(__file__).resolve().parents[1]
 MASTER_COLUMNS = (
     "job_id", "title", "company", "location", "salary", "experience",
     "education", "url", "description", "status", "collected_at", "keywords",
+    "skills",
 )
 SOURCE_COLUMNS = {
     "搜索关键词": "keywords", "职位名称": "title", "公司（卡片）": "company",
@@ -46,6 +47,32 @@ def merge_keywords(previous: str, current: str) -> str:
     return "；".join(dict.fromkeys(v for v in values if is_valid(v)))
 
 
+def parse_skills(value: str) -> list[str]:
+    """Parse the collector's JSON array, tolerating legacy semicolon text."""
+    text = (value or "").strip()
+    if not text:
+        return []
+    try:
+        parsed = json.loads(text)
+    except json.JSONDecodeError:
+        parsed = None
+    if isinstance(parsed, str):
+        return [parsed.strip()] if parsed.strip() else []
+    if isinstance(parsed, list):
+        return [str(v).strip() for v in parsed if v is not None and str(v).strip()]
+    return [v.strip() for v in text.replace(";", "；").split("；") if v.strip()]
+
+
+def merge_skills(previous: str, current: str) -> str:
+    """Union skill tags without treating an empty later scrape as removal."""
+    values = list(dict.fromkeys(parse_skills(previous) + parse_skills(current)))
+    if values:
+        return json.dumps(values, ensure_ascii=False)
+    if (current or "").strip() == "[]" or (previous or "").strip() == "[]":
+        return "[]"
+    return ""
+
+
 def merge_location(previous: str, current: str) -> str:
     if not is_valid(current):
         return previous
@@ -74,6 +101,7 @@ def normalize(source: dict[str, str]) -> dict[str, str]:
     row["collected_at"] = row["collected_at"][:10]
     row["status"] = "招聘中"  # Catalog marker; not a live-site availability check.
     row["keywords"] = merge_keywords("", row["keywords"])
+    row["skills"] = merge_skills("", source.get("技能标签", ""))
     return row
 
 
@@ -103,6 +131,7 @@ def merge(master: list[dict[str, str]], sources: list[list[dict[str, str]]]):
             # Older observations may expand provenance but cannot regress JD fields.
             recent = row["collected_at"] >= old["collected_at"]
             old["keywords"] = merge_keywords(old["keywords"], row["keywords"])
+            old["skills"] = merge_skills(old.get("skills", ""), row["skills"])
             if recent:
                 for key in ("title", "salary", "experience", "education", "url", "description"):
                     if is_valid(row[key]):
@@ -157,7 +186,7 @@ def main() -> None:
     paths = sorted((DATA_DIR / "collections" / args.date).glob("*.csv")) if args.date else args.input
     if not paths:
         parser.error("No matching collection CSV files")
-    master = read_csv(args.master, set(MASTER_COLUMNS))
+    master = read_csv(args.master, set(MASTER_COLUMNS) - {"skills"})
     if any(not is_valid(row["job_id"]) for row in master):
         raise ValueError("master contains empty job_id")
     snapshots = [read_csv(path, set(SOURCE_COLUMNS)) for path in paths]

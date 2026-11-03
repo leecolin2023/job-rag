@@ -16,13 +16,13 @@ Job-RAG 不直接把采集到的招聘信息交给模型“读完记住”。如
 
 ## 二、为什么一份岗位要保留这些字段？
 
-截至 2026-11-02 合并基线，主表含 **2,546** 个不同 `job_id`，其中 **2,545** 条 `description` 非空；2026-11-02 起主表由 12 个采集字段扩展为 13 列（新增 `analysis`），并调整部分岗位管理状态。当前实际数字请运行 `python scripts/report_dataset.py` 获取。最重要的不是列数，而是**字段扮演不同的证据角色**。
+截至 2026-11-02 合并基线，主表含 **2,546** 个不同 `job_id`，其中 **2,545** 条 `description` 非空；2026-11-02 起主表在原有 12 个采集字段上新增 `skills`，并加入人工列 `analysis`，共 14 列，同时调整部分岗位管理状态。当前实际数字请运行 `python scripts/report_dataset.py` 获取。最重要的不是列数，而是**字段扮演不同的证据角色**。
 
 假设一条招聘标题为“AI 平台工程师”，薪资“20–35K”，正文含“vLLM 经验优先”。`title/company/location/salary/experience/education` 描述招聘方展示的基本属性；`description` 承载实际职责、必备条件和加分语境；`job_id` 是以后识别同一来源岗位更新的关键；`url` 与 `collected_at` 让人能追溯出处和采集日期。
 
-采集字段 `keywords/collected_at` 记录关键词来源和采集时间，不等于岗位的真实技术要求。主表 `status` 是人工维护的管理状态：2026-10-31 已撤销“未被下一次搜索命中就判定下线”的规则；2026-11-02 根据投递记录和人工核验修正部分状态。此后合并不会自动将旧岗位标成下线，也不会覆盖已经维护的状态；新岗位默认 `招聘中` 仅是台账初始值，**不代表网站实时核验**。数据库 `job_status` 与 CSV 管理字段独立，导入时不自动映射；详见 [data_merge](data_merge/README.md)。
+采集字段 `keywords/collected_at` 记录关键词来源和采集时间，不等于岗位的真实技术要求；`skills` 保存采集页面展示的技能标签 JSON 数组，保持原始标签，不混入搜索词，旧批次可能没有该列。主表 `status` 是人工维护的管理状态：2026-10-31 已撤销“未被下一次搜索命中就判定下线”的规则；2026-11-02 根据投递记录和人工核验修正部分状态。此后合并不会自动将旧岗位标成下线，也不会覆盖已经维护的状态；新岗位默认 `招聘中` 仅是台账初始值，**不代表网站实时核验**。数据库 `job_status` 与 CSV 管理字段独立，导入时不自动映射；详见 [data_merge](data_merge/README.md)。
 
-`analysis` 是供上层 [apply-flow](../apply-flow/README.md) 使用的工作内容解读，不是网站原始 JD。合并器保留该列及未来新增的管理字段，采集数据不可覆盖人工结论。已删除的 `first_keyword/keyword_count/is_guangzhou/address` 不应恢复；只改变 `status/keywords/collected_at/analysis` 等非内容字段，不会触发知识库的内容版本递增或重复 Embedding。
+`analysis` 是供上层 [apply-flow](../apply-flow/README.md) 使用的工作内容解读，不是网站原始 JD。合并器保留该列及未来新增的管理字段，采集数据不可覆盖人工结论。已删除的 `first_keyword/keyword_count/is_guangzhou/address` 不应恢复；只改变 `status/keywords/skills/collected_at/analysis` 等非内容字段，不会触发知识库的内容版本递增或重复 Embedding。
 
 ## 三、为什么不在这里直接清洗、摘要或生成 Embedding？
 
@@ -32,7 +32,7 @@ Job-RAG 不直接把采集到的招聘信息交给模型“读完记住”。如
 
 ## 四、怎样导入及识别缺失？
 
-输入要求 UTF-8（兼容 BOM）与标准 CSV 转义；带换行、引号的 JD 仍是一条记录，不能拿文件行数当岗位数。11 个列名必须存在：`job_id/title/company/location/salary/experience/education/url/description/status/collected_at`。同批数据不能重复 `job_id`，但正文可以为空；空正文不会被编造为“暂无要求”。
+输入要求 UTF-8（兼容 BOM）与标准 CSV 转义；带换行、引号的 JD 仍是一条记录，不能拿文件行数当岗位数。11 个列名必须存在：`job_id/title/company/location/salary/experience/education/url/description/status/collected_at`；`keywords` 和 `skills` 可选，缺失时为空。同批数据不能重复 `job_id`，但正文可以为空；空正文不会被编造为“暂无要求”。
 
 ~~~bash
 job-rag import data/jobs.csv --source boss --no-index

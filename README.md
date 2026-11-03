@@ -217,7 +217,7 @@ job-rag worker
 按 `(source, job_id)` upsert，整份文件先验证，再原子导入。重复 ID、缺少必填列或列数错误时整批拒绝。文件内不允许同一个 ID 出现两次；多个来源可使用各自的 `--source`。
 
 - 原始行完全不变：只更新本地观察时间，不新增版本、不生成向量。
-- 只有采集元数据（`status/keywords/collected_at`）或 CSV 列结构变化：原地刷新当前原文与哈希，不新增版本、不写历史版本、不登记索引任务。
+- 只有采集元数据（`status/keywords/skills/collected_at`）或 CSV 列结构变化：原地刷新当前原文与哈希，不新增版本、不写历史版本、不登记索引任务。
 - 岗位内容字段（`title/company/location/salary/experience/education/description/url`）变化：保留旧版本，记录新版本，创建同事务索引任务。
 - 内容变化但检索文档相同且模型签名相同：复用已有向量，不重复调用 Embedding。
 - 岗位描述改变：原子替换该岗位全部分块，删除多余旧块；新索引完成前该岗位暂不参与检索，不展示旧内容。
@@ -318,9 +318,9 @@ data/
 └── data_merge/                # 合并、去重、保留人工字段
 ```
 
-`data/jobs.csv` 以 12 个采集字段为基础，2026-11-02 起还包含第 13 列 `analysis`（针对部分岗位的人工作业结论）；未来新增人工管理列也须由合并器原样保留：
+`data/jobs.csv` 以 12 个采集字段为基础，2026-11-02 起新增第 13 列 `skills`（页面技能标签 JSON 数组）和第 14 列 `analysis`（针对部分岗位的人工作业结论）；未来新增人工管理列也须由合并器原样保留：
 
-`job_id, title, company, location, salary, experience, education, url, description, status, collected_at, keywords, analysis`
+`job_id, title, company, location, salary, experience, education, url, description, status, collected_at, keywords, skills, analysis`
 
 统计当前文件的实际字段、岗位总数及各状态，而非手工维护总数字：
 
